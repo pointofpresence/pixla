@@ -43,10 +43,15 @@ require([
     "use strict";
 
     $(function () {
+        $(document).on("click", "a[href=#]", function (e) {
+            e.preventDefault();
+        });
+
+        // navbar fixes
         $("footer").css("background-color", $("body > nav").css("background-color"));
         $("footer *").css("color", $(".navbar-default .navbar-nav > li > a").css("color"));
 
-        if ("undefined" === typeof FileReader || !$.isFunction(FileReader)) {
+        if ("undefined" === typeof FileReaderd || !$.isFunction(FileReader)) {
             $("#old-browser").fadeIn("slow");
             return;
         } else {

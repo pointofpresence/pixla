@@ -6,8 +6,10 @@ class Input
      * Fetch an item from the GET array
      *
      * @access   public
-     * @param    string
+     *
+     * @param      string
      * @param bool $default
+     *
      * @return   string
      */
     public static function get($index = NULL, $default = FALSE)
@@ -37,8 +39,10 @@ class Input
      * Fetch an item from either the GET array or the POST
      *
      * @access   public
+     *
      * @param    string $index The index key
-     * @param bool $default
+     * @param bool      $default
+     *
      * @return string
      */
     public static function getPost($index = '', $default = FALSE)
@@ -86,6 +90,7 @@ class Input
     public static function parseCliArgs()
     {
         $args = array_slice(self::server('argv'), 1);
+
         return $args ? '/' . implode('/', $args) : '';
     }
 
@@ -93,8 +98,10 @@ class Input
      * Fetch an item from the POST array
      *
      * @access   public
-     * @param    string
+     *
+     * @param      string
      * @param bool $default
+     *
      * @return   string
      */
     public static function post($index = NULL, $default = FALSE)
@@ -124,8 +131,8 @@ class Input
      * редирект на страницу сайта. путь указывать относительно сайта
      * $header - 301 или 302 редирект
      *
-     * @param string $url
-     * @param bool $refresh
+     * @param string   $url
+     * @param bool     $refresh
      * @param bool|int $header
      */
     public static function redirect($url = NULL, $refresh = FALSE, $header = 301)
@@ -153,6 +160,7 @@ class Input
 
     /**
      * @param string $index
+     *
      * @return bool|mixed
      */
     public static function server($index = '')
@@ -161,8 +169,9 @@ class Input
     }
 
     /**
-     * @param $array
+     * @param        $array
      * @param string $index
+     *
      * @return bool|mixed
      */
     private static function _fetchFromArray(&$array, $index = '')
@@ -203,7 +212,7 @@ if (Input::get('url') && Input::isAjaxRequest()) {
 
     $content = @file_get_contents($url);
 
-    if(!$content) {
+    if (!$content) {
         die(json_encode(['error' => 400]));
     }
 
