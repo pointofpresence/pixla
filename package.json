@@ -1,7 +1,7 @@
 {
   "name": "require-backbone-strap",
   "title": "Require Backbone Strap",
-  "version": "1.0.6",
+  "version": "0.0.0",
   "description": "Boilerplate for RequireJS/Backbone/Bootstrap/Gulp based projects.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +23,6 @@
     "gulp-uglify": "^1.2.0",
     "mkdirp": "^0.5.1"
   },
-  "lastBuildDate": 1434727746,
-  "lastBuildDateUtc": "Fri, 19 Jun 2015 15:29:06 GMT"
+  "lastBuildDate": 1434779666,
+  "lastBuildDateUtc": "Sat, 20 Jun 2015 05:54:26 GMT"
 }
