@@ -1,12 +1,12 @@
 {
-  "name": "require-backbone-strap",
-  "title": "Require Backbone Strap",
+  "name": "pixla",
+  "title": "Pixla",
   "version": "0.0.0",
-  "description": "Boilerplate for RequireJS/Backbone/Bootstrap/Gulp based projects.",
+  "description": "Online image filter",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com/pointofpresence/require-backbone-strap",
+  "repository": "https://github.com/pointofpresence/pixla",
   "author": "pointofpresence",
   "license": "MIT",
   "devDependencies": {
@@ -23,6 +23,6 @@
     "gulp-uglify": "^1.2.0",
     "mkdirp": "^0.5.1"
   },
-  "lastBuildDate": 1434779666,
-  "lastBuildDateUtc": "Sat, 20 Jun 2015 05:54:26 GMT"
+  "lastBuildDate": 1434781452,
+  "lastBuildDateUtc": "Sat, 20 Jun 2015 06:24:12 GMT"
 }

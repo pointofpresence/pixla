@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015 pointofpresence
- * require-backbone-strap - Boilerplate for RequireJS/Backbone/Bootstrap/Gulp based projects.
- * @version v1.0.7
- * @build Sat, 20 Jun 2015 05:54:26 GMT
- * @link https://github.com/pointofpresence/require-backbone-strap
+ * pixla - Online image filter
+ * @version v0.0.1
+ * @build Sat, 20 Jun 2015 06:24:12 GMT
+ * @link https://github.com/pointofpresence/pixla
  * @license MIT
  */
 define("models/Test",["backbone"],function(Backbone){"use strict";return Backbone.Model.extend({})}),define("collections/Test",["backbone","models/Test"],function(Backbone,TestModel){"use strict";return Backbone.Collection.extend({url:"https://openclipart.org/search/json/?&query=christmas&page=1&amount=4",model:TestModel,parse:function(response){return response.payload}})}),define("views/Test",["backbone","templates","jquery","collections/Test"],function(Backbone,templates,$,TestCollection){"use strict";return Backbone.View.extend({el:"#test",template:templates.Test,initialize:function(){this.collection=new TestCollection,this.collection.fetch({success:this.render.bind(this)})},render:function(){this.$el.html(this.template({data:this.collection.toJSON()}))}})}),define("templates",function(require){"use strict";return{Test:require("tpl!templates/Test.ejs")}}),require.config({paths:{underscore:"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min",backbone:"//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min",jquery:"//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min",bootstrap:"//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min"},shim:{underscore:{exports:"_"},backbone:{exports:"Backbone",deps:["jquery","underscore"]},bootstrap:{deps:["jquery"]}},waitSeconds:60}),require(["jquery","views/Test","bootstrap"],function($,TestView){"use strict";$(function(){new TestView})});

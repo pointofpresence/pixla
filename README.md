@@ -1,8 +1,8 @@
-# Require Backbone Strap v1.0.7
-## aka require-backbone-strap
+# Pixla v0.0.1
+## aka pixla
 
 Author: pointofpresence
 
-Last build date: Sat, 20 Jun 2015 05:54:26 GMT
+Last build date: Sat, 20 Jun 2015 06:24:12 GMT
 
-Boilerplate for RequireJS/Backbone/Bootstrap/Gulp based projects.
+Online image filter
