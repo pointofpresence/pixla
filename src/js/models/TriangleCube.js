@@ -8,7 +8,7 @@ define("models/TriangleCube", [
 ], function (Backbone, _, TriangleAbstractModel) {
     "use strict";
 
-    return Backbone.Model.extend({
+    return TriangleAbstractModel.extend({
         defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
             name: "Triangle Cube",
             description: "Triangle Cube Filter"

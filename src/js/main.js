@@ -32,7 +32,8 @@ require([
     "collections/Generator",
     "views/Wizard",
     "bootstrap",
-    "share"
+    "share",
+    "lib/Fileinput"
 ], function ($,
              TriangleCrossModel,
              TriangleCubeModel,
@@ -60,7 +61,7 @@ require([
             new TriangleCubeSimpleModel
         ]);
 
-        app.views.wizard = new WizardView({
+        new WizardView({
             collection: generators
         });
     });

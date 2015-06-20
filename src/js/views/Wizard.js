@@ -15,30 +15,30 @@ define("views/Wizard", [
         elements:            [],
         generatorCollection: null,
 
-        initialize: function (options) {
-            this.generatorCollection = options.generatorCollection;
-
-            this.elements.inputProcess = this.$el.find(".input-process");
-            this.elements.preloader = this.$el.find(".preloader");
-            this.elements.error = this.$el.find(".error400");
-            this.elements.srcImage = this.$el.find(".src-image");
-            this.elements.dstImage = this.$el.find(".dst-image");
+        initialize: function () {
+            this.elements.inputProcess = this.$(".input-process");
+            this.elements.preloader = this.$(".preloader");
+            this.elements.error = this.$(".error400");
+            this.elements.srcImage = this.$(".src-image");
+            this.elements.dstImage = this.$(".dst-image");
             this.elements.inputFilter = $("#input-filter");
 
-            this.generatorCollection.each(function (generator) {
+            this.collection.each(function (generator) {
                 this.elements.inputFilter.append($("<option/>", {
                     value: generator.cid,
                     text:  generator.get("name")
                 }));
             }, this);
         },
-        events:     {
+
+        events: {
             "click .input-process":    "render",
             "change #input-file":      "select",
             "click #input-url":        "selectAll",
             "click #input-url-button": "loadUrl"
         },
-        loadUrl:    function (e) {
+
+        loadUrl: function (e) {
             var url = $.trim($("#input-url").val());
 
             if (!url.length) return;
@@ -63,10 +63,12 @@ define("views/Wizard", [
                 that.elements.preloader.fadeOut("slow");
             })
         },
-        selectAll:  function (e) {
+
+        selectAll: function (e) {
             $(e.currentTarget).select()
         },
-        render:     function () {
+
+        render: function () {
             if (!this.encoded) return;
             this.elements.error.hide();
 
@@ -78,13 +80,14 @@ define("views/Wizard", [
             ctx.drawImage(srcImage, 0, 0, cvs.width, cvs.height);
             var idt = ctx.getImageData(0, 0, cvs.width, cvs.height);
             var cid = this.elements.inputFilter.val();
-            var out = this.generatorCollection.doit(cid, idt, cvs.width, cvs.height);
+            var out = this.collection.doit(cid, idt, cvs.width, cvs.height);
             idt.data.set(out);
             ctx.putImageData(idt, 0, 0);
 
             this.elements.dstImage.attr("src", cvs.toDataURL("image/png"));
         },
-        select:     function (event) {
+
+        select: function (event) {
             var selectedFile = event.target.files[0];
             var reader = new FileReader();
 

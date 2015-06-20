@@ -3,11 +3,12 @@
  */
 define("models/TriangleCross", [
     "backbone",
+    "underscore",
     "models/TriangleAbstract"
-], function (Backbone, TriangleAbstractModel) {
+], function (Backbone, _, TriangleAbstractModel) {
     "use strict";
 
-    return Backbone.Model.extend({
+    return TriangleAbstractModel.extend({
         defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
             name:        "Triangle Cross",
             description: "Triangle Cross Filter"
