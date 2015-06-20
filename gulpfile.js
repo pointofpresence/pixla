@@ -15,6 +15,9 @@ header       = require("gulp-header"),        // banner maker
 mkdirp       = require("mkdirp"),             // mkdir
 fs           = require("fs"),                 // fs
 autoprefixer = require('gulp-autoprefixer'),  // CSS autoprefixer
+gutil        = require("gulp-util"),          // log and other
+chalk        = require("chalk"),              // colors
+dateHelper   = require("resampled-date"),     // date helper
 replace      = require("gulp-replace");       // replace
 
 var src     = "./src",
@@ -36,7 +39,7 @@ var pkg = require('./package.json');
 var banner = [
     '/**',
     ' * Copyright (c) <%= new Date().getFullYear() %> <%= pkg.author %>',
-    ' * <%= pkg.name %> - <%= pkg.description %>',
+    ' * <%= pkg.title %> (<%= pkg.name %>) - <%= pkg.description %>',
     ' * @version v<%= pkg.version %>',
     ' * @build <%= pkg.lastBuildDateUtc %>',
     ' * @link <%= pkg.repository %>',
@@ -44,36 +47,6 @@ var banner = [
     ' */',
     ''
 ].join('\n');
-
-var dateHelper = {
-    twoDigits: function (d) {
-        if (0 <= d && d < 10)
-            return "0" + d.toString();
-
-        if (-10 < d && d < 0)
-            return "-0" + (-1 * d).toString();
-
-        return d.toString();
-    },
-
-    /**
-     * @param {Date} d
-     */
-    toMysqlFormat: function (d) {
-        return d.getUTCFullYear() + "-" + this.twoDigits(1 + d.getUTCMonth())
-            + "-" + this.twoDigits(d.getUTCDate()) + " "
-            + this.twoDigits(d.getUTCHours())
-            + ":" + this.twoDigits(d.getUTCMinutes()) + ":"
-            + this.twoDigits(d.getUTCSeconds());
-    },
-
-    /**
-     * @param {Date} d
-     */
-    toUnixTimestamp: function (d) {
-        return Math.floor(d.getTime() / 1000);
-    }
-};
 
 function buildAmd() {
     gulp
@@ -182,6 +155,8 @@ function versionIncrement() {
         (v[2] ? parseInt(v[2]) : 0) + 1
     ].join(".");
 
+    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
+
     writeJsonFile("./package.json", pkg);
 }
 
@@ -189,6 +164,9 @@ function dateUpdate() {
     var d = new Date();
     pkg.lastBuildDate = dateHelper.toUnixTimestamp(d);
     pkg.lastBuildDateUtc = d.toUTCString();
+
+    gutil.log("Current version: " + chalk.blue(pkg.version));
+
     writeJsonFile("./package.json", pkg);
 }
 

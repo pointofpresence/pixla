@@ -1,8 +1,8 @@
-# Pixla v0.0.1
+# Pixla v0.0.2
 ## aka pixla
 
 Author: pointofpresence
 
-Last build date: Sat, 20 Jun 2015 06:24:12 GMT
+Last build date: Sat, 20 Jun 2015 09:16:19 GMT
 
 Online image filter
