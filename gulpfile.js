@@ -158,7 +158,7 @@ function versionIncrement() {
         (v[2] ? parseInt(v[2]) : 0) + 1
     ].join(".");
 
-    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
+    gutil.log("Current version: " + chalk.blue(pkg.version));
 
     jsonHelper.write("./package.json", pkg);
 }
@@ -168,7 +168,7 @@ function dateUpdate() {
     pkg.lastBuildDate = dateHelper.toUnixTimestamp(d);
     pkg.lastBuildDateUtc = d.toUTCString();
 
-    gutil.log("Current version: " + chalk.blue(pkg.version));
+    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
 
     jsonHelper.write("./package.json", pkg);
 }
