@@ -55,9 +55,12 @@ require([
         if ("undefined" === typeof FileReader || !$.isFunction(FileReader)) {
             $("#old-browser").fadeIn("slow");
             return;
-        } else {
-            $("#wizard").show();
         }
+
+        // bootstrap
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $("#wizard").show();
 
         $(":file").filestyle({buttonText: "", buttonName: "btn-primary"});
 

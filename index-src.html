@@ -65,7 +65,8 @@
         <div class="container">
             <div class="page-header">
                 <h1>
-                    ##TITLE## <small>v##VERSION##</small>
+                    ##TITLE##
+                    <small>v##VERSION##</small>
                 </h1>
 
                 <h3>
@@ -78,10 +79,60 @@
                 <h4><span class="glyphicon glyphicon-remove"></span>Ошибка!</h4>
 
                 <p>Ваш браузер морально устарел.</p>
+
                 <p>Рекомендуемые браузеры: Google Chrome, Mozilla Firefox, Opera.</p>
             </div>
 
             <div class="row" id="wizard" style="display: none;">
+                <div id="options-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">×</span></button>
+
+                                <h4 class="modal-title" id="myModalLabel"> Default text here</h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <h4>Text in a modal</h4>
+
+                                <p>
+                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                <button type="button" class="btn btn-primary">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="message" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2"
+                     aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+
+                                <h4 class="modal-title" id="myModalLabel2">##TITLE##</h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <p><!-- message here --></p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-lg-6">
                     <div class="well" style="position: relative">
                         <form>
@@ -135,23 +186,32 @@
                                 </legend>
 
                                 <div class="form-group">
-                                    <label for="input-filter" class="control-label">а. Выберите и примените
-                                        фильтр</label>
+                                    <label for="input-filter" class="control-label">
+                                        а. Выберите и примените фильтр
+                                    </label>
 
                                     <div class="input-group">
                                         <select class="form-control" id="input-filter"></select>
 
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary input-process" type="button"><span
-                                            class="glyphicon glyphicon-refresh"></span></button>
-                                </span>
+                                        <span class="input-group-btn">
+                                            <button
+                                                    id="filter-options"
+                                                    class="btn btn-primary"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="Насторойки фильтра"
+                                                    disabled="disabled"
+                                                    type="button">
+                                                <span class="glyphicon glyphicon-cog"></span>
+                                            </button>
+                                        </span>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="input-file" class="control-label">б. Сохраните файл на диск</label>
-                                    <button class="btn btn-block btn-primary">
-                                        <span class="glyphicon glyphicon-floppy-disk"></span> Сохранить изображение
+                                    <button class="btn btn-block btn-primary btn-icon">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span>Сохранить изображение
                                     </button>
                                 </div>
                             </fieldset>

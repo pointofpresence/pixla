@@ -14,6 +14,8 @@ define("models/TriangleCubeSimple", [
             description: "Triangle Cube Simple Filter"
         }),
 
+        options: _.extend({}, TriangleAbstractModel.prototype.options, {}),
+
         TILE_WIDTH: 21,
         TILE_HEIGHT: 21,
 

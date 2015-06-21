@@ -3,25 +3,26 @@
  */
 define("views/Wizard", [
     "backbone",
-    "templates",
     "jquery"
-], function (Backbone, templates, $) {
+], function (Backbone, $) {
     "use strict";
 
     return Backbone.View.extend({
-        el:                  "#wizard",
-        encoded:             null,
-        imageName:           null,
-        elements:            [],
-        generatorCollection: null,
+        el:        "#wizard",
+        encoded:   null,
+        imageName: null,
+        elements:  [],
+        filterCid: null,
 
         initialize: function () {
-            this.elements.inputProcess = this.$(".input-process");
             this.elements.preloader = this.$(".preloader");
             this.elements.error = this.$(".error400");
             this.elements.srcImage = this.$(".src-image");
             this.elements.dstImage = this.$(".dst-image");
-            this.elements.inputFilter = $("#input-filter");
+            this.elements.inputFilter = this.$("#input-filter");
+            this.elements.optionsModal = this.$("#options-modal");
+            this.elements.messageModal = this.$("#message");
+            this.elements.filterOptionsBtn = this.$("#filter-options");
 
             this.collection.each(function (generator) {
                 this.elements.inputFilter.append($("<option/>", {
@@ -32,48 +33,95 @@ define("views/Wizard", [
         },
 
         events: {
-            "click .input-process":    "render",
-            "change #input-file":      "select",
             "click #input-url":        "selectAll",
-            "click #input-url-button": "loadUrl"
+            "click #input-url-button": "loadUrl",
+            "click #filter-options":   "onFilterOptionsClick",
+            "change #input-file":      "select",
+            "change #input-filter":    "onFilterChange"
+        },
+
+        message: function (msg) {
+            this.elements.messageModal.find(".message-body p").text(msg);
+            this.elements.messageModal.modal();
+        },
+
+        buildOptions: function () {
+
+        },
+
+        onFilterChange: function (e) {
+            this.filterCid = $(e.currentTarget).val();
+
+            if (this.filterCid) {
+                var model = this.collection.get(this.filterCid);
+                var options = model.options;
+
+                if (!options || !Object.keys(options).length) {
+                    this.elements.filterOptionsBtn.prop("disabled", true);
+                } else {
+                    this.elements.filterOptionsBtn.prop("disabled", false);
+                }
+
+                this.render();
+
+            } else {
+                this.elements.filterOptionsBtn.prop("disabled", true);
+            }
+        },
+
+        onFilterOptionsClick: function (e) {
+            e.preventDefault();
+
+            this.elements.optionsModal.modal();
+        },
+
+        showPreloader: function (state) {
+            state === true || typeof state === "undefined"
+                ? this.elements.preloader.show()
+                : this.elements.preloader.fadeOut();
         },
 
         loadUrl: function (e) {
-            var url = $.trim($("#input-url").val());
+            e.preventDefault();
 
-            if (!url.length) return;
-            if (url.length > 8190) return;
+            var url = $.trim(this.$("#input-url").val());
 
-            this.elements.preloader.show();
+            if (!url.length || url.length > 8190) {
+                return;
+            }
 
-            var that = this;
+            this.showPreloader();
 
-            $.getJSON("/api.php", {url: url}, function (data) {
+            $.getJSON("/api.php", {url: url}, (function (data) {
                 if (parseInt(data.error) == 0) {
-                    that.elements.srcImage.title = data.name;
-                    that.elements.srcImage.attr("src", data.data);
-                    that.imageName = data.name;
-                    that.encoded = data.data;
+                    this.elements.srcImage.title = data.name;
+                    this.elements.srcImage.attr("src", data.data);
+                    this.imageName = data.name;
+                    this.encoded = data.data;
 
-                    that.render();
+                    this.render();
                 } else {
-                    that.elements.error.show();
+                    this.elements.error.show();
                 }
 
-                that.elements.preloader.fadeOut("slow");
-            })
+                this.showPreloader(false);
+            }).bind(this));
         },
 
         selectAll: function (e) {
-            $(e.currentTarget).select()
+            $(e.currentTarget).select();
         },
 
         render: function () {
-            if (!this.encoded) return;
+            if (!this.encoded) {
+                return;
+            }
+
+            this.showPreloader();
             this.elements.error.hide();
 
             var srcImage = this.elements.srcImage[0];
-            var cvs = document.createElement('canvas');
+            var cvs = document.createElement("canvas");
             cvs.width = srcImage.width;
             cvs.height = srcImage.height;
             var ctx = cvs.getContext("2d");
@@ -85,6 +133,7 @@ define("views/Wizard", [
             ctx.putImageData(idt, 0, 0);
 
             this.elements.dstImage.attr("src", cvs.toDataURL("image/png"));
+            this.showPreloader(false);
         },
 
         select: function (event) {
@@ -94,13 +143,11 @@ define("views/Wizard", [
             this.elements.srcImage.title = selectedFile.name;
             this.imageName = selectedFile.name;
 
-            var that = this;
-
-            reader.onload = function (event) {
-                that.elements.srcImage.attr("src", event.target.result);
-                that.encoded = event.target.result;
-                that.render();
-            };
+            reader.onload = (function (event) {
+                this.elements.srcImage.attr("src", event.target.result);
+                this.encoded = event.target.result;
+                this.render();
+            }).bind(this);
 
             reader.readAsDataURL(selectedFile);
         }

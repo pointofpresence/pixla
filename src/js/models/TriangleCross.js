@@ -14,6 +14,8 @@ define("models/TriangleCross", [
             description: "Triangle Cross Filter"
         }),
 
+        options: _.extend({}, TriangleAbstractModel.prototype.options, {}),
+
         TILE_WIDTH:  16,
         TILE_HEIGHT: 16,
 

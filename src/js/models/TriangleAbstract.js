@@ -6,9 +6,11 @@ define("models/TriangleAbstract", ["backbone"], function (Backbone) {
 
     return Backbone.Model.extend({
         defaults: {
-            name: "Abstract Generator",
+            name:        "Abstract Generator",
             description: "Abstract Model for Generators"
         },
+
+        options: {},
 
         w: 0,
         h: 0,
@@ -40,7 +42,10 @@ define("models/TriangleAbstract", ["backbone"], function (Backbone) {
         },
 
         rgbaToHex: function (color) {
-            return componentToHex(color[0]) + componentToHex(color[1]) + componentToHex(color[2]) + componentToHex(color[3]);
+            return this.componentToHex(color[0])
+                + this.componentToHex(color[1])
+                + this.componentToHex(color[2])
+                + this.componentToHex(color[3]);
         },
 
         /**
