@@ -14,7 +14,18 @@ define("models/TriangleCross", [
             description: "Triangle Cross Filter"
         }),
 
-        options: _.extend({}, TriangleAbstractModel.prototype.options, {}),
+        options: _.extend({}, TriangleAbstractModel.prototype.options, {
+            kaleidoscope: {
+                name:    "Калейдоскоп",
+                type:    "Select",
+                options: [
+                    {value: "", text: "Нет"},
+                    {value: "1", text: "К центру"},
+                    {value: "1", text: "В стороны"},
+                    {value: "2", text: "К центру и в стороны"}
+                ]
+            }
+        }),
 
         TILE_WIDTH:  16,
         TILE_HEIGHT: 16,

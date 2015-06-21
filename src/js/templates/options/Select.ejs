@@ -1,0 +1,15 @@
+<div class="form-group">
+    <label class="control-label col-sm-3" for="option-<%= id %>">
+        <%= option.name %>:
+    </label>
+
+    <div class="col-sm-9">
+        <select class="form-control" id="option-<%= id %>">
+            <% _.each(option.options, function(o) { %>
+            <option value="<%= o.value %>">
+                <%= o.text %>
+            </option>
+            <% }); %>
+        </select>
+    </div>
+</div>

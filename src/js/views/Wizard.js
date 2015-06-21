@@ -3,8 +3,10 @@
  */
 define("views/Wizard", [
     "backbone",
-    "jquery"
-], function (Backbone, $) {
+    "jquery",
+    "underscore",
+    "templates"
+], function (Backbone, $, _, templates) {
     "use strict";
 
     return Backbone.View.extend({
@@ -30,6 +32,9 @@ define("views/Wizard", [
                     text:  generator.get("name")
                 }));
             }, this);
+
+            this.filterCid = this.elements.inputFilter.val();
+            this.filterChanged();
         },
 
         events: {
@@ -45,13 +50,26 @@ define("views/Wizard", [
             this.elements.messageModal.modal();
         },
 
-        buildOptions: function () {
+        buildOptions: function (model) {
+            var options = model.options;
+            var html = "";
 
+            _.each(options, function (o, id) {
+                html += templates.options[o.type]({
+                    option: o,
+                    id:     id
+                });
+            });
+
+            return html;
         },
 
         onFilterChange: function (e) {
             this.filterCid = $(e.currentTarget).val();
+            this.filterChanged();
+        },
 
+        filterChanged: function () {
             if (this.filterCid) {
                 var model = this.collection.get(this.filterCid);
                 var options = model.options;
@@ -71,6 +89,24 @@ define("views/Wizard", [
 
         onFilterOptionsClick: function (e) {
             e.preventDefault();
+
+            var model = this.collection.get(this.filterCid);
+
+            this.elements.optionsModal
+                .find(".modal-title")
+                .html(templates.OptionsTitle({
+                    name: model.get("name")
+                }));
+
+            this.elements.optionsModal
+                .find(".description")
+                .text(model.get("description"));
+
+            var form = this.buildOptions(model);
+
+            this.elements.optionsModal
+                .find(".options-form")
+                .html(form);
 
             this.elements.optionsModal.modal();
         },

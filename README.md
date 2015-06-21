@@ -1,8 +1,8 @@
-# ReSampled.Pixla v0.0.8
+# ReSampled.Pixla v0.0.9
 ## aka pixla
 
 Author: pointofpresence
 
-Last build date: Sun, 21 Jun 2015 13:43:07 GMT
+Last build date: Sun, 21 Jun 2015 15:12:28 GMT
 
 Online image filter

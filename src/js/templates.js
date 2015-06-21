@@ -2,6 +2,10 @@ define("templates", function (require) {
     "use strict";
 
     return {
-        //Test: require("tpl!templates/Test.ejs")
+        OptionsTitle: require("tpl!templates/OptionsTitle.ejs"),
+
+        options: {
+            Select: require("tpl!templates/options/Select.ejs")
+        }
     };
 });
