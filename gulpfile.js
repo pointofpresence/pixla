@@ -110,6 +110,7 @@ function buildHtml() {
         .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
         .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
         .pipe(replace("##VERSION##", pkg.version || "Unknown"))
+        .pipe(replace("##DATE##", pkg.lastBuildDateUtc || "Unknown"))
         .pipe(out("./index.html"));
 }
 
