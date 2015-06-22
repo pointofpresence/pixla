@@ -81,6 +81,78 @@ define("models/TriangleAbstract", ["backbone"], function (Backbone) {
             );
         },
 
+        /**
+         * @param w
+         * @param h
+         * @returns {ImageData}
+         */
+        createEmptyBuffer: function (w, h) {
+            var cvs = document.createElement("canvas");
+            cvs.width = w;
+            cvs.height = h;
+            var ctx = cvs.getContext("2d");
+            return ctx.getImageData(0, 0, cvs.width, cvs.height);
+        },
+
+        createEmptyCanvas: function (w, h) {
+            var cvs = document.createElement("canvas");
+            cvs.width = w;
+            cvs.height = h;
+
+            return cvs;
+        },
+
+        /**
+         * @param data
+         * @param x
+         * @param y
+         * @param w
+         * @param h
+         * @returns {CanvasPixelArray}
+         */
+        crop: function (data, x, y, w, h) {
+            var tempCvs = this.createEmptyCanvas(this.w, this.h),
+                tempCtx = tempCvs.getContext("2d"),
+                tempIData = tempCtx.createImageData(this.w, this.w);
+
+            tempIData.data.set(data);
+            tempCtx.putImageData(tempIData, 0, 0);
+
+            this.w = w;
+            this.h = h;
+
+            return tempCtx.getImageData(x, y, w, h).data;
+        },
+
+        /**
+         * @param data Uint8ClampedArray
+         * @returns Uint8ClampedArray
+         */
+        grayscale: function (data) {
+            for (var i = 0; i < data.length; i += 4) {
+                var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                data[i] = avg;      // red
+                data[i + 1] = avg;  // green
+                data[i + 2] = avg;  // blue
+            }
+
+            return data;
+        },
+
+        /**
+         * @param data Uint8ClampedArray
+         * @returns Uint8ClampedArray
+         */
+        invert: function (data) {
+            for (var i = 0; i < data.length; i += 4) {
+                data[i] = 255 - data[i];            // red
+                data[i + 1] = 255 - data[i + 1];    // green
+                data[i + 2] = 255 - data[i + 2];    // blue
+            }
+
+            return data;
+        },
+
         setMixPixel: function (data, x, y, blendColor) {
             var oc = this.getPixelXY(data, x, y);
 

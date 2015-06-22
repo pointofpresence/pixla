@@ -5,8 +5,9 @@ define("views/Wizard", [
     "backbone",
     "jquery",
     "underscore",
-    "templates"
-], function (Backbone, $, _, templates) {
+    "templates",
+    "lib/Canvas"
+], function (Backbone, $, _, templates, Canvas) {
     "use strict";
 
     return Backbone.View.extend({
@@ -178,19 +179,22 @@ define("views/Wizard", [
             this.showPreloader();
             this.elements.error.hide();
 
-            var srcImage = this.elements.srcImage[0];
-            var cvs = document.createElement("canvas");
-            cvs.width = srcImage.width;
-            cvs.height = srcImage.height;
-            var ctx = cvs.getContext("2d");
-            ctx.drawImage(srcImage, 0, 0, cvs.width, cvs.height);
-            var idt = ctx.getImageData(0, 0, cvs.width, cvs.height);
-            var cid = this.elements.inputFilter.val();
-            var out = this.collection.doit(cid, idt, cvs.width, cvs.height);
-            idt.data.set(out);
-            ctx.putImageData(idt, 0, 0);
+            var srcImage = this.elements.srcImage[0],
+                cvsIn = Canvas.createEmptyCanvas(srcImage.width, srcImage.height),
+                ctxIn = cvsIn.getContext("2d");
 
-            this.elements.dstImage.attr("src", cvs.toDataURL("image/png"));
+            ctxIn.drawImage(srcImage, 0, 0, cvsIn.width, cvsIn.height);
+
+            var idtIn = ctxIn.getImageData(0, 0, cvsIn.width, cvsIn.height),
+                result = this.collection.doit(this.filterCid, idtIn, cvsIn.width, cvsIn.height),
+                cvsOut = Canvas.createEmptyCanvas(result.w, result.h),
+                ctxOut = cvsOut.getContext("2d"),
+                idtOut = ctxOut.createImageData(result.w, result.h);
+
+            idtOut.data.set(result.data);
+            ctxOut.putImageData(idtOut, 0, 0);
+
+            this.elements.dstImage.attr("src", cvsOut.toDataURL("image/png"));
             this.showPreloader(false);
         },
 

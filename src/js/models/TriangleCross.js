@@ -82,7 +82,11 @@ define("models/TriangleCross", [
                 }
             }
 
-            return out;
+            return {
+                data: out,
+                w:    this.w,
+                h:    this.h
+            };
         }
     });
 });
