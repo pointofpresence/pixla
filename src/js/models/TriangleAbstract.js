@@ -1,7 +1,10 @@
 /**
  * @module models/TriangleAbstract
  */
-define("models/TriangleAbstract", ["backbone"], function (Backbone) {
+define("models/TriangleAbstract", [
+    "backbone",
+    "lib/Canvas"
+], function (Backbone, Canvas) {
     "use strict";
 
     return Backbone.Model.extend({
@@ -94,14 +97,6 @@ define("models/TriangleAbstract", ["backbone"], function (Backbone) {
             return ctx.getImageData(0, 0, cvs.width, cvs.height);
         },
 
-        createEmptyCanvas: function (w, h) {
-            var cvs = document.createElement("canvas");
-            cvs.width = w;
-            cvs.height = h;
-
-            return cvs;
-        },
-
         /**
          * @param data
          * @param x
@@ -111,7 +106,7 @@ define("models/TriangleAbstract", ["backbone"], function (Backbone) {
          * @returns {CanvasPixelArray}
          */
         crop: function (data, x, y, w, h) {
-            var tempCvs = this.createEmptyCanvas(this.w, this.h),
+            var tempCvs = Canvas.createEmptyCanvas(this.w, this.h),
                 tempCtx = tempCvs.getContext("2d"),
                 tempIData = tempCtx.createImageData(this.w, this.w);
 
@@ -153,6 +148,12 @@ define("models/TriangleAbstract", ["backbone"], function (Backbone) {
             return data;
         },
 
+        /**
+         * @param data
+         * @param x
+         * @param y
+         * @param blendColor
+         */
         setMixPixel: function (data, x, y, blendColor) {
             var oc = this.getPixelXY(data, x, y);
 

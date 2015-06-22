@@ -53,6 +53,7 @@ require([
         $("footer *").css("color", $(".navbar-default .navbar-nav > li > a").css("color"));
 
         if ("undefined" === typeof FileReader || !$.isFunction(FileReader)) {
+            //noinspection JSUnresolvedFunction
             $("#old-browser").fadeIn("slow");
             return;
         }
