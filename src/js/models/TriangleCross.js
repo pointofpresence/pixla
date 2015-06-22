@@ -21,8 +21,8 @@ define("models/TriangleCross", [
                 options: [
                     {value: "", text: "Нет"},
                     {value: "1", text: "К центру"},
-                    {value: "1", text: "В стороны"},
-                    {value: "2", text: "К центру и в стороны"}
+                    {value: "2", text: "В стороны"},
+                    {value: "3", text: "К центру и в стороны"}
                 ]
             }
         }),
@@ -31,6 +31,8 @@ define("models/TriangleCross", [
         TILE_HEIGHT: 16,
 
         doit: function (data, w, h) {
+            var options = this.readOptions();
+
             this.w = w;
             this.h = h;
 

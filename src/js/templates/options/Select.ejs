@@ -4,9 +4,9 @@
     </label>
 
     <div class="col-sm-9">
-        <select class="form-control" id="option-<%= id %>">
+        <select class="form-control" data-option="<%= id %>">
             <% _.each(option.options, function(o) { %>
-            <option value="<%= o.value %>">
+            <option value="<%= o.value %>" <%= o.value == value ? "selected" : "" %>>
                 <%= o.text %>
             </option>
             <% }); %>

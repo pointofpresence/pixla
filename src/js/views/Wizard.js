@@ -41,6 +41,7 @@ define("views/Wizard", [
             "click #input-url":        "selectAll",
             "click #input-url-button": "loadUrl",
             "click #filter-options":   "onFilterOptionsClick",
+            "click #options-apply":    "onOptionsApplyClick",
             "change #input-file":      "select",
             "change #input-filter":    "onFilterChange"
         },
@@ -57,11 +58,32 @@ define("views/Wizard", [
             _.each(options, function (o, id) {
                 html += templates.options[o.type]({
                     option: o,
-                    id:     id
+                    id:     id,
+                    value:  localStorage[this.filterCid]
+                        ? JSON.parse(localStorage[this.filterCid])[id]
+                        : null
                 });
-            });
+            }, this);
 
             return html;
+        },
+
+        onOptionsApplyClick: function (e) {
+            e.preventDefault();
+
+            var options = {};
+
+            this.elements.optionsModal
+                .find("[data-option]")
+                .each(function () {
+                    var $e = $(this);
+                    options[$e.data("option")] = $e.val();
+                });
+
+            localStorage[this.filterCid] = JSON.stringify(options);
+            this.elements.optionsModal.modal("hide");
+
+            this.render();
         },
 
         onFilterChange: function (e) {

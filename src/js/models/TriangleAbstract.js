@@ -15,6 +15,12 @@ define("models/TriangleAbstract", ["backbone"], function (Backbone) {
         w: 0,
         h: 0,
 
+        readOptions: function () {
+            return localStorage[this.cid]
+                ? JSON.parse(localStorage[this.cid])
+                : {};
+        },
+
         setPixel: function (data, index, color) {
             var i = index * 4;
             data[i] = color[0];

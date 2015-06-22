@@ -84,6 +84,8 @@
             </div>
 
             <div class="row" id="wizard" style="display: none;">
+                <!-- options dialog -->
+
                 <div id="options-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                      aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
@@ -109,12 +111,19 @@
                             </div>
 
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                                <button type="button" class="btn btn-primary">OK</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Закрыть
+                                </button>
+
+                                <button type="button" class="btn btn-primary" id="options-apply">
+                                    OK
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- message dialog -->
 
                 <div id="message" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2"
                      aria-hidden="true" style="display: none;">
@@ -138,6 +147,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- wizard -->
 
                 <div class="col-lg-6">
                     <div class="well" style="position: relative">
@@ -234,6 +245,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- footer -->
 
         <footer class="footer">
             <div class="container">
