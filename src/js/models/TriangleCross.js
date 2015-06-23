@@ -82,6 +82,8 @@ define("models/TriangleCross", [
                 }
             }
 
+            // var block = this.grab(out, 0, 0, 80, 80);
+
             return {
                 data: out,
                 w:    this.w,

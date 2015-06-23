@@ -7,6 +7,7 @@ define("models/TriangleAbstract", [
 ], function (Backbone, Canvas) {
     "use strict";
 
+    //noinspection JSValidateJSDoc
     return Backbone.Model.extend({
         defaults: {
             name:        "Abstract Generator",
@@ -117,6 +118,105 @@ define("models/TriangleAbstract", [
             this.h = h;
 
             return tempCtx.getImageData(x, y, w, h).data;
+        },
+
+        /**
+         * @param data
+         * @param x
+         * @param y
+         * @param w
+         * @param h
+         * @returns {CanvasPixelArray}
+         */
+        grab: function (data, x, y, w, h) {
+            var tempCvs = Canvas.createEmptyCanvas(this.w, this.h),
+                tempCtx = tempCvs.getContext("2d"),
+                tempIData = tempCtx.createImageData(this.w, this.w);
+
+            tempIData.data.set(data);
+            tempCtx.putImageData(tempIData, 0, 0);
+
+            return tempCtx.getImageData(x, y, w, h).data;
+        },
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         */
+        flipX: function (data, w, h) {
+            var tempCvs = Canvas.createEmptyCanvas(w, h),
+                tempCtx = tempCvs.getContext("2d"),
+                tempIData = tempCtx.createImageData(w, h);
+
+            tempIData.data.set(data);
+
+            var tempData = tempIData.data,
+                i, flip, x, y, c;
+
+            for (y = 0; y < h + 1; y += 1) {
+                for (x = 0; x < w + 1; x += 1) {
+                    // RGB
+                    i = (y * w + x) * 4;
+                    flip = (y * w + (w - x)) * 4;
+
+                    for (c = 0; c < 4; c += 1) {
+                        tempData[i + c] = data[flip + c];
+                    }
+                }
+            }
+
+            return tempData;
+        },
+
+        flipY: function (data, w, h) {
+            var tempCvs = Canvas.createEmptyCanvas(w, h),
+                tempCtx = tempCvs.getContext("2d"),
+                tempIData = tempCtx.createImageData(w, h);
+
+            tempIData.data.set(data);
+
+            var tempData = tempIData.data,
+                i, flip, x, y, c;
+
+            for (y = 0; y < h + 1; y++) {
+                for (x = 0; x < w + 1; x++) {
+                    // RGB
+                    i = (y * w + x) * 4;
+                    flip = ((h - y) * w + x) * 4;
+
+                    for (c = 0; c < 4; c += 1) {
+                        tempData[i + c] = data[flip + c];
+                    }
+                }
+            }
+
+            return tempData;
+        },
+
+        rotate: function (data, w, h) {
+            var tempCvs = Canvas.createEmptyCanvas(w, h),
+                tempCtx = tempCvs.getContext("2d"),
+                tempIData = tempCtx.createImageData(w, h);
+
+            tempIData.data.set(data);
+
+            var tempData = tempIData.data,
+                i, flip, x, y, c;
+
+            for (y = 1; y < h - 1; y += 1) {
+                for (x = 1; x < w - 1; x += 1) {
+                    // RGB
+                    i = (y * w + x) * 4;
+                    flip = (x * w + (w - y)) * 4;
+
+                    for (c = 0; c < 4; c += 1) {
+                        tempData[i + c] = data[flip + c];
+                    }
+                }
+            }
+
+            return tempData;
         },
 
         /**
