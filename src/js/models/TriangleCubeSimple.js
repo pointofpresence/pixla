@@ -10,22 +10,44 @@ define("models/TriangleCubeSimple", [
 
     return TriangleAbstractModel.extend({
         defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
-            name: "Triangle Cube Simple",
+            name:        "Triangle Cube Simple",
             description: "Triangle Cube Simple Filter"
         }),
 
-        options: _.extend({}, TriangleAbstractModel.prototype.options, {}),
+        initialize: function () {
+            this.options = _.extend({}, TriangleAbstractModel.prototype.options, {
+                kaleidoscope: {
+                    name:    "Калейдоскоп",
+                    type:    "Select",
+                    options: [
+                        {text: "Нет"},
+                        {text: "К центру", cb: this.centerKaleidoskope},
+                        {text: "В стороны", cb: this.outsideKaleidoskope},
+                        {text: "К центру и в стороны", cb: this.centerOutsideKaleidoskope},
+                        {text: "По горизонтали", cb: this.horizKaleidoskope},
+                        {text: "По вертикали", cb: this.vertKaleidoskope},
+                        {text: "Игральная карта", cb: this.cardKaleidoskope}
+                    ]
+                }
+            })
+        },
 
-        TILE_WIDTH: 21,
+        TILE_WIDTH:  21,
         TILE_HEIGHT: 21,
 
         doit: function (data, w, h) {
+            var options = this.readOptions();
+
             this.w = w;
             this.h = h;
 
+            //noinspection JSUnresolvedFunction
             var out = new Uint8ClampedArray(data.data);
 
-            var pattern   = [
+            var tilesW = Math.floor(this.w / this.TILE_WIDTH);
+            var tilesH = Math.floor(this.h / this.TILE_HEIGHT);
+
+            var pattern = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0],
@@ -49,7 +71,7 @@ define("models/TriangleCubeSimple", [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ];
 
-            var border   = [
+            var border = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
@@ -73,7 +95,7 @@ define("models/TriangleCubeSimple", [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ];
 
-            var hot   = [
+            var hot = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -97,7 +119,7 @@ define("models/TriangleCubeSimple", [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ];
 
-            var spark   = [
+            var spark = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -121,7 +143,7 @@ define("models/TriangleCubeSimple", [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ];
 
-            var top   = [
+            var top = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0],
@@ -145,7 +167,7 @@ define("models/TriangleCubeSimple", [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ];
 
-            var shadow   = [
+            var shadow = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -184,12 +206,12 @@ define("models/TriangleCubeSimple", [
                     colors[1] = border_c;
                     colors[2] = hot_c;
 
-                    var x3        = parseInt(x + this.TILE_WIDTH / 2);
-                    x3        = x3 > this.w ? this.w : x3;
-                    x3        = x3 < 0 ? 0 : x3;
+                    var x3 = parseInt(x + this.TILE_WIDTH / 2);
+                    x3 = x3 > this.w ? this.w : x3;
+                    x3 = x3 < 0 ? 0 : x3;
 
-                    var y3        = parseInt(y + this.TILE_HEIGHT / 2);
-                    y3        = y3 > this.h ? this.h : y3;
+                    var y3 = parseInt(y + this.TILE_HEIGHT / 2);
+                    y3 = y3 > this.h ? this.h : y3;
 
                     colors[3] = this.getPixelXY(data.data, x3, y3);
 
@@ -199,7 +221,7 @@ define("models/TriangleCubeSimple", [
 
                     var offsetX = 0;
 
-                    if(step == 1) {
+                    if (step == 1) {
                         offsetX = 10;
                     }
 
@@ -273,7 +295,21 @@ define("models/TriangleCubeSimple", [
                 step = (step == 1) ? 0 : 1;
             }
 
-            return out;
+            if (options.kaleidoscope
+                && this.options.kaleidoscope.options[options.kaleidoscope].cb
+                && this.options.kaleidoscope.options[options.kaleidoscope]) {
+                out = this.options.kaleidoscope.options[options.kaleidoscope].cb.call(
+                    this, out,
+                    Math.floor(tilesW / 2) * this.TILE_WIDTH - 3,
+                    Math.floor(tilesH / 2) * this.TILE_HEIGHT - 6
+                );
+            }
+
+            return {
+                data: out,
+                w:    this.w,
+                h:    this.h
+            };
         }
     });
 });
