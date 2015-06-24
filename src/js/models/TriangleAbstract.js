@@ -3,8 +3,9 @@
  */
 define("models/TriangleAbstract", [
     "backbone",
+    "underscore",
     "lib/Canvas"
-], function (Backbone, Canvas) {
+], function (Backbone, _, Canvas) {
     "use strict";
 
     //noinspection JSValidateJSDoc
@@ -18,6 +19,10 @@ define("models/TriangleAbstract", [
 
         w: 0,
         h: 0,
+
+        clone: function (data) {
+            return _.map(data, _.clone);
+        },
 
         readOptions: function () {
             return localStorage[this.cid]
@@ -120,6 +125,21 @@ define("models/TriangleAbstract", [
             return tempCtx.getImageData(x, y, w, h).data;
         },
 
+        draw: function (srcData, destData, destX, destY, srcW, srcH) {
+            var tempCvs = Canvas.createEmptyCanvas(this.w, this.h),
+                tempCtx = tempCvs.getContext("2d"),
+                tempSrcIData = tempCtx.createImageData(srcW, srcH),
+                tempDestIData = tempCtx.createImageData(this.w, this.h);
+
+            tempDestIData.data.set(destData);
+            tempCtx.putImageData(tempDestIData, 0, 0);
+
+            tempSrcIData.data.set(srcData);
+            tempCtx.putImageData(tempSrcIData, destX, destY);
+
+            return tempCtx.getImageData(0, 0, this.w, this.h).data;
+        },
+
         /**
          * @param data
          * @param x
@@ -131,7 +151,7 @@ define("models/TriangleAbstract", [
         grab: function (data, x, y, w, h) {
             var tempCvs = Canvas.createEmptyCanvas(this.w, this.h),
                 tempCtx = tempCvs.getContext("2d"),
-                tempIData = tempCtx.createImageData(this.w, this.w);
+                tempIData = tempCtx.createImageData(this.w, this.h);
 
             tempIData.data.set(data);
             tempCtx.putImageData(tempIData, 0, 0);
@@ -145,22 +165,16 @@ define("models/TriangleAbstract", [
          * @param {number} h
          */
         flipX: function (data, w, h) {
-            var tempCvs = Canvas.createEmptyCanvas(w, h),
-                tempCtx = tempCvs.getContext("2d"),
-                tempIData = tempCtx.createImageData(w, h);
-
-            tempIData.data.set(data);
-
-            var tempData = tempIData.data,
+            var tempData = this.clone(data),
                 i, flip, x, y, c;
 
-            for (y = 0; y < h + 1; y += 1) {
-                for (x = 0; x < w + 1; x += 1) {
+            for (y = 0; y < h; y++) {
+                for (x = 0; x < w; x++) {
                     // RGB
                     i = (y * w + x) * 4;
-                    flip = (y * w + (w - x)) * 4;
+                    flip = (y * w + (w - x - 1)) * 4;
 
-                    for (c = 0; c < 4; c += 1) {
+                    for (c = 0; c < 4; c++) {
                         tempData[i + c] = data[flip + c];
                     }
                 }
@@ -170,20 +184,14 @@ define("models/TriangleAbstract", [
         },
 
         flipY: function (data, w, h) {
-            var tempCvs = Canvas.createEmptyCanvas(w, h),
-                tempCtx = tempCvs.getContext("2d"),
-                tempIData = tempCtx.createImageData(w, h);
-
-            tempIData.data.set(data);
-
-            var tempData = tempIData.data,
+            var tempData = this.clone(data),
                 i, flip, x, y, c;
 
-            for (y = 0; y < h + 1; y++) {
-                for (x = 0; x < w + 1; x++) {
+            for (y = 0; y < h; y++) {
+                for (x = 0; x < w; x++) {
                     // RGB
                     i = (y * w + x) * 4;
-                    flip = ((h - y) * w + x) * 4;
+                    flip = ((h - y - 1) * w + x) * 4;
 
                     for (c = 0; c < 4; c += 1) {
                         tempData[i + c] = data[flip + c];
@@ -195,13 +203,7 @@ define("models/TriangleAbstract", [
         },
 
         rotate: function (data, w, h) {
-            var tempCvs = Canvas.createEmptyCanvas(w, h),
-                tempCtx = tempCvs.getContext("2d"),
-                tempIData = tempCtx.createImageData(w, h);
-
-            tempIData.data.set(data);
-
-            var tempData = tempIData.data,
+            var tempData = this.clone(data),
                 i, flip, x, y, c;
 
             for (y = 1; y < h - 1; y += 1) {
