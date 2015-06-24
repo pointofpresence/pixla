@@ -10,20 +10,42 @@ define("models/TriangleCube", [
 
     return TriangleAbstractModel.extend({
         defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
-            name: "Triangle Cube",
+            name:        "Triangle Cube",
             description: "Triangle Cube Filter"
         }),
 
-        options: _.extend({}, TriangleAbstractModel.prototype.options, {}),
+        initialize: function () {
+            this.options = _.extend({}, TriangleAbstractModel.prototype.options, {
+                kaleidoscope: {
+                    name:    "Калейдоскоп",
+                    type:    "Select",
+                    options: [
+                        {text: "Нет"},
+                        {text: "К центру", cb: this.centerKaleidoskope},
+                        {text: "В стороны", cb: this.outsideKaleidoskope},
+                        {text: "К центру и в стороны", cb: this.centerOutsideKaleidoskope},
+                        {text: "По горизонтали", cb: this.horizKaleidoskope},
+                        {text: "По вертикали", cb: this.vertKaleidoskope},
+                        {text: "Игральная карта", cb: this.cardKaleidoskope}
+                    ]
+                }
+            })
+        },
 
-        TILE_WIDTH: 21,
+        TILE_WIDTH:  21,
         TILE_HEIGHT: 21,
 
         doit: function (data, w, h) {
+            var options = this.readOptions();
+
             this.w = w;
             this.h = h;
 
+            //noinspection JSUnresolvedFunction
             var out = new Uint8ClampedArray(data.data);
+
+            var tilesW = Math.floor(this.w / this.TILE_WIDTH);
+            var tilesH = Math.floor(this.h / this.TILE_HEIGHT);
 
             var pattern = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -283,7 +305,21 @@ define("models/TriangleCube", [
                 step = (step == 1) ? 0 : 1;
             }
 
-            return out;
+            if (options.kaleidoscope
+                && this.options.kaleidoscope.options[options.kaleidoscope].cb
+                && this.options.kaleidoscope.options[options.kaleidoscope]) {
+                out = this.options.kaleidoscope.options[options.kaleidoscope].cb.call(
+                    this, out,
+                    Math.floor(tilesW / 2) * this.TILE_WIDTH - 3,
+                    Math.floor(tilesH / 2) * this.TILE_HEIGHT - 6
+                );
+            }
+
+            return {
+                data: out,
+                w:    this.w,
+                h:    this.h
+            };
         }
     });
 });
