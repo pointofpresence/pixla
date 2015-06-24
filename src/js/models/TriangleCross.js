@@ -14,18 +14,23 @@ define("models/TriangleCross", [
             description: "Triangle Cross Filter"
         }),
 
-        options: _.extend({}, TriangleAbstractModel.prototype.options, {
-            kaleidoscope: {
-                name:    "Калейдоскоп",
-                type:    "Select",
-                options: [
-                    {value: "", text: "Нет"},
-                    {value: "1", text: "К центру"},
-                    {value: "2", text: "В стороны"},
-                    {value: "3", text: "К центру и в стороны"}
-                ]
-            }
-        }),
+        initialize: function () {
+            this.options = _.extend({}, TriangleAbstractModel.prototype.options, {
+                kaleidoscope: {
+                    name:    "Калейдоскоп",
+                    type:    "Select",
+                    options: [
+                        {text: "Нет"},
+                        {text: "К центру", cb: this.centerKaleidoskope},
+                        {text: "В стороны", cb: this.outsideKaleidoskope},
+                        {text: "К центру и в стороны", cb: this.centerOutsideKaleidoskope},
+                        {text: "По горизонтали", cb: this.horizKaleidoskope},
+                        {text: "По вертикали", cb: this.vertKaleidoskope},
+                        {text: "Игральная карта", cb: this.cardKaleidoskope}
+                    ]
+                }
+            })
+        },
 
         TILE_WIDTH:  16,
         TILE_HEIGHT: 16,
@@ -36,13 +41,14 @@ define("models/TriangleCross", [
             this.w = w;
             this.h = h;
 
+            //noinspection JSUnresolvedFunction
             var out = new Uint8ClampedArray(data.data);
 
-            var tiles_w = parseInt(this.w / this.TILE_WIDTH);
-            var tiles_h = parseInt(this.h / this.TILE_HEIGHT);
+            var tilesW = Math.floor(this.w / this.TILE_WIDTH);
+            var tilesH = Math.floor(this.h / this.TILE_HEIGHT);
 
-            var new_w = tiles_w * this.TILE_WIDTH;
-            var new_h = tiles_h * this.TILE_HEIGHT;
+            var newW = tilesW * this.TILE_WIDTH;
+            var newH = tilesH * this.TILE_HEIGHT;
 
             var pattern = [
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -63,8 +69,8 @@ define("models/TriangleCross", [
                 [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2]
             ];
 
-            for (var x = 0; x < new_w + 1; x += this.TILE_WIDTH) {
-                for (var y = 0; y < new_h + 1; y += this.TILE_HEIGHT) {
+            for (var x = 0; x < newW + 1; x += this.TILE_WIDTH) {
+                for (var y = 0; y < newH + 1; y += this.TILE_HEIGHT) {
                     var colors = [];
 
                     colors[1] = this.getPixelXY(data.data, x + this.TILE_WIDTH / 2, y + this.TILE_HEIGHT / 4);
@@ -82,7 +88,15 @@ define("models/TriangleCross", [
                 }
             }
 
-            // var block = this.grab(out, 0, 0, 80, 80);
+            if (options.kaleidoscope
+                && this.options.kaleidoscope.options[options.kaleidoscope].cb
+                && this.options.kaleidoscope.options[options.kaleidoscope]) {
+                out = this.options.kaleidoscope.options[options.kaleidoscope].cb.call(
+                    this, out,
+                    Math.floor(tilesW / 2) * this.TILE_WIDTH,
+                    Math.floor(tilesH / 2) * this.TILE_HEIGHT
+                );
+            }
 
             return {
                 data: out,

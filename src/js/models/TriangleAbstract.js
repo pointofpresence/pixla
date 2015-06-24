@@ -263,11 +263,118 @@ define("models/TriangleAbstract", [
             var n2 = 1.0 - n;
 
             this.setPixelXY(data, x, y, [
-                parseInt(oc[0] * n2 + blendColor[0] * n),
-                parseInt(oc[1] * n2 + blendColor[1] * n),
-                parseInt(oc[2] * n2 + blendColor[2] * n),
+                Math.floor(oc[0] * n2 + blendColor[0] * n),
+                Math.floor(oc[1] * n2 + blendColor[1] * n),
+                Math.floor(oc[2] * n2 + blendColor[2] * n),
                 oc[3]
             ]);
+        },
+
+        centerKaleidoskope: function (data, w, h) {
+            data = this.grab(data, 0, 0, w * 2, h * 2);
+            this.w = w * 2;
+            this.h = h * 2;
+
+            var block = this.grab(data, 0, 0, w, h);
+
+            data = this.draw(block, data, 0, 0, w, h);
+
+            block = this.flipX(block, w, h);
+            data = this.draw(block, data, w, 0, w, h);
+
+            block = this.flipY(block, w, h);
+            data = this.draw(block, data, w, h, w, h);
+
+            block = this.flipX(block, w, h);
+            data = this.draw(block, data, 0, h, w, h);
+
+            return data;
+        },
+
+        centerOutsideKaleidoskope: function (data, w, h) {
+            data = this.grab(data, 0, 0, w * 2, h * 2);
+            this.w = w * 2;
+            this.h = h * 2;
+
+            var block = this.grab(data, 0, 0, w, h);
+
+            data = this.draw(block, data, 0, 0, w, h);
+
+            block = this.flipY(block, w, h);
+            data = this.draw(block, data, w, 0, w, h);
+
+            block = this.flipX(block, w, h);
+            data = this.draw(block, data, w, h, w, h);
+
+            block = this.flipY(block, w, h);
+            data = this.draw(block, data, 0, h, w, h);
+
+            return data;
+        },
+
+        outsideKaleidoskope: function (data, w, h) {
+            data = this.grab(data, 0, 0, w * 2, h * 2);
+            this.w = w * 2;
+            this.h = h * 2;
+
+            var block = this.grab(data, 0, 0, w, h);
+
+            block = this.flipX(block, w, h);
+            data = this.draw(block, data, 0, 0, w, h);
+
+            block = this.flipX(block, w, h);
+            data = this.draw(block, data, w, 0, w, h);
+
+            block = this.flipY(block, w, h);
+            data = this.draw(block, data, w, h, w, h);
+
+            block = this.flipX(block, w, h);
+            data = this.draw(block, data, 0, h, w, h);
+
+            return data;
+        },
+
+        vertKaleidoskope: function (data, w, h) {
+            data = this.grab(data, 0, 0, w * 2, h * 2);
+            this.w = w * 2;
+            this.h = h * 2;
+
+            var block = this.grab(data, 0, 0, this.w, h);
+            data = this.draw(block, data, 0, 0, this.w, h);
+
+            block = this.flipY(block, this.w, h);
+            data = this.draw(block, data, 0, h, this.w, h);
+
+            return data;
+        },
+
+        cardKaleidoskope: function (data, w, h) {
+            data = this.grab(data, 0, 0, w * 2, h * 2);
+            this.w = w * 2;
+            this.h = h * 2;
+
+            var block = this.grab(data, 0, 0, this.w, h);
+            data = this.draw(block, data, 0, 0, this.w, h);
+
+            block = this.flipY(block, this.w, h);
+            block = this.flipX(block, this.w, h);
+            data = this.draw(block, data, 0, h, this.w, h);
+
+            return data;
+        },
+
+        horizKaleidoskope: function (data, w, h) {
+            data = this.grab(data, 0, 0, w * 2, h * 2);
+            this.w = w * 2;
+            this.h = h * 2;
+
+            var block = this.grab(data, 0, 0, w, this.h);
+            data = this.draw(block, data, 0, 0, w, this.h);
+
+            block = this.flipX(block, w, this.h);
+            data = this.draw(block, data, w, 0, w, this.h);
+
+            return data;
         }
     });
 });

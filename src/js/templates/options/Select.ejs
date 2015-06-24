@@ -5,8 +5,8 @@
 
     <div class="col-sm-9">
         <select class="form-control" data-option="<%= id %>">
-            <% _.each(option.options, function(o) { %>
-            <option value="<%= o.value %>" <%= o.value == value ? "selected" : "" %>>
+            <% _.each(option.options, function(o, idx) { console.log(idx)%>
+            <option value="<%= idx %>" <%= idx == value ? "selected" : "" %>>
                 <%= o.text %>
             </option>
             <% }); %>
