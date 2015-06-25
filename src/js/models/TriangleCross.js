@@ -32,8 +32,38 @@ define("models/TriangleCross", [
             })
         },
 
+        pattern: [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+            [4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2],
+            [4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2],
+            [4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2],
+            [4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+            [4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
+            [4, 4, 4, 4, 4, 4, 4, 1, 1, 2, 2, 2, 2, 2, 2, 2],
+            [4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+            [4, 4, 4, 4, 4, 4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 2],
+            [4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2],
+            [4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2],
+            [4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2],
+            [4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+            [4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2],
+            [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2]
+        ],
+
         TILE_WIDTH:  16,
         TILE_HEIGHT: 16,
+
+        getColors: function (data, x, y) {
+            var colors = [];
+
+            colors[1] = this.getPixelXY(data, x + this.TILE_WIDTH / 2, y + this.TILE_HEIGHT / 4);
+            colors[2] = this.getPixelXY(data, x + this.TILE_WIDTH - this.TILE_WIDTH / 4, y + this.TILE_HEIGHT / 2);
+            colors[3] = this.getPixelXY(data, x + this.TILE_WIDTH / 2, y + this.TILE_HEIGHT - this.TILE_HEIGHT / 4);
+            colors[4] = this.getPixelXY(data, x + this.TILE_WIDTH / 4, y + this.TILE_HEIGHT / 2);
+
+            return colors;
+        },
 
         doit: function (data, w, h) {
             var options = this.readOptions();
@@ -42,46 +72,34 @@ define("models/TriangleCross", [
             this.h = h;
 
             //noinspection JSUnresolvedFunction
-            var out = new Uint8ClampedArray(data.data);
+            var src = new Uint8ClampedArray(data.data);
 
-            var tilesW = Math.floor(this.w / this.TILE_WIDTH);
-            var tilesH = Math.floor(this.h / this.TILE_HEIGHT);
+            var tilesW = Math.floor(this.w / this.TILE_WIDTH),
+                tilesH = Math.floor(this.h / this.TILE_HEIGHT);
 
             var newW = tilesW * this.TILE_WIDTH;
             var newH = tilesH * this.TILE_HEIGHT;
 
-            var pattern = [
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
-                [4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2],
-                [4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2],
-                [4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2],
-                [4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2],
-                [4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
-                [4, 4, 4, 4, 4, 4, 4, 1, 1, 2, 2, 2, 2, 2, 2, 2],
-                [4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2],
-                [4, 4, 4, 4, 4, 4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 2],
-                [4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2],
-                [4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2],
-                [4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2],
-                [4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
-                [4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2],
-                [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2]
-            ];
+            src = this.crop(src, 0, 0, newW, newH);
 
-            for (var x = 0; x < newW + 1; x += this.TILE_WIDTH) {
-                for (var y = 0; y < newH + 1; y += this.TILE_HEIGHT) {
-                    var colors = [];
+            //noinspection JSUnresolvedFunction
+            var out = new Uint8ClampedArray(src.length);
 
-                    colors[1] = this.getPixelXY(data.data, x + this.TILE_WIDTH / 2, y + this.TILE_HEIGHT / 4);
-                    colors[2] = this.getPixelXY(data.data, x + this.TILE_WIDTH - this.TILE_WIDTH / 4, y + this.TILE_HEIGHT / 2);
-                    colors[3] = this.getPixelXY(data.data, x + this.TILE_WIDTH / 2, y + this.TILE_HEIGHT - this.TILE_HEIGHT / 4);
-                    colors[4] = this.getPixelXY(data.data, x + this.TILE_WIDTH / 4, y + this.TILE_HEIGHT / 2);
+            var pattern = this.pattern,
+                colors, x, y, px, py;
 
-                    for (var px = 0; px < this.TILE_WIDTH; px++) {
-                        for (var py = 0; py < this.TILE_WIDTH; py++) {
+            for (x = 0; x < newW + 1; x += this.TILE_WIDTH) {
+                for (y = 0; y < newH + 1; y += this.TILE_HEIGHT) {
+                    colors = this.getColors(src, x, y);
+
+                    for (px = 0; px < this.TILE_WIDTH; px++) {
+                        for (py = 0; py < this.TILE_WIDTH; py++) {
                             if (pattern[py][px]) {
-                                this.setPixelXY(out, x + px, y + py, colors[pattern[py][px]]);
+                                this.setPixelXY(
+                                    out,
+                                    x + px,
+                                    y + py,
+                                    colors[pattern[py][px]]);
                             }
                         }
                     }

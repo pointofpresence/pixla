@@ -112,32 +112,12 @@ define("models/TriangleAbstract", [
          * @returns {CanvasPixelArray}
          */
         crop: function (data, x, y, w, h) {
-            var tempCvs = Canvas.createEmptyCanvas(this.w, this.h),
-                tempCtx = tempCvs.getContext("2d"),
-                tempIData = tempCtx.createImageData(this.w, this.w);
-
-            tempIData.data.set(data);
-            tempCtx.putImageData(tempIData, 0, 0);
+            data = this.grab(data, x, y, w, h);
 
             this.w = w;
             this.h = h;
 
-            return tempCtx.getImageData(x, y, w, h).data;
-        },
-
-        draw: function (srcData, destData, destX, destY, srcW, srcH) {
-            var tempCvs = Canvas.createEmptyCanvas(this.w, this.h),
-                tempCtx = tempCvs.getContext("2d"),
-                tempSrcIData = tempCtx.createImageData(srcW, srcH),
-                tempDestIData = tempCtx.createImageData(this.w, this.h);
-
-            tempDestIData.data.set(destData);
-            tempCtx.putImageData(tempDestIData, 0, 0);
-
-            tempSrcIData.data.set(srcData);
-            tempCtx.putImageData(tempSrcIData, destX, destY);
-
-            return tempCtx.getImageData(0, 0, this.w, this.h).data;
+            return data;
         },
 
         /**
@@ -157,6 +137,21 @@ define("models/TriangleAbstract", [
             tempCtx.putImageData(tempIData, 0, 0);
 
             return tempCtx.getImageData(x, y, w, h).data;
+        },
+
+        draw: function (srcData, destData, destX, destY, srcW, srcH) {
+            var tempCvs = Canvas.createEmptyCanvas(this.w, this.h),
+                tempCtx = tempCvs.getContext("2d"),
+                tempSrcIData = tempCtx.createImageData(srcW, srcH),
+                tempDestIData = tempCtx.createImageData(this.w, this.h);
+
+            tempDestIData.data.set(destData);
+            tempCtx.putImageData(tempDestIData, 0, 0);
+
+            tempSrcIData.data.set(srcData);
+            tempCtx.putImageData(tempSrcIData, destX, destY);
+
+            return tempCtx.getImageData(0, 0, this.w, this.h).data;
         },
 
         /**

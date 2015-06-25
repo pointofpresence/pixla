@@ -27,6 +27,7 @@ require.config({
 require([
     "jquery",
     "models/TriangleCross",
+    "models/TriangleCrossRadial",
     "models/TriangleCube",
     "models/TriangleCubeSimple",
     "collections/Generator",
@@ -36,6 +37,7 @@ require([
     "lib/Fileinput"
 ], function ($,
              TriangleCrossModel,
+             TriangleCrossRadialModel,
              TriangleCubeModel,
              TriangleCubeSimpleModel,
              GeneratorCollection,
@@ -67,6 +69,7 @@ require([
 
         var generators = new GeneratorCollection([
             new TriangleCrossModel,
+            new TriangleCrossRadialModel,
             new TriangleCubeModel,
             new TriangleCubeSimpleModel
         ]);
