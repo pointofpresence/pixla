@@ -1,0 +1,18 @@
+<div class="form-group">
+    <label class="control-label col-sm-3" for="option-<%= id %>">
+        <%= option.name %>:
+    </label>
+
+    <div class="col-sm-7">
+        <input class="form-control" data-option="<%= id %>"
+               id="option-<%= id %>"
+               type="range" min="<%= option.min || 0 %>" max="<%= option.max || 100 %>"
+               value="<%= value %>" step="<%= option.step || 1 %>"
+               onchange="$('#option-<%= id %>-value').val(this.value);"/>
+    </div>
+
+    <div class="col-sm-2 text-center">
+        <input title class="form-control text-center" id="option-<%= id %>-value"
+               readonly value="<%= value || (option.min || 0) %>" />
+    </div>
+</div>

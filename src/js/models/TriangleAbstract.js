@@ -222,10 +222,129 @@ define("models/TriangleAbstract", [
          */
         grayscale: function (data) {
             for (var i = 0; i < data.length; i += 4) {
-                var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                data[i] = avg;      // red
-                data[i + 1] = avg;  // green
-                data[i + 2] = avg;  // blue
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+
+                // CIE luminance for the RGB
+                // The human eye is bad at seeing red and blue, so we de-emphasize them.
+                var v = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                data[i] = data[i + 1] = data[i + 2] = v;
+            }
+
+            return data;
+        },
+
+        monochrome: function (data) {
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+
+                var v = Math.floor((r + g + b) / 3);
+                data[i] = data[i + 1] = data[i + 2] = (v > 127 ? 255 : 0);
+                data[i + 3] = 255;
+            }
+
+            return data;
+        },
+
+        /**
+         * @param data
+         * @param adjustment
+         * @returns {*}
+         */
+        brightness: function (data, adjustment) {
+            for (var i = 0; i < data.length; i += 4) {
+                data[i] += adjustment;
+                data[i + 1] += adjustment;
+                data[i + 2] += adjustment;
+            }
+
+            return data;
+        },
+
+        /**
+         * @param data
+         * @param threshold
+         * @returns {*}
+         */
+        threshold: function (data, threshold) {
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+                var v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= threshold) ? 255 : 0;
+                data[i] = data[i + 1] = data[i + 2] = v
+            }
+
+            return data;
+        },
+
+        /**
+         * @param data
+         * @returns {*}
+         */
+        sepia: function (data) {
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+
+                data[i] = (r * 0.393) + (g * 0.769) + (b * 0.189);      // red
+                data[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168);  // green
+                data[i + 2] = (r * 0.272) + (g * 0.534) + (b * 0.131);  // blue
+            }
+
+            return data;
+        },
+
+        /**
+         * @param data
+         * @returns {*}
+         */
+        red: function (data) {
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+
+                data[i] = (r + g + b) / 3;     // apply average to red channel
+                data[i + 1] = data[i + 2] = 0; // zero out green and blue channel
+            }
+
+            return data;
+        },
+
+        /**
+         * @param data
+         * @returns {*}
+         */
+        green: function (data) {
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+
+                data[i + 1] = (r + g + b) / 3;
+                data[i] = data[i + 2] = 0;
+            }
+
+            return data;
+        },
+
+        /**
+         * @param data
+         * @returns {*}
+         */
+        blue: function (data) {
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+
+                data[i + 2] = (r + g + b) / 3;
+                data[i] = data[i + 1] = 0;
             }
 
             return data;
@@ -243,6 +362,142 @@ define("models/TriangleAbstract", [
             }
 
             return data;
+        },
+
+        convolve3x3: function (data, w, m, divisor, offset) {
+            if (!divisor) {
+                divisor = m.reduce(function (a, b) {
+                    return a + b;
+                }) || 1; // sum
+            }
+
+            //noinspection JSUnresolvedFunction
+            var newData = new Uint8ClampedArray(data.length),
+                len = newData.length,
+                res = 0;
+
+            for (var i = 0; i < len; i++) {
+                if ((i + 1) % 4 === 0) {
+                    newData[i] = data[i];
+                    continue;
+                }
+
+                res = 0;
+
+                var these = [
+                    data[i - w * 4 - 4] || data[i],
+                    data[i - w * 4] || data[i],
+                    data[i - w * 4 + 4] || data[i],
+                    data[i - 4] || data[i],
+                    data[i],
+                    data[i + 4] || data[i],
+                    data[i + w * 4 - 4] || data[i],
+                    data[i + w * 4] || data[i],
+                    data[i + w * 4 + 4] || data[i]
+                ];
+
+                for (var j = 0; j < 9; j++) {
+                    res += these[j] * m[j];
+                }
+
+                res /= divisor;
+
+                if (offset) {
+                    res += offset;
+                }
+
+                newData[i] = res;
+            }
+
+            return newData;
+        },
+
+        sobel: function (data, w) {
+            var grayscale = this.grayscale(data);
+
+            var vertical = this.convolve3x3(grayscale, w,
+                [
+                    -1, 0, 1,
+                    -2, 0, 2,
+                    -1, 0, 1
+                ]);
+
+            var horizontal = this.convolve3x3(grayscale, w,
+                [
+                    -1, -2, -1,
+                    0, 0, 0,
+                    1, 2, 1
+                ]);
+
+            //noinspection JSUnresolvedFunction
+            var newData = new Uint8ClampedArray(data.length);
+
+            for (var i = 0; i < data.length; i += 4) {
+                // make the vertical gradient red
+                var v = Math.abs(vertical[i]);
+                newData[i] = v;
+
+                // make the horizontal gradient green
+                var h = Math.abs(horizontal[i]);
+                newData[i + 1] = h;
+
+                // and mix in some blue for aesthetics
+                newData[i + 2] = (v + h) / 4;
+                newData[i + 3] = 255; // opaque alpha
+            }
+
+            return newData;
+        },
+
+        convolute: function (data, w, h, weights, opaque) {
+            var side = Math.round(Math.sqrt(weights.length)),
+                halfSide = Math.floor(side / 2);
+
+            // pad output by the convolution matrix
+            //noinspection JSUnresolvedFunction
+            var dst = new Uint8ClampedArray(data.length);
+
+            // go through the destination image pixels
+            var alphaFac = opaque ? 1 : 0;
+
+            for (var y = 0; y < h; y++) {
+                for (var x = 0; x < w; x++) {
+                    var sy = y,
+                        sx = x,
+                        dstOff = (y * w + x) * 4;
+
+                    // calculate the weighed sum of the source image pixels that
+                    // fall under the convolution matrix
+                    var r = 0,
+                        g = 0,
+                        b = 0,
+                        a = 0;
+
+                    for (var cy = 0; cy < side; cy++) {
+                        for (var cx = 0; cx < side; cx++) {
+                            var scy = sy + cy - halfSide,
+                                scx = sx + cx - halfSide;
+
+                            if (scy >= 0 && scy < h && scx >= 0 && scx < w) {
+                                var srcOff = (scy * w + scx) * 4,
+                                    wt = weights[cy * side + cx];
+
+                                r += data[srcOff] * wt;
+                                g += data[srcOff + 1] * wt;
+                                b += data[srcOff + 2] * wt;
+                                a += data[srcOff + 3] * wt;
+                            }
+                        }
+                    }
+
+                    dst[dstOff] = r;
+                    dst[dstOff + 1] = g;
+                    dst[dstOff + 2] = b;
+                    dst[dstOff + 3] = a + alphaFac * (255 - a);
+                }
+            }
+
+            return dst;
         },
 
         /**
@@ -263,7 +518,8 @@ define("models/TriangleAbstract", [
                 Math.floor(oc[2] * n2 + blendColor[2] * n),
                 oc[3]
             ]);
-        },
+        }
+        ,
 
         centerKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -284,7 +540,8 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
-        },
+        }
+        ,
 
         centerOutsideKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -305,7 +562,8 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
-        },
+        }
+        ,
 
         outsideKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -327,7 +585,8 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
-        },
+        }
+        ,
 
         vertKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -341,7 +600,8 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, this.w, h);
 
             return data;
-        },
+        }
+        ,
 
         cardKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -356,7 +616,8 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, this.w, h);
 
             return data;
-        },
+        }
+        ,
 
         horizKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -372,4 +633,5 @@ define("models/TriangleAbstract", [
             return data;
         }
     });
-});
+})
+;

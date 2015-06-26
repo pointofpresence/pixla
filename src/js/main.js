@@ -28,8 +28,11 @@ require([
     "jquery",
     "models/TriangleCross",
     "models/TriangleCrossRadial",
+    "models/TriangleRealCross",
     "models/TriangleCube",
     "models/TriangleCubeSimple",
+    "models/TriangleLine",
+    "models/TriangleDithering",
     "collections/Generator",
     "views/Wizard",
     "bootstrap",
@@ -38,8 +41,11 @@ require([
 ], function ($,
              TriangleCrossModel,
              TriangleCrossRadialModel,
+             TriangleRealCrossModel,
              TriangleCubeModel,
              TriangleCubeSimpleModel,
+             TriangleLineModel,
+             TriangleDitheringModel,
              GeneratorCollection,
              WizardView) {
     "use strict";
@@ -70,8 +76,11 @@ require([
         var generators = new GeneratorCollection([
             new TriangleCrossModel,
             new TriangleCrossRadialModel,
+            new TriangleRealCrossModel,
             new TriangleCubeModel,
-            new TriangleCubeSimpleModel
+            new TriangleCubeSimpleModel,
+            new TriangleLineModel,
+            new TriangleDitheringModel
         ]);
 
         new WizardView({
