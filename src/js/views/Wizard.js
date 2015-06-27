@@ -94,8 +94,8 @@ define("views/Wizard", [
 
         filterChanged: function () {
             if (this.filterCid) {
-                var model = this.collection.get(this.filterCid);
-                var options = model.options;
+                var model = this.collection.get(this.filterCid),
+                    options = model.options;
 
                 if (!options || !Object.keys(options).length) {
                     this.elements.filterOptionsBtn.prop("disabled", true);

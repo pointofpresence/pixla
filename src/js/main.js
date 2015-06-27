@@ -26,6 +26,7 @@ require.config({
 
 require([
     "jquery",
+    "models/TriangleStart",
     "models/TriangleCross",
     "models/TriangleCrossRadial",
     "models/TriangleRealCross",
@@ -39,6 +40,7 @@ require([
     "share",
     "lib/Fileinput"
 ], function ($,
+             TriangleStartModel,
              TriangleCrossModel,
              TriangleCrossRadialModel,
              TriangleRealCrossModel,
@@ -74,6 +76,7 @@ require([
         $(":file").filestyle({buttonText: "", buttonName: "btn-primary"});
 
         var generators = new GeneratorCollection([
+            new TriangleStartModel,
             new TriangleCrossModel,
             new TriangleCrossRadialModel,
             new TriangleRealCrossModel,

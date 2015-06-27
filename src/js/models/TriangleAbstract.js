@@ -4,21 +4,112 @@
 define("models/TriangleAbstract", [
     "backbone",
     "underscore",
-    "lib/Canvas"
-], function (Backbone, _, Canvas) {
+    "lib/Canvas",
+    "lib/Dithering"
+], function (Backbone, _, Canvas, Dithering) {
     "use strict";
 
-    //noinspection JSValidateJSDoc
+    //noinspection JSValidateJSDoc,JSUnusedGlobalSymbols
     return Backbone.Model.extend({
         defaults: {
             name:        "Abstract Generator",
             description: "Abstract Model for Generators"
         },
 
-        options: {},
-
         w: 0,
         h: 0,
+
+        initialize: function () {
+            this.options = {
+                kaleidoscope: {
+                    name:    "Калейдоскоп",
+                    type:    "Select",
+                    options: [
+                        {text: "Нет"},
+                        {text: "К центру", cb: console.log(this) + this.centerKaleidoskope},
+                        {text: "В стороны", cb: this.outsideKaleidoskope},
+                        {text: "К центру и в стороны", cb: this.centerOutsideKaleidoskope},
+                        {text: "По горизонтали", cb: this.horizKaleidoskope},
+                        {text: "По вертикали", cb: this.vertKaleidoskope},
+                        {text: "Игральная карта", cb: this.cardKaleidoskope}
+                    ]
+                },
+                colors:       {
+                    name:    "Цвет",
+                    type:    "Select",
+                    options: [
+                        {text: "Нет"},
+                        {text: "Монохром", cb: this.monochrome},
+                        {text: "Градации серого", cb: this.grayscale},
+                        {text: "Сепия", cb: this.sepia},
+                        {text: "Красный", cb: this.red},
+                        {text: "Зеленый", cb: this.green},
+                        {text: "Синий", cb: this.blue}
+                    ]
+                },
+                brightness:   {
+                    name: "Яркость",
+                    type: "Slider",
+                    min:  0,
+                    max:  200,
+                    cb:   this.brightness
+                },
+                threshold:    {
+                    name: "Порог",
+                    type: "Slider",
+                    min:  0,
+                    max:  200,
+                    cb:   this.threshold
+                },
+                blur:         {
+                    name: "Размытие",
+                    type: "Slider",
+                    min:  0,
+                    max:  3
+                },
+                sharpen:      {
+                    name: "Резкость",
+                    type: "Slider",
+                    min:  0,
+                    max:  10
+                },
+                edge:         {
+                    name: "Поиск края",
+                    type: "Slider",
+                    min:  0,
+                    max:  2
+                },
+                emboss:       {
+                    name: "Рельеф",
+                    type: "Slider",
+                    min:  0,
+                    max:  2
+                },
+                sobel:        {
+                    name: "Оператор Собеля",
+                    type: "Slider",
+                    min:  0,
+                    max:  1
+                },
+                thin:         {
+                    name: "Контур",
+                    type: "Slider",
+                    min:  0,
+                    max:  1
+                },
+                dither:       {
+                    name:    "Дизеринг",
+                    type:    "Select",
+                    options: this.buildDitherList()
+                },
+                invert:       {
+                    name: "Инверсия",
+                    type: "Slider",
+                    min:  0,
+                    max:  1
+                }
+            };
+        },
 
         clone: function (data) {
             return _.map(data, _.clone);
@@ -136,7 +227,12 @@ define("models/TriangleAbstract", [
             tempIData.data.set(data);
             tempCtx.putImageData(tempIData, 0, 0);
 
-            return tempCtx.getImageData(x, y, w, h).data;
+            return tempCtx.getImageData(
+                Math.floor(x),
+                Math.floor(y),
+                Math.floor(w),
+                Math.floor(h)
+            ).data;
         },
 
         draw: function (srcData, destData, destX, destY, srcW, srcH) {
@@ -518,8 +614,7 @@ define("models/TriangleAbstract", [
                 Math.floor(oc[2] * n2 + blendColor[2] * n),
                 oc[3]
             ]);
-        }
-        ,
+        },
 
         centerKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -562,8 +657,7 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
-        }
-        ,
+        },
 
         outsideKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -585,8 +679,7 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
-        }
-        ,
+        },
 
         vertKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -600,8 +693,7 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, this.w, h);
 
             return data;
-        }
-        ,
+        },
 
         cardKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -616,9 +708,14 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, this.w, h);
 
             return data;
-        }
-        ,
+        },
 
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
         horizKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
@@ -631,7 +728,538 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, w, 0, w, this.h);
 
             return data;
+        },
+
+        format: function () {
+            var theString = arguments[0];
+
+            for (var i = 1; i < arguments.length; i++) {
+                var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
+                theString = theString.replace(regEx, arguments[i]);
+            }
+
+            return theString;
+        },
+
+        //// DITHERING ////////////////////////////////////////////////////////
+
+        buildDitherList: function () {
+            var options = [
+                {text: "Нет"}
+            ];
+
+            _.each(Dithering.PALETTE, function (obj, keyP) {
+                var nameP = obj.name;
+
+                _.each(Dithering.ALGORITHM, function (nameA, keyA) {
+                    options.push(
+                        {
+                            text: this.format("{0} ({1})", nameP, nameA),
+                            cb:   this[this.format("dither{0}_{1}", keyP, keyA)]
+                        }
+                    );
+                }, this);
+            }, this);
+
+            return options;
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherC64_REDUCE: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.C64,
+                algorithm: Dithering.ALGORITHM.REDUCE
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherC64_ORDERED: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.C64,
+                algorithm: Dithering.ALGORITHM.ORDERED
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherC64_ERROR: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.C64,
+                algorithm: Dithering.ALGORITHM.ERROR
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherC64_ATKINSON: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.C64,
+                algorithm: Dithering.ALGORITHM.ATKINSON
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherSPECTRUM_ATKINSON: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.SPECTRUM,
+                algorithm: Dithering.ALGORITHM.ATKINSON
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherSPECTRUM_REDUCE: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.SPECTRUM,
+                algorithm: Dithering.ALGORITHM.REDUCE
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherSPECTRUM_ORDERED: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.SPECTRUM,
+                algorithm: Dithering.ALGORITHM.ORDERED
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherSPECTRUM_ERROR: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.SPECTRUM,
+                algorithm: Dithering.ALGORITHM.ERROR
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_BRONZE_ATKINSON: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_BRONZE,
+                algorithm: Dithering.ALGORITHM.ATKINSON
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_BRONZE_REDUCE: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_BRONZE,
+                algorithm: Dithering.ALGORITHM.REDUCE
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_BRONZE_ORDERED: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_BRONZE,
+                algorithm: Dithering.ALGORITHM.ORDERED
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_BRONZE_ERROR: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_BRONZE,
+                algorithm: Dithering.ALGORITHM.ERROR
+            });
+        },/**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherMONO_ATKINSON: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.MONO,
+                algorithm: Dithering.ALGORITHM.ATKINSON
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherMONO_REDUCE: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.MONO,
+                algorithm: Dithering.ALGORITHM.REDUCE
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherMONO_ORDERED: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.MONO,
+                algorithm: Dithering.ALGORITHM.ORDERED
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherMONO_ERROR: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.MONO,
+                algorithm: Dithering.ALGORITHM.ERROR
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_ORANGE_ATKINSON: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_ORANGE,
+                algorithm: Dithering.ALGORITHM.ATKINSON
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_ORANGE_REDUCE: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_ORANGE,
+                algorithm: Dithering.ALGORITHM.REDUCE
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_ORANGE_ORDERED: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_ORANGE,
+                algorithm: Dithering.ALGORITHM.ORDERED
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherAMIGA_ORANGE_ERROR: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.AMIGA_ORANGE,
+                algorithm: Dithering.ALGORITHM.ERROR
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherBASIC_ATKINSON: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.BASIC,
+                algorithm: Dithering.ALGORITHM.ATKINSON
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherBASIC_REDUCE: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.BASIC,
+                algorithm: Dithering.ALGORITHM.REDUCE
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherBASIC_ORDERED: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.BASIC,
+                algorithm: Dithering.ALGORITHM.ORDERED
+            });
+        },
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        ditherBASIC_ERROR: function (data, w, h) {
+            return Dithering.dither(data, w, h, {
+                palette:   Dithering.PALETTE.BASIC,
+                algorithm: Dithering.ALGORITHM.ERROR
+            });
+        },
+
+        //// POST EFFECTS /////////////////////////////////////////////////////
+
+        applyPost: function (out, options, tilesW, tilesH) {
+            out = this.postKaleidoscope(options, out, tilesW, tilesH);
+            out = this.postColors(options, out);
+            out = this.postBrightness(options, out);
+            out = this.postThreshold(options, out);
+            out = this.postBlur(options, out);
+            out = this.postSharpen(options, out);
+            out = this.postEdge(options, out);
+            out = this.postEmboss(options, out);
+            out = this.postSobel(options, out);
+            out = this.postThin(options, out);
+            out = this.postDither(options, out);
+            out = this.postInvert(options, out);
+            return out;
+        },
+
+        postInvert: function (options, out) {
+            if (parseInt(options.invert)) {
+                out = this.invert(out);
+            }
+            return out;
+        },
+
+        postDither: function (options, out) {
+            if (options.dither
+                && this.options.dither.options[options.dither].cb
+                && this.options.dither.options[options.dither]) {
+                out = this.options.dither.options[options.dither].cb.call(this, out, this.w, this.h);
+            }
+            return out;
+        },
+
+        postThin: function (options, out) {
+            if (parseInt(options.thin)) {
+                out = this.convolute(out, this.w, this.h, [
+                    1, 1, 1,
+                    1, -7, 1,
+                    1, 1, 1
+                ]);
+            }
+            return out;
+        },
+
+        postSobel: function (options, out) {
+            if (parseInt(options.sobel)) {
+                out = this.sobel(out, this.w);
+            }
+            return out;
+        },
+
+        postEmboss: function (options, out) {
+            if (parseInt(options.emboss)) {
+                var eFac = parseInt(options.emboss),
+                    eMtx = [];
+
+                switch (eFac) {
+                    case 1:
+                        eMtx = [
+                            1, 1, -1,
+                            1, 3, -1,
+                            1, -1, -1
+                        ];
+
+                        break;
+                    case 2:
+                        eMtx = [
+                            2, 0, 0,
+                            0, -1, 0,
+                            0, 0, -1
+                        ];
+
+                        break;
+                }
+
+                out = this.convolve3x3(out, this.w, eMtx);
+            }
+            return out;
+        },
+
+        postEdge: function (options, out) {
+            if (parseInt(options.edge)) {
+                var edFac = parseInt(options.edge),
+                    edMtx = [];
+
+                switch (edFac) {
+                    case 1:
+                        edMtx = [
+                            1, 1, 1,
+                            1, -7, 1,
+                            1, 1, 1
+                        ];
+
+                        break;
+                    case 2:
+                        edMtx = [
+                            -5, 0, 0,
+                            0, 0, 0,
+                            0, 0, 5
+                        ];
+
+                        break;
+                }
+
+                out = this.convolve3x3(out, this.w, edMtx);
+            }
+            return out;
+        },
+
+        postSharpen: function (options, out) {
+            if (parseInt(options.sharpen)) {
+                var sFac = parseInt(options.sharpen),
+                    sMtx = [];
+
+                if (sFac < 2) {
+                    sFac += 4;
+                    sMtx = [
+                        0, -1, 0,
+                        -1, sFac, -1,
+                        0, -1, 0
+                    ];
+                } else {
+                    sFac += 7;
+
+                    sMtx = [
+                        -1, -1, -1,
+                        -1, sFac, -1,
+                        -1, -1, -1
+                    ];
+                }
+
+                out = this.convolute(out, this.w, this.h, sMtx);
+            }
+            return out;
+        },
+
+        postBlur: function (options, out) {
+            if (parseInt(options.blur)) {
+                var bFac = parseInt(options.blur) + 7;
+
+                out = this.convolute(out, this.w, this.h, [
+                    1 / bFac, 1 / bFac, 1 / bFac,
+                    1 / bFac, 1 / bFac, 1 / bFac,
+                    1 / bFac, 1 / bFac, 1 / bFac
+                ]);
+            }
+            return out;
+        },
+
+        postThreshold: function (options, out) {
+            if (parseInt(options.threshold)
+                && this.options.threshold.cb) {
+                out = this.options.threshold.cb.call(this, out, parseInt(options.threshold));
+            }
+            return out;
+        },
+
+        postBrightness: function (options, out) {
+            if (parseInt(options.brightness)
+                && this.options.brightness.cb) {
+                out = this.options.brightness.cb.call(this, out, parseInt(options.brightness));
+            }
+            return out;
+        },
+
+        postColors: function (options, out) {
+            if (options.colors
+                && this.options.colors.options[options.colors].cb
+                && this.options.colors.options[options.colors]) {
+                out = this.options.colors.options[options.colors].cb.call(this, out);
+            }
+            return out;
+        },
+
+        postKaleidoscope: function (options, out, tilesW, tilesH) {
+            if (options.kaleidoscope
+                && this.options.kaleidoscope.options[options.kaleidoscope].cb
+                && this.options.kaleidoscope.options[options.kaleidoscope]) {
+                out = this.options.kaleidoscope.options[options.kaleidoscope].cb.call(
+                    this, out,
+                    Math.floor(tilesW / 2) * this.TILE_WIDTH,
+                    Math.floor(tilesH / 2) * this.TILE_HEIGHT
+                );
+            }
+            return out;
         }
     });
-})
-;
+});
