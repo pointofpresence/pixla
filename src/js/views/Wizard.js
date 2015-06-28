@@ -26,6 +26,7 @@ define("views/Wizard", [
             this.elements.optionsModal = this.$("#options-modal");
             this.elements.messageModal = this.$("#message");
             this.elements.filterOptionsBtn = this.$("#filter-options");
+            this.elements.save = this.$("#output-save");
 
             this.collection.each(function (generator) {
                 this.elements.inputFilter.append($("<option/>", {
@@ -140,6 +141,10 @@ define("views/Wizard", [
                 : this.elements.preloader.fadeOut();
         },
 
+        /**
+         * @description Loading from URL
+         * @param e
+         */
         loadUrl: function (e) {
             e.preventDefault();
 
@@ -194,10 +199,26 @@ define("views/Wizard", [
             idtOut.data.set(result.data);
             ctxOut.putImageData(idtOut, 0, 0);
 
-            this.elements.dstImage.attr("src", cvsOut.toDataURL("image/png"));
+            this.outData = cvsOut.toDataURL("image/png");
+
+            this.elements.dstImage.attr("src", this.outData);
+
+            var d = new Date(),
+                name = "pixla_"
+                    + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear()
+                    + "_" + d.getHours() + "-" + d.getMinutes() + "-" + d.getSeconds()
+                    + ".png";
+
+            this.elements.save.attr("href", this.outData);
+            this.elements.save.attr("download", name);
+
             this.showPreloader(false);
         },
 
+        /**
+         * @description Loading from disk
+         * @param event
+         */
         select: function (event) {
             var selectedFile = event.target.files[0];
             var reader = new FileReader();
