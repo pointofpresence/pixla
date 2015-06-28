@@ -7,7 +7,7 @@
         <input class="form-control" data-option="<%= id %>"
                id="option-<%= id %>"
                type="range" min="<%= option.min || 0 %>" max="<%= option.max || 100 %>"
-               value="<%= value %>" step="<%= option.step || 1 %>"
+               value="<%= value || (option.min || 0) %>" step="<%= option.step || 1 %>"
                onchange="$('#option-<%= id %>-value').val(this.value);"/>
     </div>
 
