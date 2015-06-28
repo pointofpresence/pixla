@@ -26,7 +26,7 @@ define("models/TriangleAbstract", [
                     type:    "Select",
                     options: [
                         {text: "Нет"},
-                        {text: "К центру", cb: console.log(this) + this.centerKaleidoskope},
+                        {text: "К центру", cb: this.centerKaleidoskope},
                         {text: "В стороны", cb: this.outsideKaleidoskope},
                         {text: "К центру и в стороны", cb: this.centerOutsideKaleidoskope},
                         {text: "По горизонтали", cb: this.horizKaleidoskope},
@@ -135,7 +135,7 @@ define("models/TriangleAbstract", [
         },
 
         getPixelXY: function (data, x, y) {
-            return this.getPixel(data, y * this.w + x);
+            return this.getPixel(data, Math.floor(y * this.w + x));
         },
 
         setPixelXY: function (data, x, y, color) {
