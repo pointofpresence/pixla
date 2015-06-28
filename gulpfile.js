@@ -42,7 +42,7 @@ var banner = [
     ' * Copyright (c) <%= new Date().getFullYear() %> <%= pkg.author %>',
     ' * <%= pkg.title %> (<%= pkg.name %>) - <%= pkg.description %>',
     ' * @version v<%= pkg.version %>',
-    ' * @build <%= pkg.lastBuildDateUtc %>',
+    ' * @build <%= pkg.lastBuildDateHuman %>',
     ' * @link <%= pkg.repository %>',
     ' * @license <%= pkg.license %>',
     ' */',
@@ -110,7 +110,7 @@ function buildHtml() {
         .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
         .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
         .pipe(replace("##VERSION##", pkg.version || "Unknown"))
-        .pipe(replace("##DATE##", pkg.lastBuildDateUtc || "Unknown"))
+        .pipe(replace("##DATE##", pkg.lastBuildDateHuman || "Unknown"))
         .pipe(out("./index.html"));
 }
 
@@ -122,7 +122,7 @@ function buildReadme() {
         .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
         .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
         .pipe(replace("##VERSION##", pkg.version || "Unknown"))
-        .pipe(replace("##DATE##", pkg.lastBuildDateUtc || "Unknown"))
+        .pipe(replace("##DATE##", pkg.lastBuildDateHuman || "Unknown"))
         .pipe(out("./README.md"));
 }
 
@@ -164,8 +164,11 @@ function versionIncrement() {
 }
 
 function dateUpdate() {
-    pkg.lastBuildDateUtc = dateFormat(new Date, "isoUtcDateTime");
-    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
+    var d = new Date();
+    pkg.lastBuildDate = dateFormat(d, "isoUtcDateTime");
+    pkg.lastBuildDateHuman = dateFormat(d);
+
+    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateHuman));
 
     jsonHelper.write("./package.json", pkg);
 }
