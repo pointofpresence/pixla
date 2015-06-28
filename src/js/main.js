@@ -35,6 +35,7 @@ require([
     "models/TriangleLine",
     "models/TriangleDithering",
     "models/TriangleMeander",
+    "models/TriangleSkull",
     "collections/Generator",
     "views/Wizard",
     "bootstrap",
@@ -50,6 +51,7 @@ require([
              TriangleLineModel,
              TriangleDitheringModel,
              TriangleMeanderModel,
+             TriangleSkullModel,
              GeneratorCollection,
              WizardView) {
     "use strict";
@@ -82,6 +84,7 @@ require([
             new TriangleCrossModel,
             new TriangleCrossRadialModel,
             new TriangleRealCrossModel,
+            new TriangleSkullModel,
             new TriangleCubeModel,
             new TriangleCubeSimpleModel,
             new TriangleLineModel,

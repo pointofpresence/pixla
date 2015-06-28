@@ -1,7 +1,7 @@
 {
   "name": "pixla",
   "title": "ReSampled.Pixla",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "Online image filter",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "chalk": "^1.0.0",
+    "dateformat": "^1.0.11",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-concat": "^2.5.2",
@@ -24,9 +25,7 @@
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.5",
     "mkdirp": "^0.5.1",
-    "resampled-date": "0.0.1",
     "resampled-json-io": "0.0.1"
   },
-  "lastBuildDate": 1435466789,
-  "lastBuildDateUtc": "Sun, 28 Jun 2015 04:46:29 GMT"
+  "lastBuildDateUtc": "2015-06-28T08:07:16Z"
 }

@@ -17,7 +17,7 @@ fs           = require("fs"),                 // fs
 autoprefixer = require('gulp-autoprefixer'),  // CSS autoprefixer
 gutil        = require("gulp-util"),          // log and other
 chalk        = require("chalk"),              // colors
-dateHelper   = require("resampled-date"),     // date helper
+dateFormat   = require("dateformat"),         // date helper
 jsonHelper   = require("resampled-json-io"),  // JSON helper
 replace      = require("gulp-replace");       // replace
 
@@ -164,10 +164,7 @@ function versionIncrement() {
 }
 
 function dateUpdate() {
-    var d = new Date();
-    pkg.lastBuildDate = dateHelper.toUnixTimestamp(d);
-    pkg.lastBuildDateUtc = d.toUTCString();
-
+    pkg.lastBuildDateUtc = dateFormat(new Date, "isoUtcDateTime");
     gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
 
     jsonHelper.write("./package.json", pkg);
