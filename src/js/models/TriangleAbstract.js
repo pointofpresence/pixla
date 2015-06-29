@@ -102,7 +102,12 @@ define("models/TriangleAbstract", [
                     type:    "Select",
                     options: this.buildDitherList()
                 },
-                invert:       {
+                zhangSuen:    {
+                    name: "Скелет",
+                    type: "Slider",
+                    min:  0,
+                    max:  1
+                }, invert:    {
                     name: "Инверсия",
                     type: "Slider",
                     min:  0,
@@ -179,6 +184,158 @@ define("models/TriangleAbstract", [
                     R, G, B, A
                 ]
             );
+        },
+
+        zhangSuen: function (data, w, h) {
+            var self = this;
+
+            function Image2Bool(img, width, height) {
+                var s = [];
+
+                for (var y = 0; y < height; y++) {
+                    var sx = [];
+
+                    for (var x = 0; x < width; x++) {
+                        var p = self.getPixelXY(img, x, y);
+
+                        if(x == 0 || y == 0 || x == width -1 || y == height - 1) {
+                            sx.push(false);
+                        } else {
+                            var v = Math.floor((p[0] + p[1] + p[2]) / 3);
+                            sx.push(v < 32);
+                        }
+
+
+                    }
+
+                    s.push(sx);
+                }
+
+                return s;
+            }
+
+            function Bool2Image(s, width, height) {
+               var bmp = new Uint8ClampedArray(width * height * 4);
+
+                for (var y = 0; y < height; y++) {
+                    for (var x = 0; x < width; x++) {
+                        if (s[y][x]) {
+                            self.setPixelXY(bmp, x, y, [0, 0, 0, 255]);
+                        } else {
+                            self.setPixelXY(bmp, x, y, [255, 255, 255, 255]);
+                        }
+                    }
+                }
+
+                return bmp;
+            }
+
+            /**
+             * @return {number}
+             */
+            function NumberOfNonZeroNeighbors(x, y, s) {
+                var count = 0;
+
+                if (s[x - 1][y])     count++;
+                if (s[x - 1][y + 1]) count++;
+                if (s[x - 1][y - 1]) count++;
+                if (s[x][y + 1])     count++;
+                if (s[x][y - 1])     count++;
+                if (s[x + 1][y])     count++;
+                if (s[x + 1][y + 1]) count++;
+                if (s[x + 1][y - 1]) count++;
+
+                return count;
+            }
+
+            /**
+             * @return {number}
+             */
+            function NumberOfZeroToOneTransitionFromP9(x, y, s) {
+                var p2 = s[x][y - 1];
+                var p3 = s[x + 1][y - 1];
+                var p4 = s[x + 1][y];
+                var p5 = s[x + 1][y + 1];
+                var p6 = s[x][y + 1];
+                var p7 = s[x - 1][y + 1];
+                var p8 = s[x - 1][y];
+                var p9 = s[x - 1][y - 1];
+
+                return (+(!p2 && p3)) + (+(!p3 && p4))
+                    + (+(!p4 && p5)) + (+(!p5 && p6))
+                    + (+(!p6 && p7)) + (+(!p7 && p8))
+                    + (+(!p8 && p9)) + (+(!p9 && p2));
+            }
+
+            /**
+             * @return {boolean}
+             */
+            function SuenThinningAlg(x, y, s, even) {
+                var p2 = s[x][y - 1];
+                var p4 = s[x + 1][y];
+                var p6 = s[x][y + 1];
+                var p8 = s[x - 1][y];
+
+                var bp1 = NumberOfNonZeroNeighbors(x, y, s);
+
+                if (bp1 >= 2 && bp1 <= 6) {
+                    if (NumberOfZeroToOneTransitionFromP9(x, y, s) == 1) {
+                        if (even) {
+                            if (!((p2 && p4) && p8)) {
+                                if (!((p2 && p6) && p8)) {
+                                    return true;
+                                }
+                            }
+                        } else {
+                            if (!((p2 && p4) && p6)) {
+                                if (!((p4 && p6) && p8)) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            function step(stepNo, temp, s) {
+                var count = 0;
+
+                for (var a = 1; a < temp.length - 1; a++) {
+                    for (var b = 1; b < temp[0].length - 1; b++) {
+                        if (SuenThinningAlg(a, b, temp, stepNo == 2)) {
+                            // still changes happening?
+                            if (s[a][b]) {
+                                count++;
+                            }
+
+                            s[a][b] = false;
+                        }
+                    }
+                }
+
+                return count;
+            }
+
+            function ZhangSuenThinning(img, width, height) {
+                var s = Image2Bool(img, width, height);
+
+                var temp;
+                var count = 0;
+
+                do {
+                    temp = self.clone(s);
+                    count = step(1, temp, s);
+
+                    temp = self.clone(s);
+                    count += step(2, temp, s);
+                } while (count > 0);
+
+                return Bool2Image(s, width, height);
+            }
+
+            return ZhangSuenThinning(data, w, h);
         },
 
         /**
@@ -918,13 +1075,13 @@ define("models/TriangleAbstract", [
                 palette:   Dithering.PALETTE.AMIGA_BRONZE,
                 algorithm: Dithering.ALGORITHM.ERROR
             });
-        },/**
+        }, /**
          * @param data
          * @param w
          * @param h
          * @returns {*}
          */
-        ditherMONO_ATKINSON: function (data, w, h) {
+        ditherMONO_ATKINSON:      function (data, w, h) {
             return Dithering.dither(data, w, h, {
                 palette:   Dithering.PALETTE.MONO,
                 algorithm: Dithering.ALGORITHM.ATKINSON
@@ -1088,6 +1245,7 @@ define("models/TriangleAbstract", [
             out = this.postSobel(options, out);
             out = this.postThin(options, out);
             out = this.postDither(options, out);
+            out = this.postZhangSuen(options, out);
             out = this.postInvert(options, out);
             return out;
         },
@@ -1096,6 +1254,7 @@ define("models/TriangleAbstract", [
             if (parseInt(options.invert)) {
                 out = this.invert(out);
             }
+
             return out;
         },
 
@@ -1105,6 +1264,7 @@ define("models/TriangleAbstract", [
                 && this.options.dither.options[options.dither]) {
                 out = this.options.dither.options[options.dither].cb.call(this, out, this.w, this.h);
             }
+
             return out;
         },
 
@@ -1116,6 +1276,15 @@ define("models/TriangleAbstract", [
                     1, 1, 1
                 ]);
             }
+
+            return out;
+        },
+
+        postZhangSuen: function (options, out) {
+            if (parseInt(options.zhangSuen)) {
+                out = this.zhangSuen(out, this.w, this.h);
+            }
+
             return out;
         },
 
@@ -1123,6 +1292,7 @@ define("models/TriangleAbstract", [
             if (parseInt(options.sobel)) {
                 out = this.sobel(out, this.w);
             }
+
             return out;
         },
 
