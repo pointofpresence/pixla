@@ -4,7 +4,8 @@ require.config({
         backbone:   "//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min",
         jquery:     "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min",
         bootstrap:  "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min",
-        share:      "//yastatic.net/share/share"
+        share:      "//yastatic.net/share/share",
+        sortable:   "//cdnjs.cloudflare.com/ajax/libs/Sortable/1.2.0/Sortable.min"
     },
 
     shim:        {
