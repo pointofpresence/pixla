@@ -21,6 +21,16 @@ define("models/TriangleAbstract", [
 
         initialize: function () {
             this.options = {
+                mirror:       {
+                    name:    "Отражение",
+                    type:    "Select",
+                    options: [
+                        {text: "Нет"},
+                        {text: "По оси X", cb: this.cbMirrorX},
+                        {text: "По оси Y", cb: this.cbMirrorY},
+                        {text: "По оси X и Y", cb: this.cbMirrorXY}
+                    ]
+                },
                 kaleidoscope: {
                     name:    "Калейдоскоп",
                     type:    "Select",
@@ -791,8 +801,7 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
-        }
-        ,
+        }        ,
 
         centerOutsideKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -1240,6 +1249,26 @@ define("models/TriangleAbstract", [
             });
         },
 
+        //// POST EFFECTS CALLBACKS ///////////////////////////////////////////
+
+        /**
+         * @param data
+         * @param w
+         * @param h
+         * @returns {*}
+         */
+        cbMirrorX:  function (data, w, h) {
+            return this.flipX(data, w, h);
+        },
+
+        cbMirrorY:  function (data, w, h) {
+            return this.flipY(data, w, h);
+        },
+
+        cbMirrorXY: function (data, w, h) {
+            return this.flipY(this.flipX(data, w, h), w, h);
+        },
+
         //// POST EFFECTS /////////////////////////////////////////////////////
 
         applyPost: function (out, options, tilesW, tilesH) {
@@ -1250,6 +1279,16 @@ define("models/TriangleAbstract", [
             _.each(Object.keys(options), function (key) {
                 out = this["post" + this.ucfirst(key)](options, out, tilesW, tilesH);
             }, this);
+
+            return out;
+        },
+
+        postMirror: function (options, out) {
+            if (options.mirror
+                && this.options.mirror.options[options.mirror].cb
+                && this.options.mirror.options[options.mirror]) {
+                out = this.options.mirror.options[options.mirror].cb.call(this, out, this.w, this.h);
+            }
 
             return out;
         },
@@ -1420,6 +1459,7 @@ define("models/TriangleAbstract", [
                 && this.options.colors.options[options.colors]) {
                 out = this.options.colors.options[options.colors].cb.call(this, out);
             }
+
             return out;
         },
 
