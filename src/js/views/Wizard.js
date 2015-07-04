@@ -37,6 +37,12 @@ define("views/Wizard", [
                 }));
             }, this);
 
+            var selectedFilter = this.getSelectedFilter();
+
+            if(selectedFilter) {
+                this.elements.inputFilter.val(selectedFilter);
+            }
+
             this.filterCid = this.elements.inputFilter.val();
             this.filterChanged();
         },
@@ -48,6 +54,20 @@ define("views/Wizard", [
             "click #options-apply":    "onOptionsApplyClick",
             "change #input-file":      "select",
             "change #input-filter":    "onFilterChange"
+        },
+
+        /**
+         * @returns {*|number}
+         */
+        getSelectedFilter: function () {
+            return localStorage["filter"];
+        },
+
+        /**
+         * @param id
+         */
+        setSelectedFilter: function (id) {
+            localStorage["filter"] = id;
         },
 
         message: function (msg) {
@@ -98,6 +118,8 @@ define("views/Wizard", [
 
         filterChanged: function () {
             if (this.filterCid) {
+                this.setSelectedFilter(this.filterCid);
+
                 var model = this.collection.get(this.filterCid),
                     options = model.options;
 
