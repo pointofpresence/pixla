@@ -11,7 +11,8 @@ define("models/TriangleRealCross", [
     return TriangleCrossModel.extend({
         defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
             name:        "Triangle Real Cross",
-            description: "Triangle Real Cross Filter"
+            description: "Triangle Real Cross Filter",
+            sort:        60
         }),
 
         getColors: function (data, x, y) {

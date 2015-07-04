@@ -11,7 +11,8 @@ define("models/TriangleCross", [
     return TriangleAbstractModel.extend({
         defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
             name:        "Triangle Cross",
-            description: "Triangle Cross Filter"
+            description: "Triangle Cross Filter",
+            sort:        10
         }),
 
         pattern: [

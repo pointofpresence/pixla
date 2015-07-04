@@ -11,7 +11,8 @@ define("models/TriangleStart", [
     return TriangleAbstractModel.extend({
         defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
             name:        "Тождество",
-            description: "Start Filter"
+            description: "Start Filter",
+            sort:        0
         }),
 
         getColors: function (data, x, y) {

@@ -11,7 +11,8 @@ define("models/TriangleCrossRadial", [
     return TriangleCrossModel.extend({
         defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
             name:        "Triangle Cross Radial",
-            description: "Triangle Cross Radial Filter"
+            description: "Triangle Cross Radial Filter",
+            sort:        20
         }),
 
         getColors: function (data, x, y) {

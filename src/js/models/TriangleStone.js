@@ -11,7 +11,8 @@ define("models/TriangleStone", [
     return TriangleCrossModel.extend({
         defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
             name:        "Stone",
-            description: "Stone Tile"
+            description: "Stone Tile",
+            sort:        80
         }),
 
         getColors: function (data, x, y) {

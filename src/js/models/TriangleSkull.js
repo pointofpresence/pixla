@@ -11,7 +11,8 @@ define("models/TriangleSkull", [
     return TriangleCrossModel.extend({
         defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
             name:        "Череп",
-            description: "Skull Tile"
+            description: "Skull Tile",
+            sort:        70
         }),
 
         getColors: function (data, x, y) {

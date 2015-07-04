@@ -11,7 +11,8 @@ define("models/TriangleMeander", [
     return TriangleCrossModel.extend({
         defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
             name:        "Меандр",
-            description: "Meander Pattern"
+            description: "Meander Pattern",
+            sort:        50
         }),
 
         getColors: function (data, x, y) {

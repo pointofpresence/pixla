@@ -11,7 +11,8 @@ define("models/TriangleCubeSimple", [
     return TriangleAbstractModel.extend({
         defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
             name:        "Triangle Cube Simple",
-            description: "Triangle Cube Simple Filter"
+            description: "Triangle Cube Simple Filter",
+            sort:        110
         }),
 
         TILE_WIDTH:  21,

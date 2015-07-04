@@ -13,7 +13,8 @@ define("models/TriangleAbstract", [
     return Backbone.Model.extend({
         defaults: {
             name:        "Abstract Generator",
-            description: "Abstract Model for Generators"
+            description: "Abstract Model for Generators",
+            sort:        0
         },
 
         w: 0,
@@ -801,7 +802,7 @@ define("models/TriangleAbstract", [
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
-        }        ,
+        },
 
         centerOutsideKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
@@ -1257,11 +1258,11 @@ define("models/TriangleAbstract", [
          * @param h
          * @returns {*}
          */
-        cbMirrorX:  function (data, w, h) {
+        cbMirrorX: function (data, w, h) {
             return this.flipX(data, w, h);
         },
 
-        cbMirrorY:  function (data, w, h) {
+        cbMirrorY: function (data, w, h) {
             return this.flipY(data, w, h);
         },
 

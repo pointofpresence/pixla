@@ -11,7 +11,8 @@ define("models/TriangleLine", [
     return TriangleCrossModel.extend({
         defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
             name:        "Triangle Line",
-            description: "Triangle Line Filter"
+            description: "Triangle Line Filter",
+            sort:        40
         }),
 
         getColors: function (data, x, y) {

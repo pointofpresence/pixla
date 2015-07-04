@@ -7,7 +7,7 @@ define("collections/Generator", [
     "use strict";
 
     return Backbone.Collection.extend({
-        comparator: "name",
+        comparator: "sort",
 
         doit: function (cid, data, w, h) {
             return this.get({cid: cid}).doit(data, w, h);
