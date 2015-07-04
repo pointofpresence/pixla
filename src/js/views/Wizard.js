@@ -6,8 +6,9 @@ define("views/Wizard", [
     "jquery",
     "underscore",
     "templates",
-    "lib/Canvas"
-], function (Backbone, $, _, templates, Canvas) {
+    "lib/Canvas",
+    "sortable"
+], function (Backbone, $, _, templates, Canvas, Sortable) {
     "use strict";
 
     return Backbone.View.extend({
@@ -24,6 +25,7 @@ define("views/Wizard", [
             this.elements.dstImage = this.$(".dst-image");
             this.elements.inputFilter = this.$("#input-filter");
             this.elements.optionsModal = this.$("#options-modal");
+            this.elements.optionsForm = this.$("#options-form");
             this.elements.messageModal = this.$("#message");
             this.elements.filterOptionsBtn = this.$("#filter-options");
             this.elements.save = this.$("#output-save");
@@ -83,6 +85,7 @@ define("views/Wizard", [
                 });
 
             localStorage[this.filterCid] = JSON.stringify(options);
+
             this.elements.optionsModal.modal("hide");
 
             this.render();
@@ -128,9 +131,20 @@ define("views/Wizard", [
 
             var form = this.buildOptions(model);
 
-            this.elements.optionsModal
-                .find(".options-form")
-                .html(form);
+            this.elements.optionsForm.html(form);
+
+            this.sortable = Sortable.create(this.elements.optionsForm.get(0), {
+                sort:      true,
+                group:     this.filterCid,
+                handle:    ".drag-handle",
+                animation: 150
+            });
+
+            if (localStorage[this.filterCid]) {
+                this.sortable.sort(
+                    Object.keys(JSON.parse(localStorage[this.filterCid]))
+                );
+            }
 
             this.elements.optionsModal.modal();
         },

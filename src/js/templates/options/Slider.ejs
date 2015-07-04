@@ -1,9 +1,11 @@
-<div class="form-group">
+<div class="form-group" data-id="<%= id %>">
+    <span class="glyphicon glyphicon-sort text-info col-sm-1 drag-handle"></span>
+
     <label class="control-label col-sm-3" for="option-<%= id %>">
         <%= option.name %>:
     </label>
 
-    <div class="col-sm-7">
+    <div class="col-sm-6">
         <input class="form-control" data-option="<%= id %>"
                id="option-<%= id %>"
                type="range" min="<%= option.min || 0 %>" max="<%= option.max || 100 %>"
