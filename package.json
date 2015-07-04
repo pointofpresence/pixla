@@ -1,7 +1,7 @@
 {
   "name": "pixla",
   "title": "ReSampled.Pixla",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "Online image filter",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,6 +27,6 @@
     "mkdirp": "^0.5.1",
     "resampled-json-io": "0.0.1"
   },
-  "lastBuildDate": "2015-07-04T14:12:09Z",
-  "lastBuildDateHuman": "Sat Jul 04 2015 20:12:09"
+  "lastBuildDate": "2015-07-04T14:34:46Z",
+  "lastBuildDateHuman": "Sat Jul 04 2015 20:34:46"
 }
