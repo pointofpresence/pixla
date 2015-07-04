@@ -198,13 +198,12 @@ define("models/TriangleAbstract", [
                     for (var x = 0; x < width; x++) {
                         var p = self.getPixelXY(img, x, y);
 
-                        if(x == 0 || y == 0 || x == width -1 || y == height - 1) {
+                        if (x == 0 || y == 0 || x == width - 1 || y == height - 1) {
                             sx.push(false);
                         } else {
                             var v = Math.floor((p[0] + p[1] + p[2]) / 3);
                             sx.push(v < 32);
                         }
-
 
                     }
 
@@ -215,7 +214,7 @@ define("models/TriangleAbstract", [
             }
 
             function Bool2Image(s, width, height) {
-               var bmp = new Uint8ClampedArray(width * height * 4);
+                var bmp = new Uint8ClampedArray(width * height * 4);
 
                 for (var y = 0; y < height; y++) {
                     for (var x = 0; x < width; x++) {
@@ -887,6 +886,8 @@ define("models/TriangleAbstract", [
             return data;
         },
 
+        //// UTILS ////////////////////////////////////////////////////////////
+
         format: function () {
             var theString = arguments[0];
 
@@ -896,6 +897,14 @@ define("models/TriangleAbstract", [
             }
 
             return theString;
+        },
+
+        ucfirst: function (str) {
+            if (str.length) {
+                str = str.charAt(0).toUpperCase() + str.slice(1);
+            }
+
+            return str;
         },
 
         //// DITHERING ////////////////////////////////////////////////////////
@@ -1234,19 +1243,14 @@ define("models/TriangleAbstract", [
         //// POST EFFECTS /////////////////////////////////////////////////////
 
         applyPost: function (out, options, tilesW, tilesH) {
-            out = this.postKaleidoscope(options, out, tilesW, tilesH);
-            out = this.postColors(options, out);
-            out = this.postBrightness(options, out);
-            out = this.postThreshold(options, out);
-            out = this.postBlur(options, out);
-            out = this.postSharpen(options, out);
-            out = this.postEdge(options, out);
-            out = this.postEmboss(options, out);
-            out = this.postSobel(options, out);
-            out = this.postThin(options, out);
-            out = this.postDither(options, out);
-            out = this.postZhangSuen(options, out);
-            out = this.postInvert(options, out);
+            if (Object.getOwnPropertyNames(options).length === 0) {
+                return out;
+            }
+
+            _.each(Object.keys(options), function (key) {
+                out = this["post" + this.ucfirst(key)](options, out, tilesW, tilesH);
+            }, this);
+
             return out;
         },
 
