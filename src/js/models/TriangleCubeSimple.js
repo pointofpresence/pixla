@@ -14,24 +14,6 @@ define("models/TriangleCubeSimple", [
             description: "Triangle Cube Simple Filter"
         }),
 
-        initialize: function () {
-            this.options = _.extend({}, TriangleAbstractModel.prototype.options, {
-                kaleidoscope: {
-                    name:    "Калейдоскоп",
-                    type:    "Select",
-                    options: [
-                        {text: "Нет"},
-                        {text: "К центру", cb: this.centerKaleidoskope},
-                        {text: "В стороны", cb: this.outsideKaleidoskope},
-                        {text: "К центру и в стороны", cb: this.centerOutsideKaleidoskope},
-                        {text: "По горизонтали", cb: this.horizKaleidoskope},
-                        {text: "По вертикали", cb: this.vertKaleidoskope},
-                        {text: "Игральная карта", cb: this.cardKaleidoskope}
-                    ]
-                }
-            })
-        },
-
         TILE_WIDTH:  21,
         TILE_HEIGHT: 21,
 
@@ -295,15 +277,7 @@ define("models/TriangleCubeSimple", [
                 step = (step == 1) ? 0 : 1;
             }
 
-            if (options.kaleidoscope
-                && this.options.kaleidoscope.options[options.kaleidoscope].cb
-                && this.options.kaleidoscope.options[options.kaleidoscope]) {
-                out = this.options.kaleidoscope.options[options.kaleidoscope].cb.call(
-                    this, out,
-                    Math.floor(tilesW / 2) * this.TILE_WIDTH - 3,
-                    Math.floor(tilesH / 2) * this.TILE_HEIGHT - 6
-                );
-            }
+            out = this.applyPost(out, options, tilesW, tilesH);
 
             return {
                 data: out,
