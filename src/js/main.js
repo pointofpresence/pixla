@@ -40,6 +40,7 @@ require([
     "models/TriangleStone",
     "models/TriangleStoneAdvanced",
     "models/TriangleKuwahara",
+    "models/TrianglePeecol",
     "collections/Generator",
     "views/Wizard",
     "bootstrap",
@@ -59,6 +60,7 @@ require([
              TriangleStoneModel,
              TriangleStoneAdvancedModel,
              TriangleKuwahara,
+             TrianglePeecol,
              GeneratorCollection,
              WizardView) {
     "use strict";
@@ -99,6 +101,7 @@ require([
             new TriangleStoneModel,
             new TriangleStoneAdvancedModel,
             new TriangleKuwahara,
+            new TrianglePeecol,
             new TriangleDitheringModel
         ]);
 

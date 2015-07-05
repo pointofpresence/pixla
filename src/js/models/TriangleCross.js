@@ -68,11 +68,11 @@ define("models/TriangleCross", [
             //noinspection JSUnresolvedFunction
             var out = new Uint8ClampedArray(src.length);
 
-            var pattern = this.pattern,
+            var pattern = _.isFunction(this.pattern) ? this.pattern() : this.pattern,
                 colors, x, y, px, py;
 
-            for (x = 0; x < newW + 1; x += this.TILE_WIDTH) {
-                for (y = 0; y < newH + 1; y += this.TILE_HEIGHT) {
+            for (x = 0; x < newW; x += this.TILE_WIDTH) {
+                for (y = 0; y < newH; y += this.TILE_HEIGHT) {
                     colors = this.getColors(src, x, y);
 
                     for (px = 0; px < this.TILE_WIDTH; px++) {

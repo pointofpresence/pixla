@@ -13,7 +13,6 @@ define("models/TriangleKuwahara", [
             name:        "Плавная пикселизация",
             description: "Kuwahara Tile",
             sort:        130
-
         }),
 
         TILE_WIDTH:  5,
@@ -63,14 +62,6 @@ define("models/TriangleKuwahara", [
             colors[12] = this.mixColors(colors[6], colors[8]);
 
             colors[13] = this.mixColors(colors[7], colors[8]);
-
-            colors[14] = this.mixColors(colors[1], colors[10]);
-
-            colors[15] = this.mixColors(colors[2], colors[11]);
-
-            colors[16] = this.mixColors(colors[3], colors[12]);
-
-            colors[17] = this.mixColors(colors[4], colors[13]);
 
             return colors;
         },

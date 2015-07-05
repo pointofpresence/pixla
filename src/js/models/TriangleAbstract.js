@@ -127,6 +127,11 @@ define("models/TriangleAbstract", [
             };
         },
 
+        COLORS: {
+            BLACK: [0, 0, 0, 255],
+            WHITE: [255, 255, 255, 255]
+        },
+
         clone: function (data) {
             return _.map(data, _.clone);
         },
@@ -155,6 +160,10 @@ define("models/TriangleAbstract", [
         },
 
         setPixelXY: function (data, x, y, color) {
+            if (x >= this.w) {
+                return;
+            }
+
             return this.setPixel(data, y * this.w + x, color);
         },
 
@@ -783,8 +792,8 @@ define("models/TriangleAbstract", [
             ]);
         },
 
-        mixColors: function (color1, color2) {
-            var n = 0.5;
+        mixColors: function (color1, color2, percent) {
+            var n = percent || 0.5;
 
             var R = Math.round((color2[0] - color1[0]) * n) + color1[0];
             var G = Math.round((color2[1] - color1[1]) * n) + color1[1];
