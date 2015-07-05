@@ -783,6 +783,19 @@ define("models/TriangleAbstract", [
             ]);
         },
 
+        mixColors: function (color1, color2) {
+            var n = 0.5;
+
+            var R = Math.round((color2[0] - color1[0]) * n) + color1[0];
+            var G = Math.round((color2[1] - color1[1]) * n) + color1[1];
+            var B = Math.round((color2[2] - color1[2]) * n) + color1[2];
+            var A = Math.round((color2[3] - color1[3]) * n) + color1[3];
+
+            return [
+                R, G, B, A
+            ];
+        },
+
         centerKaleidoskope: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
