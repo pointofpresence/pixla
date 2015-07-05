@@ -39,12 +39,20 @@ define("views/Wizard", [
 
             var selectedFilter = this.getSelectedFilter();
 
-            if(selectedFilter) {
+            if (selectedFilter) {
                 this.elements.inputFilter.val(selectedFilter);
             }
 
             this.filterCid = this.elements.inputFilter.val();
             this.filterChanged();
+
+            var encoded = this.getEncoded();
+
+            if (encoded) {
+                this.encoded = encoded;
+                this.elements.srcImage.attr("src", encoded);
+                this.render();
+            }
         },
 
         events: {
@@ -68,6 +76,14 @@ define("views/Wizard", [
          */
         setSelectedFilter: function (id) {
             localStorage["filter"] = id;
+        },
+
+        getEncoded: function () {
+            return localStorage["encoded"] ? JSON.parse(localStorage["encoded"]) : null;
+        },
+
+        setEncoded: function (data) {
+            localStorage["encoded"] = JSON.stringify(data);
         },
 
         message: function (msg) {
@@ -199,6 +215,8 @@ define("views/Wizard", [
                     this.imageName = data.name;
                     this.encoded = data.data;
 
+                    this.setEncoded(this.encoded);
+
                     this.render();
                 } else {
                     this.elements.error.show();
@@ -265,6 +283,9 @@ define("views/Wizard", [
             reader.onload = (function (event) {
                 this.elements.srcImage.attr("src", event.target.result);
                 this.encoded = event.target.result;
+
+                this.setEncoded(this.encoded);
+
                 this.render();
             }).bind(this);
 
