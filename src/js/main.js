@@ -5,7 +5,8 @@ require.config({
         jquery:     "//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min",
         bootstrap:  "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min",
         share:      "//yastatic.net/share/share",
-        sortable:   "//cdnjs.cloudflare.com/ajax/libs/Sortable/1.2.0/Sortable.min"
+        sortable:   "//cdnjs.cloudflare.com/ajax/libs/Sortable/1.2.0/Sortable.min",
+        fabric:     "/vendor/fabric.min"
     },
 
     shim:        {

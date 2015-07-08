@@ -9,10 +9,14 @@ define("lib/Canvas", [], function () {
          * @param h
          * @returns {HTMLElement}
          */
-        createEmptyCanvas: function (w, h) {
+        createEmptyCanvas: function (w, h, id) {
             var canvas = document.createElement("canvas");
             canvas.width = w;
             canvas.height = h;
+
+            if(id) {
+                canvas.id = id;
+            }
 
             return canvas;
         },
