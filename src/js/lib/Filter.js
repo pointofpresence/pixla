@@ -1,10 +1,66 @@
 /* global define */
 
-define("lib/Filter", ["lib/Dithering"], function (Dithering) {
+define("lib/Filter", [
+    "underscore",
+    "lib/Dithering",
+    "lib/Mixin"
+], function (_, Dithering) {
     "use strict";
 
     //noinspection JSValidateJSDoc
     return {
+        //// MIRROR //////////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @returns {Uint8ClampedArray}
+         */
+        flipX: function (data, w, h) {
+            var tempData = _.deepClone(data),
+                i, flip, x, y, c;
+
+            for (y = 0; y < h; y++) {
+                for (x = 0; x < w; x++) {
+                    // RGB
+                    i = (y * w + x) * 4;
+                    flip = (y * w + (w - x - 1)) * 4;
+
+                    for (c = 0; c < 4; c++) {
+                        tempData[i + c] = data[flip + c];
+                    }
+                }
+            }
+
+            return tempData;
+        },
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @returns {Uint8ClampedArray}
+         */
+        flipY: function (data, w, h) {
+            var tempData = _.deepClone(data),
+                i, flip, x, y, c;
+
+            for (y = 0; y < h; y++) {
+                for (x = 0; x < w; x++) {
+                    // RGB
+                    i = (y * w + x) * 4;
+                    flip = ((h - y - 1) * w + x) * 4;
+
+                    for (c = 0; c < 4; c += 1) {
+                        tempData[i + c] = data[flip + c];
+                    }
+                }
+            }
+
+            return tempData;
+        },
+
         //// THRESHOLD ///////////////////////////////////////////////////////
 
         /**

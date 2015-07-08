@@ -424,49 +424,6 @@ define("models/TriangleAbstract", [
             return tempCtx.getImageData(0, 0, this.w, this.h).data;
         },
 
-        /**
-         * @param {Uint8ClampedArray} data
-         * @param {number} w
-         * @param {number} h
-         */
-        flipX: function (data, w, h) {
-            var tempData = _.deepClone(data),
-                i, flip, x, y, c;
-
-            for (y = 0; y < h; y++) {
-                for (x = 0; x < w; x++) {
-                    // RGB
-                    i = (y * w + x) * 4;
-                    flip = (y * w + (w - x - 1)) * 4;
-
-                    for (c = 0; c < 4; c++) {
-                        tempData[i + c] = data[flip + c];
-                    }
-                }
-            }
-
-            return tempData;
-        },
-
-        flipY: function (data, w, h) {
-            var tempData = _.deepClone(data),
-                i, flip, x, y, c;
-
-            for (y = 0; y < h; y++) {
-                for (x = 0; x < w; x++) {
-                    // RGB
-                    i = (y * w + x) * 4;
-                    flip = ((h - y - 1) * w + x) * 4;
-
-                    for (c = 0; c < 4; c += 1) {
-                        tempData[i + c] = data[flip + c];
-                    }
-                }
-            }
-
-            return tempData;
-        },
-
         rotate: function (data, w, h) {
             var tempData = _.deepClone(data),
                 i, flip, x, y, c;
@@ -678,13 +635,13 @@ define("models/TriangleAbstract", [
 
             data = this.draw(block, data, 0, 0, w, h);
 
-            block = this.flipX(block, w, h);
+            block = Filter.flipX(block, w, h);
             data = this.draw(block, data, w, 0, w, h);
 
-            block = this.flipY(block, w, h);
+            block = Filter.flipY(block, w, h);
             data = this.draw(block, data, w, h, w, h);
 
-            block = this.flipX(block, w, h);
+            block = Filter.flipX(block, w, h);
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
@@ -699,13 +656,13 @@ define("models/TriangleAbstract", [
 
             data = this.draw(block, data, 0, 0, w, h);
 
-            block = this.flipY(block, w, h);
+            block = Filter.flipY(block, w, h);
             data = this.draw(block, data, w, 0, w, h);
 
-            block = this.flipX(block, w, h);
+            block = Filter.flipX(block, w, h);
             data = this.draw(block, data, w, h, w, h);
 
-            block = this.flipY(block, w, h);
+            block = Filter.flipY(block, w, h);
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
@@ -718,16 +675,16 @@ define("models/TriangleAbstract", [
 
             var block = this.grab(data, 0, 0, w, h);
 
-            block = this.flipX(block, w, h);
+            block = Filter.flipX(block, w, h);
             data = this.draw(block, data, 0, 0, w, h);
 
-            block = this.flipX(block, w, h);
+            block = Filter.flipX(block, w, h);
             data = this.draw(block, data, w, 0, w, h);
 
-            block = this.flipY(block, w, h);
+            block = Filter.flipY(block, w, h);
             data = this.draw(block, data, w, h, w, h);
 
-            block = this.flipX(block, w, h);
+            block = Filter.flipX(block, w, h);
             data = this.draw(block, data, 0, h, w, h);
 
             return data;
@@ -741,7 +698,7 @@ define("models/TriangleAbstract", [
             var block = this.grab(data, 0, 0, this.w, h);
             data = this.draw(block, data, 0, 0, this.w, h);
 
-            block = this.flipY(block, this.w, h);
+            block = Filter.flipY(block, this.w, h);
             data = this.draw(block, data, 0, h, this.w, h);
 
             return data;
@@ -755,8 +712,8 @@ define("models/TriangleAbstract", [
             var block = this.grab(data, 0, 0, this.w, h);
             data = this.draw(block, data, 0, 0, this.w, h);
 
-            block = this.flipY(block, this.w, h);
-            block = this.flipX(block, this.w, h);
+            block = Filter.flipY(block, this.w, h);
+            block = Filter.flipX(block, this.w, h);
             data = this.draw(block, data, 0, h, this.w, h);
 
             return data;
@@ -776,7 +733,7 @@ define("models/TriangleAbstract", [
             var block = this.grab(data, 0, 0, w, this.h);
             data = this.draw(block, data, 0, 0, w, this.h);
 
-            block = this.flipX(block, w, this.h);
+            block = Filter.flipX(block, w, this.h);
             data = this.draw(block, data, w, 0, w, this.h);
 
             return data;
@@ -814,15 +771,15 @@ define("models/TriangleAbstract", [
          * @returns {*}
          */
         cbMirrorX: function (data, w, h) {
-            return this.flipX(data, w, h);
+            return Filter.flipX(data, w, h);
         },
 
         cbMirrorY: function (data, w, h) {
-            return this.flipY(data, w, h);
+            return Filter.flipY(data, w, h);
         },
 
         cbMirrorXY: function (data, w, h) {
-            return this.flipY(this.flipX(data, w, h), w, h);
+            return Filter.flipY(Filter.flipX(data, w, h), w, h);
         },
 
         //// POST EFFECTS /////////////////////////////////////////////////////
