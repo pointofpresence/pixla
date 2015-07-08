@@ -9,6 +9,69 @@ define("lib/Filter", [
 
     //noinspection JSValidateJSDoc
     return {
+        //// CONVOLUTION /////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @param {Array} weights
+         * @param {boolean} opaque
+         * @returns {Uint8ClampedArray}
+         */
+        convolute: function (data, w, h, weights, opaque) {
+            opaque = opaque || false;
+
+            var side = Math.round(Math.sqrt(weights.length)),
+                halfSide = Math.floor(side / 2);
+
+            // pad output by the convolution matrix
+            //noinspection JSUnresolvedFunction
+            var dst = new Uint8ClampedArray(data.length);
+
+            // go through the destination image pixels
+            var alphaFac = +opaque;
+
+            for (var y = 0; y < h; y++) {
+                for (var x = 0; x < w; x++) {
+                    var sy = y,
+                        sx = x,
+                        dstOff = (y * w + x) * 4;
+
+                    // calculate the weighed sum of the source image pixels that
+                    // fall under the convolution matrix
+                    var r = 0,
+                        g = 0,
+                        b = 0,
+                        a = 0;
+
+                    for (var cy = 0; cy < side; cy++) {
+                        for (var cx = 0; cx < side; cx++) {
+                            var scy = sy + cy - halfSide,
+                                scx = sx + cx - halfSide;
+
+                            if (scy >= 0 && scy < h && scx >= 0 && scx < w) {
+                                var srcOff = (scy * w + scx) * 4,
+                                    wt = weights[cy * side + cx];
+
+                                r += data[srcOff] * wt;
+                                g += data[srcOff + 1] * wt;
+                                b += data[srcOff + 2] * wt;
+                                a += data[srcOff + 3] * wt;
+                            }
+                        }
+                    }
+
+                    dst[dstOff] = r;
+                    dst[dstOff + 1] = g;
+                    dst[dstOff + 2] = b;
+                    dst[dstOff + 3] = a + alphaFac * (255 - a);
+                }
+            }
+
+            return dst;
+        },
+
         //// INVERSE /////////////////////////////////////////////////////////
 
         /**

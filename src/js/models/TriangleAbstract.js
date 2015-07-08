@@ -222,7 +222,6 @@ define("models/TriangleAbstract", [
                             var v = Math.floor((p[0] + p[1] + p[2]) / 3);
                             sx.push(v < 32);
                         }
-
                     }
 
                     s.push(sx);
@@ -232,6 +231,7 @@ define("models/TriangleAbstract", [
             }
 
             function Bool2Image(s, width, height) {
+                //noinspection JSUnresolvedFunction
                 var bmp = new Uint8ClampedArray(width * height * 4);
 
                 for (var y = 0; y < height; y++) {
@@ -528,56 +528,7 @@ define("models/TriangleAbstract", [
             return newData;
         },
 
-        convolute: function (data, w, h, weights, opaque) {
-            var side = Math.round(Math.sqrt(weights.length)),
-                halfSide = Math.floor(side / 2);
 
-            // pad output by the convolution matrix
-            //noinspection JSUnresolvedFunction
-            var dst = new Uint8ClampedArray(data.length);
-
-            // go through the destination image pixels
-            var alphaFac = opaque ? 1 : 0;
-
-            for (var y = 0; y < h; y++) {
-                for (var x = 0; x < w; x++) {
-                    var sy = y,
-                        sx = x,
-                        dstOff = (y * w + x) * 4;
-
-                    // calculate the weighed sum of the source image pixels that
-                    // fall under the convolution matrix
-                    var r = 0,
-                        g = 0,
-                        b = 0,
-                        a = 0;
-
-                    for (var cy = 0; cy < side; cy++) {
-                        for (var cx = 0; cx < side; cx++) {
-                            var scy = sy + cy - halfSide,
-                                scx = sx + cx - halfSide;
-
-                            if (scy >= 0 && scy < h && scx >= 0 && scx < w) {
-                                var srcOff = (scy * w + scx) * 4,
-                                    wt = weights[cy * side + cx];
-
-                                r += data[srcOff] * wt;
-                                g += data[srcOff + 1] * wt;
-                                b += data[srcOff + 2] * wt;
-                                a += data[srcOff + 3] * wt;
-                            }
-                        }
-                    }
-
-                    dst[dstOff] = r;
-                    dst[dstOff + 1] = g;
-                    dst[dstOff + 2] = b;
-                    dst[dstOff + 3] = a + alphaFac * (255 - a);
-                }
-            }
-
-            return dst;
-        },
 
         /**
          * @param data
@@ -793,7 +744,7 @@ define("models/TriangleAbstract", [
 
         postThin: function (options, out) {
             if (parseInt(options.thin)) {
-                out = this.convolute(out, this.w, this.h, [
+                out = Filter.convolute(out, this.w, this.h, [
                     1, 1, 1,
                     1, -7, 1,
                     1, 1, 1
@@ -900,8 +851,9 @@ define("models/TriangleAbstract", [
                     ];
                 }
 
-                out = this.convolute(out, this.w, this.h, sMtx);
+                out = Filter.convolute(out, this.w, this.h, sMtx);
             }
+
             return out;
         },
 
@@ -909,12 +861,13 @@ define("models/TriangleAbstract", [
             if (parseInt(options.blur)) {
                 var bFac = parseInt(options.blur) + 7;
 
-                out = this.convolute(out, this.w, this.h, [
+                out = Filter.convolute(out, this.w, this.h, [
                     1 / bFac, 1 / bFac, 1 / bFac,
                     1 / bFac, 1 / bFac, 1 / bFac,
                     1 / bFac, 1 / bFac, 1 / bFac
                 ]);
             }
+
             return out;
         },
 
