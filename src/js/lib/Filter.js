@@ -5,6 +5,23 @@ define("lib/Filter", ["lib/Dithering"], function (Dithering) {
 
     //noinspection JSValidateJSDoc
     return {
+        //// BRIGHTNESS ///////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} adjustment
+         * @returns {Uint8ClampedArray}
+         */
+        brightness: function (data, adjustment) {
+            for (var i = 0; i < data.length; i += 4) {
+                data[i] += adjustment;
+                data[i + 1] += adjustment;
+                data[i + 2] += adjustment;
+            }
+
+            return data;
+        },
+
         //// COLOR ////////////////////////////////////////////////////////////
 
         /**

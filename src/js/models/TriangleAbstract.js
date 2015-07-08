@@ -65,7 +65,7 @@ define("models/TriangleAbstract", [
                     type: "Slider",
                     min:  0,
                     max:  200,
-                    cb:   this.brightness
+                    cb:   Filter.brightness
                 },
                 threshold:    {
                     name: "Порог",
@@ -486,20 +486,7 @@ define("models/TriangleAbstract", [
             return tempData;
         },
 
-        /**
-         * @param data
-         * @param adjustment
-         * @returns {*}
-         */
-        brightness: function (data, adjustment) {
-            for (var i = 0; i < data.length; i += 4) {
-                data[i] += adjustment;
-                data[i + 1] += adjustment;
-                data[i + 2] += adjustment;
-            }
 
-            return data;
-        },
 
         /**
          * @param data
