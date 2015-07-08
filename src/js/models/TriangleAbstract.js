@@ -5,7 +5,8 @@ define("models/TriangleAbstract", [
     "backbone",
     "underscore",
     "lib/Canvas",
-    "lib/Dithering"
+    "lib/Dithering",
+    "lib/Mixin"
 ], function (Backbone, _, Canvas, Dithering) {
     "use strict";
 
@@ -130,10 +131,6 @@ define("models/TriangleAbstract", [
         COLORS: {
             BLACK: [0, 0, 0, 255],
             WHITE: [255, 255, 255, 255]
-        },
-
-        clone: function (data) {
-            return _.map(data, _.clone);
         },
 
         readOptions: function () {
@@ -344,10 +341,10 @@ define("models/TriangleAbstract", [
                 var count = 0;
 
                 do {
-                    temp = self.clone(s);
+                    temp = _.deepClone(s);
                     count = step(1, temp, s);
 
-                    temp = self.clone(s);
+                    temp = _.deepClone(s);
                     count += step(2, temp, s);
                 } while (count > 0);
 
@@ -432,7 +429,7 @@ define("models/TriangleAbstract", [
          * @param {number} h
          */
         flipX: function (data, w, h) {
-            var tempData = this.clone(data),
+            var tempData = _.deepClone(data),
                 i, flip, x, y, c;
 
             for (y = 0; y < h; y++) {
@@ -451,7 +448,7 @@ define("models/TriangleAbstract", [
         },
 
         flipY: function (data, w, h) {
-            var tempData = this.clone(data),
+            var tempData = _.deepClone(data),
                 i, flip, x, y, c;
 
             for (y = 0; y < h; y++) {
@@ -470,7 +467,7 @@ define("models/TriangleAbstract", [
         },
 
         rotate: function (data, w, h) {
-            var tempData = this.clone(data),
+            var tempData = _.deepClone(data),
                 i, flip, x, y, c;
 
             for (y = 1; y < h - 1; y += 1) {
@@ -918,27 +915,6 @@ define("models/TriangleAbstract", [
             return data;
         },
 
-        //// UTILS ////////////////////////////////////////////////////////////
-
-        format: function () {
-            var theString = arguments[0];
-
-            for (var i = 1; i < arguments.length; i++) {
-                var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
-                theString = theString.replace(regEx, arguments[i]);
-            }
-
-            return theString;
-        },
-
-        ucfirst: function (str) {
-            if (str.length) {
-                str = str.charAt(0).toUpperCase() + str.slice(1);
-            }
-
-            return str;
-        },
-
         //// DITHERING ////////////////////////////////////////////////////////
 
         buildDitherList: function () {
@@ -952,8 +928,8 @@ define("models/TriangleAbstract", [
                 _.each(Dithering.ALGORITHM, function (nameA, keyA) {
                     options.push(
                         {
-                            text: this.format("{0} ({1})", nameP, nameA),
-                            cb:   this[this.format("dither{0}_{1}", keyP, keyA)]
+                            text: _.format("{0} ({1})", nameP, nameA),
+                            cb:   this[_.format("dither{0}_{1}", keyP, keyA)]
                         }
                     );
                 }, this);
@@ -1300,7 +1276,7 @@ define("models/TriangleAbstract", [
             }
 
             _.each(Object.keys(options), function (key) {
-                out = this["post" + this.ucfirst(key)](options, out, tilesW, tilesH);
+                out = this["post" + _.capitalize(key)](options, out, tilesW, tilesH);
             }, this);
 
             return out;
