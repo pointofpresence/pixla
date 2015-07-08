@@ -443,65 +443,17 @@ define("models/TriangleAbstract", [
             return tempData;
         },
 
-        convolve3x3: function (data, w, m, divisor, offset) {
-            if (!divisor) {
-                divisor = m.reduce(function (a, b) {
-                    return a + b;
-                }) || 1; // sum
-            }
-
-            //noinspection JSUnresolvedFunction
-            var newData = new Uint8ClampedArray(data.length),
-                len = newData.length,
-                res = 0;
-
-            for (var i = 0; i < len; i++) {
-                if ((i + 1) % 4 === 0) {
-                    newData[i] = data[i];
-                    continue;
-                }
-
-                res = 0;
-
-                var these = [
-                    data[i - w * 4 - 4] || data[i],
-                    data[i - w * 4] || data[i],
-                    data[i - w * 4 + 4] || data[i],
-                    data[i - 4] || data[i],
-                    data[i],
-                    data[i + 4] || data[i],
-                    data[i + w * 4 - 4] || data[i],
-                    data[i + w * 4] || data[i],
-                    data[i + w * 4 + 4] || data[i]
-                ];
-
-                for (var j = 0; j < 9; j++) {
-                    res += these[j] * m[j];
-                }
-
-                res /= divisor;
-
-                if (offset) {
-                    res += offset;
-                }
-
-                newData[i] = res;
-            }
-
-            return newData;
-        },
-
         sobel: function (data, w) {
             var grayscale = Filter.grayscale(data);
 
-            var vertical = this.convolve3x3(grayscale, w,
+            var vertical = Filter.convolve3x3(grayscale, w,
                 [
                     -1, 0, 1,
                     -2, 0, 2,
                     -1, 0, 1
                 ]);
 
-            var horizontal = this.convolve3x3(grayscale, w,
+            var horizontal = Filter.convolve3x3(grayscale, w,
                 [
                     -1, -2, -1,
                     0, 0, 0,
@@ -527,8 +479,6 @@ define("models/TriangleAbstract", [
 
             return newData;
         },
-
-
 
         /**
          * @param data
@@ -794,7 +744,7 @@ define("models/TriangleAbstract", [
                         break;
                 }
 
-                out = this.convolve3x3(out, this.w, eMtx);
+                out = Filter.convolve3x3(out, this.w, eMtx);
             }
 
             return out;
@@ -824,7 +774,7 @@ define("models/TriangleAbstract", [
                         break;
                 }
 
-                out = this.convolve3x3(out, this.w, edMtx);
+                out = Filter.convolve3x3(out, this.w, edMtx);
             }
             return out;
         },

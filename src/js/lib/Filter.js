@@ -72,6 +72,62 @@ define("lib/Filter", [
             return dst;
         },
 
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {Array} m Kernel
+         * @param {number} divisor
+         * @param {number} offset
+         * @returns {Uint8ClampedArray}
+         */
+        convolve3x3: function (data, w, m, divisor, offset) {
+            if (!divisor) {
+                divisor = m.reduce(function (a, b) {
+                    return a + b;
+                }) || 1; // sum
+            }
+
+            //noinspection JSUnresolvedFunction
+            var newData = new Uint8ClampedArray(data.length),
+                len = newData.length,
+                res = 0;
+
+            for (var i = 0; i < len; i++) {
+                if ((i + 1) % 4 === 0) {
+                    newData[i] = data[i];
+                    continue;
+                }
+
+                res = 0;
+
+                var these = [
+                    data[i - w * 4 - 4] || data[i],
+                    data[i - w * 4] || data[i],
+                    data[i - w * 4 + 4] || data[i],
+                    data[i - 4] || data[i],
+                    data[i],
+                    data[i + 4] || data[i],
+                    data[i + w * 4 - 4] || data[i],
+                    data[i + w * 4] || data[i],
+                    data[i + w * 4 + 4] || data[i]
+                ];
+
+                for (var j = 0; j < 9; j++) {
+                    res += these[j] * m[j];
+                }
+
+                res /= divisor;
+
+                if (offset) {
+                    res += offset;
+                }
+
+                newData[i] = res;
+            }
+
+            return newData;
+        },
+
         //// INVERSE /////////////////////////////////////////////////////////
 
         /**
