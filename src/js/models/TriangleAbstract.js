@@ -443,20 +443,6 @@ define("models/TriangleAbstract", [
             return tempData;
         },
 
-        /**
-         * @param data Uint8ClampedArray
-         * @returns Uint8ClampedArray
-         */
-        invert: function (data) {
-            for (var i = 0; i < data.length; i += 4) {
-                data[i] = 255 - data[i];            // red
-                data[i + 1] = 255 - data[i + 1];    // green
-                data[i + 2] = 255 - data[i + 2];    // blue
-            }
-
-            return data;
-        },
-
         convolve3x3: function (data, w, m, divisor, offset) {
             if (!divisor) {
                 divisor = m.reduce(function (a, b) {
@@ -808,7 +794,7 @@ define("models/TriangleAbstract", [
 
         postInvert: function (options, out) {
             if (parseInt(options.invert)) {
-                out = this.invert(out);
+                out = Filter.invert(out);
             }
 
             return out;
@@ -878,6 +864,7 @@ define("models/TriangleAbstract", [
 
                 out = this.convolve3x3(out, this.w, eMtx);
             }
+
             return out;
         },
 
