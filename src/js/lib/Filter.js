@@ -77,6 +77,18 @@ define("lib/Filter", [
             return tempData;
         },
 
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @returns {Uint8ClampedArray}
+         */
+        flipXY: function (data, w, h) {
+            return this.flipY(
+                this.flipX(data, w, h), w, h
+            );
+        },
+
         //// THRESHOLD ///////////////////////////////////////////////////////
 
         /**

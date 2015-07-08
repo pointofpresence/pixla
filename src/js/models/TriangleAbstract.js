@@ -29,9 +29,9 @@ define("models/TriangleAbstract", [
                     type:    "Select",
                     options: [
                         {text: "Нет"},
-                        {text: "По оси X", cb: this.cbMirrorX},
-                        {text: "По оси Y", cb: this.cbMirrorY},
-                        {text: "По оси X и Y", cb: this.cbMirrorXY}
+                        {text: "По оси X", cb: Filter.flipX},
+                        {text: "По оси Y", cb: Filter.flipY},
+                        {text: "По оси X и Y", cb: Filter.flipXY}
                     ]
                 },
                 kaleidoscope: {
@@ -39,12 +39,12 @@ define("models/TriangleAbstract", [
                     type:    "Select",
                     options: [
                         {text: "Нет"},
-                        {text: "К центру", cb: this.centerKaleidoskope},
-                        {text: "В стороны", cb: this.outsideKaleidoskope},
-                        {text: "К центру и в стороны", cb: this.centerOutsideKaleidoskope},
-                        {text: "По горизонтали", cb: this.horizKaleidoskope},
-                        {text: "По вертикали", cb: this.vertKaleidoskope},
-                        {text: "Игральная карта", cb: this.cardKaleidoskope}
+                        {text: "К центру", cb: this.kaleidoskopeCenter},
+                        {text: "В стороны", cb: this.kaleidoskopeOutside},
+                        {text: "К центру и в стороны", cb: this.kaleidoskopeCenterOutside},
+                        {text: "По горизонтали", cb: this.kaleidoskopeHoriz},
+                        {text: "По вертикали", cb: this.kaleidoskopeVert},
+                        {text: "Игральная карта", cb: this.kaleidoskopeCard}
                     ]
                 },
                 colors:       {
@@ -612,7 +612,7 @@ define("models/TriangleAbstract", [
             ];
         },
 
-        centerKaleidoskope: function (data, w, h) {
+        kaleidoskopeCenter: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
             this.h = h * 2;
@@ -633,7 +633,7 @@ define("models/TriangleAbstract", [
             return data;
         },
 
-        centerOutsideKaleidoskope: function (data, w, h) {
+        kaleidoskopeCenterOutside: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
             this.h = h * 2;
@@ -654,7 +654,7 @@ define("models/TriangleAbstract", [
             return data;
         },
 
-        outsideKaleidoskope: function (data, w, h) {
+        kaleidoskopeOutside: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
             this.h = h * 2;
@@ -676,7 +676,7 @@ define("models/TriangleAbstract", [
             return data;
         },
 
-        vertKaleidoskope: function (data, w, h) {
+        kaleidoskopeVert: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
             this.h = h * 2;
@@ -690,7 +690,7 @@ define("models/TriangleAbstract", [
             return data;
         },
 
-        cardKaleidoskope: function (data, w, h) {
+        kaleidoskopeCard: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
             this.h = h * 2;
@@ -711,7 +711,7 @@ define("models/TriangleAbstract", [
          * @param h
          * @returns {*}
          */
-        horizKaleidoskope: function (data, w, h) {
+        kaleidoskopeHoriz: function (data, w, h) {
             data = this.grab(data, 0, 0, w * 2, h * 2);
             this.w = w * 2;
             this.h = h * 2;
@@ -748,26 +748,6 @@ define("models/TriangleAbstract", [
             return options;
         },
 
-        //// POST EFFECTS CALLBACKS ///////////////////////////////////////////
-
-        /**
-         * @param data
-         * @param w
-         * @param h
-         * @returns {*}
-         */
-        cbMirrorX: function (data, w, h) {
-            return Filter.flipX(data, w, h);
-        },
-
-        cbMirrorY: function (data, w, h) {
-            return Filter.flipY(data, w, h);
-        },
-
-        cbMirrorXY: function (data, w, h) {
-            return Filter.flipY(Filter.flipX(data, w, h), w, h);
-        },
-
         //// POST EFFECTS /////////////////////////////////////////////////////
 
         applyPost: function (out, options, tilesW, tilesH) {
@@ -786,7 +766,8 @@ define("models/TriangleAbstract", [
             if (options.mirror
                 && this.options.mirror.options[options.mirror].cb
                 && this.options.mirror.options[options.mirror]) {
-                out = this.options.mirror.options[options.mirror].cb.call(this, out, this.w, this.h);
+                out = this.options.mirror.options[options.mirror]
+                    .cb.call(Filter, out, this.w, this.h);
             }
 
             return out;
