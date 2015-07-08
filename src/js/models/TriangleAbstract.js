@@ -52,12 +52,12 @@ define("models/TriangleAbstract", [
                     type:    "Select",
                     options: [
                         {text: "Нет"},
-                        {text: "Монохром", cb: this.monochrome},
-                        {text: "Градации серого", cb: this.grayscale},
-                        {text: "Сепия", cb: this.sepia},
-                        {text: "Красный", cb: this.red},
-                        {text: "Зеленый", cb: this.green},
-                        {text: "Синий", cb: this.blue}
+                        {text: "Монохром", cb: Filter.monochrome},
+                        {text: "Градации серого", cb: Filter.grayscale},
+                        {text: "Сепия", cb: Filter.sepia},
+                        {text: "Красный", cb: Filter.red},
+                        {text: "Зеленый", cb: Filter.green},
+                        {text: "Синий", cb: Filter.blue}
                     ]
                 },
                 brightness:   {
@@ -487,39 +487,6 @@ define("models/TriangleAbstract", [
         },
 
         /**
-         * @param data Uint8ClampedArray
-         * @returns Uint8ClampedArray
-         */
-        grayscale: function (data) {
-            for (var i = 0; i < data.length; i += 4) {
-                var r = data[i];
-                var g = data[i + 1];
-                var b = data[i + 2];
-
-                // CIE luminance for the RGB
-                // The human eye is bad at seeing red and blue, so we de-emphasize them.
-                var v = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                data[i] = data[i + 1] = data[i + 2] = v;
-            }
-
-            return data;
-        },
-
-        monochrome: function (data) {
-            for (var i = 0; i < data.length; i += 4) {
-                var r = data[i];
-                var g = data[i + 1];
-                var b = data[i + 2];
-
-                var v = Math.floor((r + g + b) / 3);
-                data[i] = data[i + 1] = data[i + 2] = (v > 127 ? 255 : 0);
-                data[i + 3] = 255;
-            }
-
-            return data;
-        },
-
-        /**
          * @param data
          * @param adjustment
          * @returns {*}
@@ -546,75 +513,6 @@ define("models/TriangleAbstract", [
                 var b = data[i + 2];
                 var v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= threshold) ? 255 : 0;
                 data[i] = data[i + 1] = data[i + 2] = v
-            }
-
-            return data;
-        },
-
-        /**
-         * @param data
-         * @returns {*}
-         */
-        sepia: function (data) {
-            for (var i = 0; i < data.length; i += 4) {
-                var r = data[i];
-                var g = data[i + 1];
-                var b = data[i + 2];
-
-                data[i] = (r * 0.393) + (g * 0.769) + (b * 0.189);      // red
-                data[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168);  // green
-                data[i + 2] = (r * 0.272) + (g * 0.534) + (b * 0.131);  // blue
-            }
-
-            return data;
-        },
-
-        /**
-         * @param data
-         * @returns {*}
-         */
-        red: function (data) {
-            for (var i = 0; i < data.length; i += 4) {
-                var r = data[i];
-                var g = data[i + 1];
-                var b = data[i + 2];
-
-                data[i] = (r + g + b) / 3;     // apply average to red channel
-                data[i + 1] = data[i + 2] = 0; // zero out green and blue channel
-            }
-
-            return data;
-        },
-
-        /**
-         * @param data
-         * @returns {*}
-         */
-        green: function (data) {
-            for (var i = 0; i < data.length; i += 4) {
-                var r = data[i];
-                var g = data[i + 1];
-                var b = data[i + 2];
-
-                data[i + 1] = (r + g + b) / 3;
-                data[i] = data[i + 2] = 0;
-            }
-
-            return data;
-        },
-
-        /**
-         * @param data
-         * @returns {*}
-         */
-        blue: function (data) {
-            for (var i = 0; i < data.length; i += 4) {
-                var r = data[i];
-                var g = data[i + 1];
-                var b = data[i + 2];
-
-                data[i + 2] = (r + g + b) / 3;
-                data[i] = data[i + 1] = 0;
             }
 
             return data;
@@ -683,7 +581,7 @@ define("models/TriangleAbstract", [
         },
 
         sobel: function (data, w) {
-            var grayscale = this.grayscale(data);
+            var grayscale = Filter.grayscale(data);
 
             var vertical = this.convolve3x3(grayscale, w,
                 [
