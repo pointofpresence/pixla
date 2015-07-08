@@ -9,6 +9,43 @@ define("lib/Filter", [
 
     //noinspection JSValidateJSDoc
     return {
+        //// SOBEL ///////////////////////////////////////////////////////////
+
+        sobel: function (data, w) {
+            var grayscale = this.grayscale(data);
+
+            var vertical = this.convolve3x3(grayscale, w, [
+                -1, 0, 1,
+                -2, 0, 2,
+                -1, 0, 1
+            ]);
+
+            var horizontal = this.convolve3x3(grayscale, w, [
+                -1, -2, -1,
+                0, 0, 0,
+                1, 2, 1
+            ]);
+
+            //noinspection JSUnresolvedFunction
+            var newData = new Uint8ClampedArray(data.length);
+
+            for (var i = 0; i < data.length; i += 4) {
+                // make the vertical gradient red
+                var v = Math.abs(vertical[i]);
+                newData[i] = v;
+
+                // make the horizontal gradient green
+                var h = Math.abs(horizontal[i]);
+                newData[i + 1] = h;
+
+                // and mix in some blue for aesthetics
+                newData[i + 2] = (v + h) / 4;
+                newData[i + 3] = 255; // opaque alpha
+            }
+
+            return newData;
+        },
+
         //// CONVOLUTION /////////////////////////////////////////////////////
 
         /**
@@ -76,8 +113,8 @@ define("lib/Filter", [
          * @param {Uint8ClampedArray} data
          * @param {number} w
          * @param {Array} m Kernel
-         * @param {number} divisor
-         * @param {number} offset
+         * @param {number} [divisor]
+         * @param {number} [offset]
          * @returns {Uint8ClampedArray}
          */
         convolve3x3: function (data, w, m, divisor, offset) {

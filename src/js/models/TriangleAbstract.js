@@ -443,43 +443,6 @@ define("models/TriangleAbstract", [
             return tempData;
         },
 
-        sobel: function (data, w) {
-            var grayscale = Filter.grayscale(data);
-
-            var vertical = Filter.convolve3x3(grayscale, w,
-                [
-                    -1, 0, 1,
-                    -2, 0, 2,
-                    -1, 0, 1
-                ]);
-
-            var horizontal = Filter.convolve3x3(grayscale, w,
-                [
-                    -1, -2, -1,
-                    0, 0, 0,
-                    1, 2, 1
-                ]);
-
-            //noinspection JSUnresolvedFunction
-            var newData = new Uint8ClampedArray(data.length);
-
-            for (var i = 0; i < data.length; i += 4) {
-                // make the vertical gradient red
-                var v = Math.abs(vertical[i]);
-                newData[i] = v;
-
-                // make the horizontal gradient green
-                var h = Math.abs(horizontal[i]);
-                newData[i + 1] = h;
-
-                // and mix in some blue for aesthetics
-                newData[i + 2] = (v + h) / 4;
-                newData[i + 3] = 255; // opaque alpha
-            }
-
-            return newData;
-        },
-
         /**
          * @param data
          * @param x
@@ -714,7 +677,7 @@ define("models/TriangleAbstract", [
 
         postSobel: function (options, out) {
             if (parseInt(options.sobel)) {
-                out = this.sobel(out, this.w);
+                out = Filter.sobel(out, this.w);
             }
 
             return out;
