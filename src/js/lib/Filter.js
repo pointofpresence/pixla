@@ -11,6 +11,11 @@ define("lib/Filter", [
     return {
         //// SOBEL ///////////////////////////////////////////////////////////
 
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @returns {Uint8ClampedArray}
+         */
         sobel: function (data, w) {
             var grayscale = this.grayscale(data);
 

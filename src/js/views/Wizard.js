@@ -276,7 +276,11 @@ define("views/Wizard", [
                 this.draw[o](canvas, w, h);
             }
 
-            this.elements.srcImage.attr("src", canvas.toDataURL());
+            var data = canvas.toDataURL();
+            this.elements.srcImage.attr("src", data);
+            this.encoded = data;
+            this.setEncoded(this.encoded);
+
             this.render();
         },
 

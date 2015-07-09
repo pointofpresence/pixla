@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2015 pointofpresence
  * ReSampled.Pixla (pixla) - Online image filter
- * @version v0.0.52
- * @build Wed Jul 08 2015 20:21:46
+ * @version v0.0.53
+ * @build Thu Jul 09 2015 08:37:03
  * @link https://github.com/pointofpresence/pixla
  * @license MIT
  */
