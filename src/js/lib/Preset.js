@@ -10,8 +10,9 @@ define("lib/Preset", [], function () {
         },
 
         "Thin": {
-            "colors":     2,
-            "brightness": 3,
+            "colors":     4,
+            "brightness": 10,
+            "contrast":   75,
             "sharpen":    2,
             "zhangSuen":  1
         }

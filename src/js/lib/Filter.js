@@ -10,6 +10,33 @@ define("lib/Filter", [
 
     //noinspection JSValidateJSDoc
     return {
+        //// CONTRAST /////////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} contrast
+         * @returns {Uint8ClampedArray}
+         */
+        contrast: function (data, contrast) {
+            var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+            for (var i = 0; i < data.length; i += 4) {
+                data[i] = factor * (data[i] - 128) + 128;
+                data[i + 1] = factor * (data[i + 1] - 128) + 128;
+                data[i + 2] = factor * (data[i + 2] - 128) + 128;
+            }
+
+            return data;
+        },
+
+        //// ZHANG SUEN ///////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @returns {Uint8ClampedArray}
+         */
         zhangSuen: function (data, w, h) {
             function Image2Bool(img, width, height) {
                 var s = [];

@@ -56,6 +56,13 @@ define("lib/Options", [
                 cb:   Filter.brightness
             },
 
+            contrast: {
+                name: "Контраст",
+                type: "Slider",
+                min:  0,
+                max:  259
+            },
+
             threshold: {
                 name: "Порог",
                 type: "Slider",

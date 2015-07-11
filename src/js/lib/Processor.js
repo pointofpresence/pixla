@@ -255,6 +255,17 @@ define("lib/Processor", [
         /**
          * @param {string} filter
          */
+        postContrast: function (filter) {
+            if (parseInt(filter) && Filter.contrast) {
+                this.data = Filter.contrast(
+                    this.data, parseInt(filter)
+                );
+            }
+        },
+
+        /**
+         * @param {string} filter
+         */
         postBrightness: function (filter) {
             if (parseInt(filter)
                 && this.options.brightness.cb) {
