@@ -6,7 +6,7 @@
     </label>
 
     <div class="col-sm-6">
-        <input class="form-control" data-option="<%= id %>"
+        <input class="form-control input-sm" data-option="<%= id %>"
                id="option-<%= id %>"
                type="range" min="<%= option.min || 0 %>" max="<%= option.max || 100 %>"
                value="<%= value || (option.min || 0) %>" step="<%= option.step || 1 %>"
@@ -14,7 +14,7 @@
     </div>
 
     <div class="col-sm-2 text-center">
-        <input title class="form-control text-center" id="option-<%= id %>-value"
+        <input title class="form-control text-center input-sm" id="option-<%= id %>-value"
                readonly value="<%= value || (option.min || 0) %>" />
     </div>
-</div>
+</div><% console.log(value)%>

@@ -2,19 +2,12 @@
  * @module models/TriangleBlocks
  */
 define("models/TriangleBlocks", [
-    "backbone",
-    "underscore",
-    "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+    "models/TriangleCross",
+    "lib/Buffer"
+], function (TriangleCrossModel, Buffer) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Blocks",
-            description: "Blocks Tile",
-            sort:        150
-        }),
-
         TILE_WIDTH:  5,
         TILE_HEIGHT: 5,
 
@@ -28,15 +21,15 @@ define("models/TriangleBlocks", [
             );
 
             f = 0.75;
-            colors[2] = this.mixColors(colors[5], this.COLORS.BLACK, f);
-            colors[3] = this.mixColors(colors[5], this.COLORS.WHITE, f);
+            colors[2] = Buffer.mixColors(colors[5], Buffer.COLORS.BLACK, f);
+            colors[3] = Buffer.mixColors(colors[5], Buffer.COLORS.WHITE, f);
 
             f = 0.125;
-            colors[4] = this.mixColors(colors[5], this.COLORS.WHITE, f);
-            colors[6] = this.mixColors(colors[5], this.COLORS.BLACK, f);
+            colors[4] = Buffer.mixColors(colors[5], Buffer.COLORS.WHITE, f);
+            colors[6] = Buffer.mixColors(colors[5], Buffer.COLORS.BLACK, f);
 
             f = 0.25;
-            colors[7] = this.mixColors(colors[5], this.COLORS.BLACK, f);
+            colors[7] = Buffer.mixColors(colors[5], Buffer.COLORS.BLACK, f);
 
             return colors;
         },

@@ -2,19 +2,11 @@
  * @module models/TriangleCross
  */
 define("models/TriangleCrossRadial", [
-    "backbone",
-    "underscore",
     "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+], function (TriangleCrossModel) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Triangle Cross Radial",
-            description: "Triangle Cross Radial Filter",
-            sort:        20
-        }),
-
         getColors: function (data, x, y) {
             var colors = [];
 

@@ -2,19 +2,11 @@
  * @module models/TriangleCross
  */
 define("models/TriangleDithering", [
-    "backbone",
-    "underscore",
     "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+], function (TriangleCrossModel) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Triangle Dither",
-            description: "Triangle Dither Filter",
-            sort:        30
-        }),
-
         getColors: function (data, x, y) {
             var colors = [];
 

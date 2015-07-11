@@ -28,44 +28,11 @@ require.config({
 
 require([
     "jquery",
-    "models/TriangleStart",
-    "models/TriangleCross",
-    "models/TriangleCrossRadial",
-    "models/TriangleRealCross",
-    "models/TriangleCube",
-    "models/TriangleCubeSimple",
-    "models/TriangleLine",
-    "models/TriangleDithering",
-    "models/TriangleMeander",
-    "models/TriangleSkull",
-    "models/TriangleStone",
-    "models/TriangleStoneAdvanced",
-    "models/TriangleKuwahara",
-    "models/TrianglePeecol",
-    "models/TriangleBlocks",
-    "collections/Generator",
     "views/Wizard",
     "bootstrap",
     "share",
     "lib/Fileinput"
-], function ($,
-             TriangleStartModel,
-             TriangleCrossModel,
-             TriangleCrossRadialModel,
-             TriangleRealCrossModel,
-             TriangleCubeModel,
-             TriangleCubeSimpleModel,
-             TriangleLineModel,
-             TriangleDitheringModel,
-             TriangleMeanderModel,
-             TriangleSkullModel,
-             TriangleStoneModel,
-             TriangleStoneAdvancedModel,
-             TriangleKuwahara,
-             TrianglePeecol,
-             TriangleBlocks,
-             GeneratorCollection,
-             WizardView) {
+], function ($, WizardView) {
     "use strict";
 
     $(function () {
@@ -89,28 +56,12 @@ require([
 
         $("#wizard").show();
 
-        $(":file").filestyle({buttonText: "", buttonName: "btn-primary"});
-
-        var generators = new GeneratorCollection([
-            new TriangleStartModel,
-            new TriangleCrossModel,
-            new TriangleCrossRadialModel,
-            new TriangleRealCrossModel,
-            new TriangleSkullModel,
-            new TriangleCubeModel,
-            new TriangleCubeSimpleModel,
-            new TriangleLineModel,
-            new TriangleMeanderModel,
-            new TriangleStoneModel,
-            new TriangleStoneAdvancedModel,
-            new TriangleKuwahara,
-            new TrianglePeecol,
-            new TriangleBlocks,
-            new TriangleDitheringModel
-        ]);
-
-        new WizardView({
-            collection: generators
+        $(":file").filestyle({
+            buttonText: "",
+            buttonName: "btn-primary",
+            size: "sm"
         });
+
+        new WizardView;
     });
 });

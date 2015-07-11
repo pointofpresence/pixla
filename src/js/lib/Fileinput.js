@@ -197,7 +197,9 @@ define("lib/Fileinput", ["jquery"], function ($) {
             }
 
             return f
-        }, constructor: function () {
+        },
+
+        constructor: function () {
             var h = this,
                 f = "",
                 g = h.$element.attr("id"),

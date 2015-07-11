@@ -2,19 +2,12 @@
  * @module models/TriangleKuwahara
  */
 define("models/TriangleKuwahara", [
-    "backbone",
-    "underscore",
-    "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+    "models/TriangleCross",
+    "lib/Buffer"
+], function (TriangleCrossModel, Buffer) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Плавная пикселизация",
-            description: "Kuwahara Tile",
-            sort:        130
-        }),
-
         TILE_WIDTH:  5,
         TILE_HEIGHT: 5,
 
@@ -45,23 +38,23 @@ define("models/TriangleKuwahara", [
                 y + 4
             );
 
-            colors[5] = this.mixColors(colors[1], colors[2]);
+            colors[5] = Buffer.mixColors(colors[1], colors[2]);
 
-            colors[6] = this.mixColors(colors[1], colors[3]);
+            colors[6] = Buffer.mixColors(colors[1], colors[3]);
 
-            colors[7] = this.mixColors(colors[2], colors[4]);
+            colors[7] = Buffer.mixColors(colors[2], colors[4]);
 
-            colors[8] = this.mixColors(colors[3], colors[4]);
+            colors[8] = Buffer.mixColors(colors[3], colors[4]);
 
-            colors[9] = this.mixColors(colors[5], colors[8]);
+            colors[9] = Buffer.mixColors(colors[5], colors[8]);
 
-            colors[10] = this.mixColors(colors[6], colors[5]);
+            colors[10] = Buffer.mixColors(colors[6], colors[5]);
 
-            colors[11] = this.mixColors(colors[5], colors[7]);
+            colors[11] = Buffer.mixColors(colors[5], colors[7]);
 
-            colors[12] = this.mixColors(colors[6], colors[8]);
+            colors[12] = Buffer.mixColors(colors[6], colors[8]);
 
-            colors[13] = this.mixColors(colors[7], colors[8]);
+            colors[13] = Buffer.mixColors(colors[7], colors[8]);
 
             return colors;
         },

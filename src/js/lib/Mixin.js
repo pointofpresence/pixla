@@ -4,6 +4,10 @@ define("lib/Mixin", ["underscore"], function (_) {
     "use strict";
 
     _.mixin({
+        /**
+         * @param str
+         * @returns {*}
+         */
         capitalize: function(str) {
             if (str.length) {
                 str = str.charAt(0).toUpperCase() + str.slice(1);
@@ -12,6 +16,9 @@ define("lib/Mixin", ["underscore"], function (_) {
             return str;
         },
 
+        /**
+         * @returns {*}
+         */
         format: function () {
             var s = arguments[0];
 
@@ -23,6 +30,10 @@ define("lib/Mixin", ["underscore"], function (_) {
             return s;
         },
 
+        /**
+         * @param data
+         * @returns {*}
+         */
         deepClone: function (data) {
             return this.map(data, this.clone);
         }

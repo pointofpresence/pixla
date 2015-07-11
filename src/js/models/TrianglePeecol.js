@@ -4,24 +4,19 @@
 define("models/TrianglePeecol", [
     "backbone",
     "underscore",
-    "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+    "models/TriangleCross",
+    "lib/Buffer"
+], function (Backbone, _, TriangleCrossModel, Buffer) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Peecol",
-            description: "Peecol Tile",
-            sort:        140
-        }),
-
         TILE_WIDTH:  36,
         TILE_HEIGHT: 36,
 
         getColors: function (data, x, y) {
             var colors = [];
 
-            colors[1] = this.COLORS.BLACK;
+            colors[1] = Buffer.COLORS.BLACK;
 
             colors[2] = this.getPixelXY(
                 data,
@@ -127,12 +122,12 @@ define("models/TrianglePeecol", [
 
             var f = 0.25;
 
-            colors[19] = this.mixColors(colors[6], this.COLORS.BLACK, f);
-            colors[20] = this.mixColors(colors[8], this.COLORS.BLACK, f);
-            colors[21] = this.mixColors(colors[7], this.COLORS.BLACK, f);
-            colors[22] = this.mixColors(colors[14], this.COLORS.BLACK, f);
+            colors[19] = Buffer.mixColors(colors[6], Buffer.COLORS.BLACK, f);
+            colors[20] = Buffer.mixColors(colors[8], Buffer.COLORS.BLACK, f);
+            colors[21] = Buffer.mixColors(colors[7], Buffer.COLORS.BLACK, f);
+            colors[22] = Buffer.mixColors(colors[14], Buffer.COLORS.BLACK, f);
 
-            colors[23] = this.mixColors(colors[9], this.COLORS.BLACK, f);
+            colors[23] = Buffer.mixColors(colors[9], Buffer.COLORS.BLACK, f);
 
             colors[24] = colors[9];
 
@@ -142,12 +137,12 @@ define("models/TrianglePeecol", [
                 y + Math.floor((this.TILE_HEIGHT - 1) / 2)
             );
 
-            colors[26] = this.mixColors(colors[9], this.COLORS.WHITE, f);
+            colors[26] = Buffer.mixColors(colors[9], Buffer.COLORS.WHITE, f);
 
-            colors[27] = this.mixColors(colors[6], this.COLORS.WHITE, f);
-            colors[28] = this.mixColors(colors[8], this.COLORS.WHITE, f);
-            colors[29] = this.mixColors(colors[7], this.COLORS.WHITE, f);
-            colors[30] = this.mixColors(colors[14], this.COLORS.WHITE, f);
+            colors[27] = Buffer.mixColors(colors[6], Buffer.COLORS.WHITE, f);
+            colors[28] = Buffer.mixColors(colors[8], Buffer.COLORS.WHITE, f);
+            colors[29] = Buffer.mixColors(colors[7], Buffer.COLORS.WHITE, f);
+            colors[30] = Buffer.mixColors(colors[14], Buffer.COLORS.WHITE, f);
 
             return colors;
         },

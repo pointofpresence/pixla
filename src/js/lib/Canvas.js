@@ -7,6 +7,7 @@ define("lib/Canvas", [], function () {
         /**
          * @param w
          * @param h
+         * @param [id]
          * @returns {HTMLElement}
          */
         createEmptyCanvas: function (w, h, id) {
@@ -14,7 +15,7 @@ define("lib/Canvas", [], function () {
             canvas.width = w;
             canvas.height = h;
 
-            if(id) {
+            if (id) {
                 canvas.id = id;
             }
 
@@ -23,7 +24,7 @@ define("lib/Canvas", [], function () {
 
         /**
          * @param image
-         * @returns {*}
+         * @returns {HTMLElement}
          */
         convertImageToCanvas: function (image) {
             var canvas = this.createEmptyCanvas(image.width, image.height);
@@ -44,6 +45,19 @@ define("lib/Canvas", [], function () {
             };
 
             image.src = canvas.toDataURL("image/png");
+        },
+
+        /**
+         * @param w
+         * @param h
+         * @returns {ImageData}
+         */
+        createEmptyBuffer: function (w, h) {
+            var cvs = document.createElement("canvas");
+            cvs.width = w;
+            cvs.height = h;
+            var ctx = cvs.getContext("2d");
+            return ctx.getImageData(0, 0, cvs.width, cvs.height);
         }
     };
 });

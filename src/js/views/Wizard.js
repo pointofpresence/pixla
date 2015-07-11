@@ -7,9 +7,14 @@ define("views/Wizard", [
     "underscore",
     "templates",
     "lib/Canvas",
+    "lib/Processor",
+    "lib/Storage",
+    "lib/Random",
+    "lib/Options",
+    "lib/Preset",
     "sortable",
     "fabric"
-], function (Backbone, $, _, templates, Canvas, Sortable) {
+], function (Backbone, $, _, templates, Canvas, Processor, Storage, Random, Options, Preset, Sortable) {
     "use strict";
 
     return Backbone.View.extend({
@@ -17,38 +22,44 @@ define("views/Wizard", [
         encoded:   null,
         imageName: null,
         elements:  [],
-        filterCid: null,
+        filterId:  null,
 
         initialize: function () {
+            // fieldsets blocker
             this.elements.preloader = this.$(".preloader");
+
+            // download error
             this.elements.error = this.$(".error400");
+
+            // source img
             this.elements.srcImage = this.$(".src-image");
+
+            // filtered image
             this.elements.dstImage = this.$(".dst-image");
-            this.elements.inputFilter = this.$("#input-filter");
-            this.elements.inputRandom = this.$("#input-random");
+
+            // presets selectbox
+            this.elements.inputPreset = this.$("#input-preset");
+
+            // options dialog
             this.elements.optionsModal = this.$("#options-modal");
+
+            // options form
             this.elements.optionsForm = this.$("#options-form");
+
+            // message box (reserved)
             this.elements.messageModal = this.$("#message");
-            this.elements.filterOptionsBtn = this.$("#filter-options");
+
+            // save button
             this.elements.save = this.$("#output-save");
 
-            this.collection.each(function (generator) {
-                this.elements.inputFilter.append($("<option/>", {
-                    value: generator.cid,
-                    text:  generator.get("name")
+            Object.keys(Preset).forEach(function (key) {
+                this.elements.inputPreset.append($("<option/>", {
+                    value: key,
+                    text:  key
                 }));
             }, this);
 
-            var selectedFilter = this.getSelectedFilter();
-
-            if (selectedFilter) {
-                this.elements.inputFilter.val(selectedFilter);
-            }
-
-            this.filterCid = this.elements.inputFilter.val();
-            this.filterChanged();
-
-            var encoded = this.getEncoded();
+            var encoded = Storage.getEncoded();
 
             if (encoded) {
                 this.encoded = encoded;
@@ -58,232 +69,46 @@ define("views/Wizard", [
         },
 
         events: {
-            "click #input-random":     "onRandomClick",
-            "click #input-url":        "selectAll",
-            "click #input-url-button": "loadUrl",
-            "click #filter-options":   "onFilterOptionsClick",
+            // generate image button
+            "click #input-random":     "onRandomButtonClick",
+
+            // just select all when url textbox clicked
+            "click #input-url":        "onUrlTextClick",
+
+            // download button
+            "click #input-url-button": "onDownloadButtonClick",
+
+            // show options button
+            "click #show-options":     "onShowOptionsButtonClick",
+
+            // apply options button
             "click #options-apply":    "onOptionsApplyClick",
-            "change #input-file":      "select",
-            "change #input-filter":    "onFilterChange"
+
+            // fileinput changed
+            "change #input-file":      "onFileChange",
+
+            // change preset
+            "change #input-preset":    "onPresetChange"
         },
 
         /**
-         * @returns {*|number}
+         * @param {Event} e
          */
-        getSelectedFilter: function () {
-            return localStorage["filter"];
-        },
-
-        /**
-         * @param id
-         */
-        setSelectedFilter: function (id) {
-            localStorage["filter"] = id;
-        },
-
-        getEncoded: function () {
-            return localStorage["encoded"] ? JSON.parse(localStorage["encoded"]) : null;
-        },
-
-        setEncoded: function (data) {
-            localStorage["encoded"] = JSON.stringify(data);
-        },
-
-        message: function (msg) {
-            this.elements.messageModal.find(".message-body p").text(msg);
-            this.elements.messageModal.modal();
-        },
-
-        buildOptions: function (model) {
-            var options = model.options;
-            var html = "";
-
-            _.each(options, function (o, id) {
-                html += templates.options[o.type]({
-                    option: o,
-                    id:     id,
-                    value:  localStorage[this.filterCid]
-                        ? JSON.parse(localStorage[this.filterCid])[id]
-                        : null
-                });
-            }, this);
-
-            return html;
-        },
-
-        draw: {
-            poly: function (canvas, w, h) {
-                var points = [];
-
-                for (var i = 0; i <= Math.round(Math.random() * 100); i++) {
-                    points.push({x: Math.round(Math.random() * w), y: Math.round(Math.random() * h)});
-                }
-
-                var rect = new fabric.Polygon(points, {
-                    fill: "rgb(" + [
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255)
-                    ].join(",") + ")",
-
-                    left:    Math.round(Math.random() * w),
-                    top:     Math.round(Math.random() * h),
-                    angle:   Math.round(Math.random() * 360),
-                    opacity: Math.round(Math.random() * 100) / 100
-                });
-
-                rect.setShadow({
-                    color:   'rgba(0,0,0,0.3)',
-                    offsetX: Math.round(Math.random() * 20),
-                    offsetY: Math.round(Math.random() * 20)
-                });
-
-                canvas.add(rect);
-            },
-
-            rect: function (canvas, w, h) {
-                var rect = new fabric.Rect({
-                    left: Math.round(Math.random() * w),
-                    top:  Math.round(Math.random() * h),
-
-                    fill: "rgb(" + [
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255)
-                    ].join(",") + ")",
-
-                    width:   Math.round(Math.random() * w),
-                    height:  Math.round(Math.random() * h),
-                    angle:   Math.round(Math.random() * 360),
-                    opacity: Math.round(Math.random() * 100) / 100
-                });
-
-                rect.setShadow({
-                    color:   'rgba(0,0,0,0.3)',
-                    offsetX: Math.round(Math.random() * 20),
-                    offsetY: Math.round(Math.random() * 20)
-                });
-
-                canvas.add(rect);
-            },
-
-            ellipse: function (canvas, w, h) {
-                var rect = new fabric.Ellipse({
-                    left: Math.round(Math.random() * w),
-                    top:  Math.round(Math.random() * h),
-
-                    fill: "rgb(" + [
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255)
-                    ].join(",") + ")",
-
-                    rx:      Math.round(Math.random() * w),
-                    ry:      Math.round(Math.random() * h),
-                    opacity: Math.round(Math.random() * 100) / 100
-                });
-
-                rect.setShadow({
-                    color:   'rgba(0,0,0,0.3)',
-                    offsetX: Math.round(Math.random() * 20),
-                    offsetY: Math.round(Math.random() * 20)
-                });
-
-                canvas.add(rect);
-            },
-
-            triangle: function (canvas, w, h) {
-                var rect = new fabric.Triangle({
-                    left: Math.round(Math.random() * w),
-                    top:  Math.round(Math.random() * h),
-
-                    fill: "rgb(" + [
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255)
-                    ].join(",") + ")",
-
-                    width:   Math.round(Math.random() * w),
-                    height:  Math.round(Math.random() * h),
-                    angle:   Math.round(Math.random() * 360),
-                    opacity: Math.round(Math.random() * 100) / 100
-                });
-
-                rect.setShadow({
-                    color:   'rgba(0,0,0,0.3)',
-                    offsetX: Math.round(Math.random() * 20),
-                    offsetY: Math.round(Math.random() * 20)
-                });
-
-                canvas.add(rect);
-            },
-
-            circle: function (canvas, w, h) {
-                var rect = new fabric.Circle({
-                    left: Math.round(Math.random() * w),
-                    top:  Math.round(Math.random() * h),
-
-                    fill: "rgb(" + [
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255),
-                        Math.round(Math.random() * 255)
-                    ].join(",") + ")",
-
-                    radius:  Math.round(Math.random() * w / 2),
-                    opacity: Math.round(Math.random() * 100) / 100
-                });
-
-                rect.setShadow({
-                    color:   'rgba(0,0,0,0.3)',
-                    offsetX: Math.round(Math.random() * 20),
-                    offsetY: Math.round(Math.random() * 20)
-                });
-
-                canvas.add(rect);
-            }
-        },
-
-        onRandomClick: function (e) {
+        onRandomButtonClick: function (e) {
             e.preventDefault();
 
-            var w = 505, h = 505;
+            var data = Random.generate(505, 505, 100);
 
-            var el = Canvas.createEmptyCanvas(w, h, "random-canvas"),
-                canvas = new fabric.Canvas("random-canvas");
-
-            canvas.setDimensions({width: w, height: h});
-
-            var objects = Object.keys(this.draw);
-
-            var rect = new fabric.Rect({
-                left: 0,
-                top:  0,
-
-                fill: "rgb(" + [
-                    Math.round(Math.random() * 255),
-                    Math.round(Math.random() * 255),
-                    Math.round(Math.random() * 255)
-                ].join(",") + ")",
-
-                width:  w,
-                height: h
-            });
-
-            canvas.add(rect);
-
-            for (var i = 0; i <= Math.round(Math.random() * 100); i++) {
-                var o = objects[Math.round(Math.random() * (objects.length - 1))];
-                this.draw[o](canvas, w, h);
-            }
-
-            var data = canvas.toDataURL();
             this.elements.srcImage.attr("src", data);
             this.encoded = data;
-            this.setEncoded(this.encoded);
+            Storage.setEncoded(this.encoded);
 
             this.render();
         },
 
+        /**
+         * @param {Event} e
+         */
         onOptionsApplyClick: function (e) {
             e.preventDefault();
 
@@ -296,84 +121,59 @@ define("views/Wizard", [
                     options[$e.data("option")] = $e.val();
                 });
 
-            localStorage[this.filterCid] = JSON.stringify(options);
-
+            Storage.setFilter(options);
             this.elements.optionsModal.modal("hide");
+            this.render();
+        },
+
+        /**
+         * @param {Event} e
+         */
+        onPresetChange: function (e) {
+            this.presetId = $(e.currentTarget).val();
+
+            if (this.presetId && Preset[this.presetId]) {
+                Storage.setFilter(Preset[this.presetId]);
+            } else {
+                Storage.unsetFilter();
+            }
 
             this.render();
         },
 
-        onFilterChange: function (e) {
-            this.filterCid = $(e.currentTarget).val();
-            this.filterChanged();
-        },
-
-        filterChanged: function () {
-            if (this.filterCid) {
-                this.setSelectedFilter(this.filterCid);
-
-                var model = this.collection.get(this.filterCid),
-                    options = model.options;
-
-                if (!options || !Object.keys(options).length) {
-                    this.elements.filterOptionsBtn.prop("disabled", true);
-                } else {
-                    this.elements.filterOptionsBtn.prop("disabled", false);
-                }
-
-                this.render();
-
-            } else {
-                this.elements.filterOptionsBtn.prop("disabled", true);
-            }
-        },
-
-        onFilterOptionsClick: function (e) {
+        /**
+         * @param {Event} e
+         */
+        onShowOptionsButtonClick: function (e) {
             e.preventDefault();
 
-            var model = this.collection.get(this.filterCid);
-
-            this.elements.optionsModal
-                .find(".modal-title")
-                .html(templates.OptionsTitle({
-                    name: model.get("name")
-                }));
-
-            this.elements.optionsModal
-                .find(".description")
-                .text(model.get("description"));
-
-            var form = this.buildOptions(model);
+            var form = this.buildOptions();
 
             this.elements.optionsForm.html(form);
 
             this.sortable = Sortable.create(this.elements.optionsForm.get(0), {
                 sort:      true,
-                group:     this.filterCid,
+                group:     "options",
                 handle:    ".drag-handle",
                 animation: 150
             });
 
-            if (localStorage[this.filterCid]) {
+            var filter = Storage.getFilter();
+
+            if (!_.isEmpty(filter)) {
                 this.sortable.sort(
-                    Object.keys(JSON.parse(localStorage[this.filterCid]))
+                    Object.keys(filter)
                 );
             }
 
             this.elements.optionsModal.modal();
         },
 
-        showPreloader: function (state) {
-            state === true || typeof state === "undefined"
-                ? this.elements.preloader.show()
-                : this.elements.preloader.fadeOut();
-        },
-
         /**
          * @description Loading from URL
-         * @param e
+         * @param {Event} e
          */
-        loadUrl: function (e) {
+        onDownloadButtonClick: function (e) {
             e.preventDefault();
 
             var url = $.trim(this.$("#input-url").val());
@@ -391,7 +191,7 @@ define("views/Wizard", [
                     this.imageName = data.name;
                     this.encoded = data.data;
 
-                    this.setEncoded(this.encoded);
+                    Storage.setEncoded(this.encoded);
 
                     this.render();
                 } else {
@@ -402,8 +202,68 @@ define("views/Wizard", [
             }).bind(this));
         },
 
-        selectAll: function (e) {
+        /**
+         * @param {Event} e
+         */
+        onUrlTextClick: function (e) {
             $(e.currentTarget).select();
+        },
+
+        /**
+         * @description Loading from disk
+         * @param {Event} e
+         */
+        onFileChange: function (e) {
+            var selectedFile = e.target.files[0];
+            var reader = new FileReader();
+
+            this.elements.srcImage.title = selectedFile.name;
+            this.imageName = selectedFile.name;
+
+            reader.onload = (function (event) {
+                this.elements.srcImage.attr("src", event.target.result);
+                this.encoded = event.target.result;
+
+                this.setEncoded(this.encoded);
+
+                this.render();
+            }).bind(this);
+
+            reader.readAsDataURL(selectedFile);
+        },
+
+        /**
+         * @description Show message box
+         * @param msg
+         */
+        message: function (msg) {
+            this.elements.messageModal.find(".message-body p").text(msg);
+            this.elements.messageModal.modal();
+        },
+
+        /**
+         * @returns {string}
+         */
+        buildOptions: function () {
+            var options = Options.options,
+                storageData = Storage.getFilter(),
+                html = "";
+
+            _.each(options, function (o, id) {
+                html += templates.options[o.type]({
+                    option: o,
+                    id:     id,
+                    value:  parseInt(storageData[id]) || null
+                });
+            }, this);
+
+            return html;
+        },
+
+        showPreloader: function (state) {
+            state === true || typeof state === "undefined"
+                ? this.elements.preloader.show()
+                : this.elements.preloader.fadeOut();
         },
 
         render: function () {
@@ -421,7 +281,9 @@ define("views/Wizard", [
             ctxIn.drawImage(srcImage, 0, 0, cvsIn.width, cvsIn.height);
 
             var idtIn = ctxIn.getImageData(0, 0, cvsIn.width, cvsIn.height),
-                result = this.collection.doit(this.filterCid, idtIn, cvsIn.width, cvsIn.height),
+
+                result = Processor.doit(idtIn, cvsIn.width, cvsIn.height),
+
                 cvsOut = Canvas.createEmptyCanvas(result.w, result.h),
                 ctxOut = cvsOut.getContext("2d"),
                 idtOut = ctxOut.createImageData(result.w, result.h);
@@ -443,29 +305,6 @@ define("views/Wizard", [
             this.elements.save.attr("download", name);
 
             this.showPreloader(false);
-        },
-
-        /**
-         * @description Loading from disk
-         * @param event
-         */
-        select: function (event) {
-            var selectedFile = event.target.files[0];
-            var reader = new FileReader();
-
-            this.elements.srcImage.title = selectedFile.name;
-            this.imageName = selectedFile.name;
-
-            reader.onload = (function (event) {
-                this.elements.srcImage.attr("src", event.target.result);
-                this.encoded = event.target.result;
-
-                this.setEncoded(this.encoded);
-
-                this.render();
-            }).bind(this);
-
-            reader.readAsDataURL(selectedFile);
         }
     });
 });

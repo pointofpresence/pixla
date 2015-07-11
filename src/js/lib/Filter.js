@@ -3,12 +3,310 @@
 define("lib/Filter", [
     "underscore",
     "lib/Dithering",
+    "lib/Buffer",
     "lib/Mixin"
-], function (_, Dithering) {
+], function (_, Dithering, Buffer) {
     "use strict";
 
     //noinspection JSValidateJSDoc
     return {
+        zhangSuen: function (data, w, h) {
+            function Image2Bool(img, width, height) {
+                var s = [];
+
+                for (var y = 0; y < height; y++) {
+                    var sx = [];
+
+                    for (var x = 0; x < width; x++) {
+                        var p = Buffer.getPixelXY(img, x, y, w);
+
+                        if (x == 0 || y == 0 || x == width - 1 || y == height - 1) {
+                            sx.push(false);
+                        } else {
+                            var v = Math.floor((p[0] + p[1] + p[2]) / 3);
+                            sx.push(v < 32);
+                        }
+                    }
+
+                    s.push(sx);
+                }
+
+                return s;
+            }
+
+            function Bool2Image(s, width, height) {
+                //noinspection JSUnresolvedFunction
+                var bmp = new Uint8ClampedArray(width * height * 4);
+
+                for (var y = 0; y < height; y++) {
+                    for (var x = 0; x < width; x++) {
+                        if (s[y][x]) {
+                            Buffer.setPixelXY(bmp, x, y, Buffer.COLORS.BLACK, w);
+                        } else {
+                            Buffer.setPixelXY(bmp, x, y, Buffer.COLORS.WHITE, w);
+                        }
+                    }
+                }
+
+                return bmp;
+            }
+
+            /**
+             * @return {number}
+             */
+            function NumberOfNonZeroNeighbors(x, y, s) {
+                var count = 0;
+
+                if (s[x - 1][y])     count++;
+                if (s[x - 1][y + 1]) count++;
+                if (s[x - 1][y - 1]) count++;
+                if (s[x][y + 1])     count++;
+                if (s[x][y - 1])     count++;
+                if (s[x + 1][y])     count++;
+                if (s[x + 1][y + 1]) count++;
+                if (s[x + 1][y - 1]) count++;
+
+                return count;
+            }
+
+            /**
+             * @return {number}
+             */
+            function NumberOfZeroToOneTransitionFromP9(x, y, s) {
+                var p2 = s[x][y - 1];
+                var p3 = s[x + 1][y - 1];
+                var p4 = s[x + 1][y];
+                var p5 = s[x + 1][y + 1];
+                var p6 = s[x][y + 1];
+                var p7 = s[x - 1][y + 1];
+                var p8 = s[x - 1][y];
+                var p9 = s[x - 1][y - 1];
+
+                return (+(!p2 && p3)) + (+(!p3 && p4))
+                    + (+(!p4 && p5)) + (+(!p5 && p6))
+                    + (+(!p6 && p7)) + (+(!p7 && p8))
+                    + (+(!p8 && p9)) + (+(!p9 && p2));
+            }
+
+            /**
+             * @return {boolean}
+             */
+            function SuenThinningAlg(x, y, s, even) {
+                var p2 = s[x][y - 1];
+                var p4 = s[x + 1][y];
+                var p6 = s[x][y + 1];
+                var p8 = s[x - 1][y];
+
+                var bp1 = NumberOfNonZeroNeighbors(x, y, s);
+
+                if (bp1 >= 2 && bp1 <= 6) {
+                    if (NumberOfZeroToOneTransitionFromP9(x, y, s) == 1) {
+                        if (even) {
+                            if (!((p2 && p4) && p8)) {
+                                if (!((p2 && p6) && p8)) {
+                                    return true;
+                                }
+                            }
+                        } else {
+                            if (!((p2 && p4) && p6)) {
+                                if (!((p4 && p6) && p8)) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            function step(stepNo, temp, s) {
+                var count = 0;
+
+                for (var a = 1; a < temp.length - 1; a++) {
+                    for (var b = 1; b < temp[0].length - 1; b++) {
+                        if (SuenThinningAlg(a, b, temp, stepNo == 2)) {
+                            // still changes happening?
+                            if (s[a][b]) {
+                                count++;
+                            }
+
+                            s[a][b] = false;
+                        }
+                    }
+                }
+
+                return count;
+            }
+
+            function ZhangSuenThinning(img, width, height) {
+                var s = Image2Bool(img, width, height);
+
+                var temp;
+                var count = 0;
+
+                do {
+                    temp = _.deepClone(s);
+                    count = step(1, temp, s);
+
+                    temp = _.deepClone(s);
+                    count += step(2, temp, s);
+                } while (count > 0);
+
+                return Bool2Image(s, width, height);
+            }
+
+            return ZhangSuenThinning(data, w, h);
+        },
+
+        //// KALEIDOSKOPE /////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} srcW
+         * @param {number} srcH
+         * @returns {Uint8ClampedArray}
+         */
+        kaleidoskopeCenter: function (data, srcW, srcH) {
+            data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
+
+            var w = Math.floor(srcW / 2),
+                h = Math.floor(srcH / 2);
+
+            var block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
+
+            data = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
+
+            block = this.flipX(block, w, h);
+            data = Buffer.draw(block, w, h, data, w, 0, srcW, srcH);
+
+            block = this.flipY(block, w, h);
+            data = Buffer.draw(block, w, h, data, w, h, srcW, srcH);
+
+            block = this.flipX(block, w, h);
+            data = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
+
+            return data;
+        },
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} srcW
+         * @param {number} srcH
+         * @returns {Uint8ClampedArray}
+         */
+        kaleidoskopeCenterOutside: function (data, srcW, srcH) {
+            data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
+
+            var w = Math.floor(srcW / 2),
+                h = Math.floor(srcH / 2);
+
+            var block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
+
+            data = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
+
+            block = this.flipY(block, w, h);
+            data = Buffer.draw(block, w, h, data, w, 0, srcW, srcH);
+
+            block = this.flipX(block, w, h);
+            data = Buffer.draw(block, w, h, data, w, h, srcW, srcH);
+
+            block = this.flipY(block, w, h);
+            data = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
+
+            return data;
+        },
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} srcW
+         * @param {number} srcH
+         * @returns {Uint8ClampedArray}
+         */
+        kaleidoskopeOutside: function (data, srcW, srcH) {
+            data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
+
+            var w = Math.floor(srcW / 2),
+                h = Math.floor(srcH / 2);
+
+            var block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
+
+            block = this.flipX(block, w, h);
+            data = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
+
+            block = this.flipX(block, w, h);
+            data = Buffer.draw(block, w, h, data, w, 0, srcW, srcH);
+
+            block = this.flipY(block, w, h);
+            data = Buffer.draw(block, w, h, data, w, h, srcW, srcH);
+
+            block = this.flipX(block, w, h);
+            data = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
+
+            return data;
+        },
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} srcW
+         * @param {number} srcH
+         * @returns {Uint8ClampedArray}
+         */
+        kaleidoskopeVert: function (data, srcW, srcH) {
+            data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
+
+            var h = Math.floor(srcH / 2);
+
+            var block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
+            data = Buffer.draw(block, srcW, h, data, 0, 0, srcW, srcH);
+
+            block = this.flipY(block, srcW, h);
+            data = Buffer.draw(block, srcW, h, data, 0, h, srcW, srcH);
+
+            return data;
+        },
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} srcW
+         * @param {number} srcH
+         * @returns {Uint8ClampedArray}
+         */
+        kaleidoskopeCard: function (data, srcW, srcH) {
+            data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
+
+            var h = Math.floor(srcH / 2);
+
+            var block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
+            data = Buffer.draw(block, srcW, h, data, 0, 0, srcW, srcH);
+
+            block = this.flipY(block, srcW, h);
+            block = this.flipX(block, srcW, h);
+            data = Buffer.draw(block, srcW, h, data, 0, h, srcW, srcH);
+
+            return data;
+        },
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} srcW
+         * @param {number} srcH
+         * @returns {Uint8ClampedArray}
+         */
+        kaleidoskopeHoriz: function (data, srcW, srcH) {
+            data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
+
+            var w = Math.floor(srcW / 2);
+
+            var block = Buffer.grab(data, srcW, srcH, 0, 0, w, srcH);
+            data = Buffer.draw(block, w, srcH, data, 0, 0, srcW, srcH);
+
+            block = this.flipX(block, w, srcH);
+            data = Buffer.draw(block, w, srcH, data, w, 0, srcW, srcH);
+
+            return data;
+        },
+
         //// SOBEL ///////////////////////////////////////////////////////////
 
         /**

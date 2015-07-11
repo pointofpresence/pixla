@@ -96,15 +96,11 @@
                                 </button>
 
                                 <h4 class="modal-title" id="myModalLabel">
-                                    <!-- title here -->
+                                    Настройки фильтра
                                 </h4>
                             </div>
 
                             <div class="modal-body">
-                                <p class="description">
-                                    <!-- description here -->
-                                </p>
-
                                 <form id="options-form" class="form-horizontal" role="form">
                                     <!-- form here -->
                                 </form>
@@ -175,11 +171,14 @@
                                     <label for="input-url" class="control-label">... или укажите ссылку на файл</label>
 
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="input-url">
+                                        <input type="text" class="form-control input-sm" id="input-url">
 
                                         <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="button" id="input-url-button"><span
-                                                    class="glyphicon glyphicon-download-alt"></span></button>
+                                            <button title="Загрузить изображение" data-toggle="tooltip"
+                                                    data-placement="top" class="btn btn-primary btn-sm" type="button"
+                                                    id="input-url-button">
+                                                <span class="glyphicon glyphicon-download-alt"></span>
+                                            </button>
                                         </span>
                                     </div>
                                 </div>
@@ -187,10 +186,10 @@
                                 <div class="form-group">
                                     <label class="control-label">... или сгенерируйте изображение</label>
 
-                                    <button class="btn btn-icon btn-block btn-primary" id="input-random">
+                                    <button class="btn btn-icon btn-block btn-primary btn-sm" id="input-random">
                                         <span class="glyphicon glyphicon-random"></span>Сгенерировать
                                     </button>
-                                 </div>
+                                </div>
                             </fieldset>
 
                             <div class="preview">
@@ -213,32 +212,37 @@
                                 </legend>
 
                                 <div class="form-group">
-                                    <label for="input-filter" class="control-label">
-                                        а. Выберите и настройте фильтр
+                                    <label for="input-preset" class="control-label">
+                                        а. Выберите пресет
                                     </label>
 
-                                    <div class="input-group">
-                                        <select class="form-control" id="input-filter"></select>
-
-                                        <span class="input-group-btn">
-                                            <button
-                                                    id="filter-options"
-                                                    class="btn btn-primary"
-                                                    data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    title="Насторойки фильтра"
-                                                    disabled="disabled"
-                                                    type="button">
-                                                <span class="glyphicon glyphicon-cog"></span>
-                                            </button>
-                                        </span>
-                                    </div>
+                                    <select class="form-control input-sm"
+                                            id="input-preset">
+                                        <option value="">Пользовательские настройки</option>
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label">б. Сохраните файл на диск</label>
+                                    <label for="show-options" class="control-label">
+                                        б. Настройте фильтр
+                                    </label>
 
-                                    <a href="#" class="btn btn-block btn-primary btn-icon" id="output-save">
+                                    <button
+                                            id="show-options"
+                                            class="btn btn-primary btn-block btn-icon btn-sm"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Настройки фильтра"
+                                            type="button">
+                                        <span class="glyphicon glyphicon-cog"></span>Настроить фильтр
+                                    </button>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">в. Сохраните файл на диск</label>
+
+                                    <a href="#" class="btn btn-block btn-primary btn-icon btn-sm" id="output-save">
                                         <span class="glyphicon glyphicon-floppy-disk"></span>Сохранить изображение
                                     </a>
                                 </div>

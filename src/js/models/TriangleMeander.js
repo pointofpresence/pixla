@@ -2,19 +2,11 @@
  * @module models/TriangleMeander
  */
 define("models/TriangleMeander", [
-    "backbone",
-    "underscore",
     "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+], function (TriangleCrossModel) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Меандр",
-            description: "Meander Pattern",
-            sort:        50
-        }),
-
         getColors: function (data, x, y) {
             var colors = [];
 

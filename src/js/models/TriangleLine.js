@@ -2,19 +2,11 @@
  * @module models/TriangleCross
  */
 define("models/TriangleLine", [
-    "backbone",
-    "underscore",
     "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+], function (TriangleCrossModel) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Triangle Line",
-            description: "Triangle Line Filter",
-            sort:        40
-        }),
-
         getColors: function (data, x, y) {
             var colors = [];
 

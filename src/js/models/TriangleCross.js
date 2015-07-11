@@ -4,17 +4,11 @@
 define("models/TriangleCross", [
     "backbone",
     "underscore",
-    "models/TriangleAbstract"
-], function (Backbone, _, TriangleAbstractModel) {
+    "models/AbstractTemplate"
+], function (Backbone, _, AbstractTemplate) {
     "use strict";
 
-    return TriangleAbstractModel.extend({
-        defaults: _.extend({}, TriangleAbstractModel.prototype.defaults, {
-            name:        "Triangle Cross",
-            description: "Triangle Cross Filter",
-            sort:        10
-        }),
-
+    return AbstractTemplate.extend({
         pattern: [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
@@ -49,13 +43,8 @@ define("models/TriangleCross", [
         },
 
         doit: function (data, w, h) {
-            var options = this.readOptions();
-
             this.w = w;
             this.h = h;
-
-            //noinspection JSUnresolvedFunction
-            var src = new Uint8ClampedArray(data.data);
 
             var tilesW = Math.floor(this.w / this.TILE_WIDTH),
                 tilesH = Math.floor(this.h / this.TILE_HEIGHT);
@@ -63,17 +52,17 @@ define("models/TriangleCross", [
             var newW = tilesW * this.TILE_WIDTH;
             var newH = tilesH * this.TILE_HEIGHT;
 
-            src = this.crop(src, 0, 0, newW, newH);
+            data = this.crop(data, 0, 0, newW, newH);
 
             //noinspection JSUnresolvedFunction
-            var out = new Uint8ClampedArray(src.length);
+            var out = new Uint8ClampedArray(data.length);
 
             var pattern = _.isFunction(this.pattern) ? this.pattern() : this.pattern,
                 colors, x, y, px, py;
 
             for (x = 0; x < newW; x += this.TILE_WIDTH) {
                 for (y = 0; y < newH; y += this.TILE_HEIGHT) {
-                    colors = this.getColors(src, x, y);
+                    colors = this.getColors(data, x, y);
 
                     for (px = 0; px < this.TILE_WIDTH; px++) {
                         for (py = 0; py < this.TILE_WIDTH; py++) {
@@ -88,8 +77,6 @@ define("models/TriangleCross", [
                     }
                 }
             }
-
-            out = this.applyPost(out, options, tilesW, tilesH);
 
             return {
                 data: out,

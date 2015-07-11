@@ -2,19 +2,11 @@
  * @module models/TriangleStoneAdvanced
  */
 define("models/TriangleStoneAdvanced", [
-    "backbone",
-    "underscore",
     "models/TriangleCross"
-], function (Backbone, _, TriangleCrossModel) {
+], function (TriangleCrossModel) {
     "use strict";
 
     return TriangleCrossModel.extend({
-        defaults: _.extend({}, TriangleCrossModel.prototype.defaults, {
-            name:        "Stone Advanced",
-            description: "Advanced Stone Tile",
-            sort:        90
-        }),
-
         getColors: function (data, x, y) {
             var colors = [];
 
