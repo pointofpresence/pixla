@@ -266,6 +266,17 @@ define("lib/Processor", [
         /**
          * @param {string} filter
          */
+        postHue: function (filter) {
+            if (parseFloat(filter) && Filter.hue) {
+                this.data = Filter.hue(
+                    this.data, this.w, this.h, parseFloat(filter)
+                );
+            }
+        },
+
+        /**
+         * @param {string} filter
+         */
         postBrightness: function (filter) {
             if (parseInt(filter)
                 && this.options.brightness.cb) {

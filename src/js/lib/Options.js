@@ -63,6 +63,14 @@ define("lib/Options", [
                 max:  259
             },
 
+            hue: {
+                name: "Тон",
+                type: "Slider",
+                min:  -1,
+                max:  1,
+                step: 0.01
+            },
+
             threshold: {
                 name: "Порог",
                 type: "Slider",

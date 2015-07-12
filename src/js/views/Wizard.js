@@ -253,7 +253,7 @@ define("views/Wizard", [
                 html += templates.options[o.type]({
                     option: o,
                     id:     id,
-                    value:  parseInt(storageData[id]) || null
+                    value:  storageData[id] || null
                 });
             }, this);
 
