@@ -19,6 +19,7 @@ gutil        = require("gulp-util"),          // log and other
 chalk        = require("chalk"),              // colors
 dateFormat   = require("dateformat"),         // date helper
 jsonHelper   = require("resampled-json-io"),  // JSON helper
+jade         = require("gulp-jade"),          // Jade compiler
 replace      = require("gulp-replace");       // replace
 
 var src     = "./src",
@@ -91,7 +92,11 @@ function buildTplPlugin() {
         .pipe(out(distDir + file));
 }
 
-function buildHtml() {
+function buildJade() {
+    gulp.src("./index.jade")
+        .pipe(jade({pretty: true}))
+        .pipe(out("./index-dev.html"));
+
     var opts = {
         conditionals: true,
         spare:        true,
@@ -101,7 +106,8 @@ function buildHtml() {
         loose:        false
     };
 
-    gulp.src("./index-src.html")
+    gulp.src("./index.jade")
+        .pipe(jade())
         .pipe(minifyHTML(opts))
         .pipe(replace("/src/js/main", "/dist/js/modules"))
         .pipe(replace("##NAME##", pkg.name || "Unknown"))
@@ -111,7 +117,7 @@ function buildHtml() {
         .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
         .pipe(replace("##VERSION##", pkg.version || "Unknown"))
         .pipe(replace("##DATE##", pkg.lastBuildDateHuman || "Unknown"))
-        .pipe(out("./index.html"));
+        .pipe(gulp.dest("./"));
 }
 
 function buildReadme() {
@@ -174,7 +180,7 @@ function dateUpdate() {
 }
 
 gulp.task("build_css", buildCss);
-gulp.task("build_html", buildHtml);
+gulp.task("build_jade", buildJade);
 gulp.task("build_tpl_plugin", buildTplPlugin);
 gulp.task("build_templates", buildTemplates);
 gulp.task("build_amd", buildAmd);
@@ -182,7 +188,7 @@ gulp.task("build_readme", buildReadme);
 
 gulp.task("watch", function () {
     gulp.watch(srcLess + "/**/*.less", ["build_css"]);
-    gulp.watch("./index-src.html", ["build_html"]);
+    gulp.watch("./index.jade", ["build_jade"]);
     gulp.watch(srcJs + "/lib/tpl.js", ["build_tpl_plugin"]);
     gulp.watch(srcJs + templates + "/**/*.ejs", ["build_templates"]);
 
@@ -199,8 +205,8 @@ gulp.task("watch", function () {
 gulp.task("build", function () {
     dateUpdate();
     versionIncrement();
+    buildJade();
     buildCss();
-    buildHtml();
     buildTplPlugin();
     buildTemplates();
     buildAmd();

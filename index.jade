@@ -1,0 +1,179 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="utf-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        meta(name="description", content="##DESCRIPTION##")
+        meta(name="author", content="##AUTHOR##")
+
+        title ##TITLE##
+
+        link(rel="icon", href="/favicon.png")
+
+        // Twitter Bootstrap
+        link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/flatly/bootstrap.min.css", rel="stylesheet")
+
+        // Custom Fonts
+        link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+        link(href="http://fonts.googleapis.com/css?family=Montserrat:400,700", rel="stylesheet", type="text/css")
+        link(href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic", rel="stylesheet", type="text/css")
+
+        // Custom CSS
+        link(href="/dist/css/app.css", rel="stylesheet")
+
+        // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+        // WARNING: Respond.js doesn't work if you view the page via file://
+        // [if lt IE 9]
+        script(src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js")
+        script(src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js")
+        // [endif]
+
+    body#page-top.index
+        // Navigation
+        nav.navbar.navbar-default
+            .container
+                // Brand and toggle get grouped for better mobile display
+                .navbar-header.page-scroll
+                    button.navbar-toggle(type="button", data-toggle="collapse", data-target="#bs-navbar-collapse")
+                        span.sr-only Show menu
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+
+                    a.navbar-brand(href="#") ##TITLE##
+
+                // Collect the nav links, forms, and other content for toggling
+                #bs-navbar-collapse.collapse.navbar-collapse
+                    ul.nav.navbar-nav.navbar-right
+                        li
+                            a(href="http://pointofpresence.ru") pointofpresence.ru
+
+        .container
+            .page-header
+                h1
+                    img.logo(src="/dist/images/logo.png", title="##TITLE##")
+                    small v##VERSION##
+
+                h3 Креативный онлайн-фильтр изображений
+
+            #old-browser.alert.alert-danger
+                h4
+                    span.glyphicon.glyphicon-remove Ошибка!
+                p Ваш браузер морально устарел
+                p Рекомендуемые браузеры: Google Chrome, Mozilla Firefox, Opera.
+
+            #wizard.row
+                // options dialog
+                #options-modal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type="button", data-dismiss="modal", aria-label="Close")
+                                    span(aria-hidden="true") ×
+
+                                h4#myModalLabel.modal-title Настройки фильтра
+
+                            .modal-body
+                                form#options-form.form-horizontal(role="form")
+                                    // form here
+
+                            .modal-footer
+                                button.btn.btn-default.btn-sm(type="button", data-dismiss="modal") Закрыть
+                                button#options-apply.btn.btn-primary.btn-sm(type="button") OK
+
+                // message dialog
+                #message.modal.fade(tabindex="-1", role="dialog", aria-labelledby="myModalLabel2", aria-hidden="true")
+                    .modal-dialog
+                        .modal-content
+                            .modal-header
+                                button.close(type="button", data-dismiss="modal", aria-label="Close")
+                                    span(aria-hidden="true") ×
+
+                                h4#myModalLabel2.modal-title ##TITLE##
+
+                            .modal-body
+                                p
+                                    // message here
+
+                            .modal-footer
+                                button.btn.btn-default.btn-sm(type="button", data-dismiss="modal") Закрыть
+
+                // wizard - input
+                .col-lg-6
+                    .well.well-relative
+                        form
+                            fieldset
+                                legend
+                                    | Шаг 1:#[ ]
+                                    small Загрузите изображение
+
+                                .alert.alert-danger.error400.fade.in
+                                    h4 Ошибка!
+                                    p Ссылка не может быть обработана.
+
+                                .form-group
+                                    label.control-label(for="input-file") Выберите файл на диске (PNG, GIF, JPEG, SVG, BMP) ...
+                                    input#input-file(type="file")
+
+                                .form-group
+                                    label.control-label(for="input-url") ... или укажите ссылку на файл
+
+                                    .input-group
+                                        input#input-url.form-control.input-sm(type="text")
+                                        span.input-group-btn
+                                            button#input-url-button.btn.btn-primary.btn-sm(title="Загрузить изображение", data-toggle="tooltip", data-placement="top" type="button")
+                                                span.glyphicon.glyphicon-download-alt
+
+                                .form-group
+                                    label.control-label ... или сгенерируйте изображение
+
+                                    button#input-random.btn.btn-icon.btn-block.btn-primary.btn-sm
+                                        span.glyphicon.glyphicon-random
+                                        | Сгенерировать
+
+                            .preview
+                                img.src-image.img-thumbnail.img-responsive(src="data:image/png;base64,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",  alt="200x200.png")
+
+                        .preloader
+
+                // wizard - output
+                .col-lg-6
+                    .well.well-relative
+                        form
+                            fieldset#inputs
+                                legend Шаг 2:#[ ]
+                                    small Обработайте изображение
+
+                                .form-group
+                                    label.control-label(for="input-preset") а. Выберите пресет
+
+                                    select#input-preset.form-control.input-sm
+                                        option(value="") Пользовательские настройки
+
+                                .form-group
+                                    label.control-label(for="show-options") б. Настройте фильтр
+
+                                    button#show-options.btn.btn-primary.btn-block.btn-icon.btn-sm(data-toggle="tooltip", data-placement="top", title="Настройки фильтра",type="button")
+                                        span.glyphicon.glyphicon-cog
+                                        | Настроить фильтр
+
+                                .form-group
+                                    label.control-label в. Сохраните файл на диск
+
+                                    a#output-save.btn.btn-block.btn-primary.btn-icon.btn-sm(href="#")
+                                        span.glyphicon.glyphicon-floppy-disk
+                                        | Сохранить изображение
+
+                            .preview
+                                img.dst-image.img-thumbnail.img-responsive(src="data:image/png;base64,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", alt="200x200.png")
+
+                        .preloader
+
+        // footer
+
+        footer.footer
+            .container
+                .yashare-auto-init(data-yashareL10n="ru", data-yashareQuickServices="vkontakte,facebook,twitter,odnoklassniki,moimir,gplus", data-yashareTheme="counter")
+
+        script(data-main="/src/js/main", src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js")
