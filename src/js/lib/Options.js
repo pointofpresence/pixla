@@ -101,6 +101,13 @@ define("lib/Options", [
                 max:  2
             },
 
+            bump: {
+                name: "Выдавливание",
+                type: "Slider",
+                min:  0,
+                max:  1
+            },
+
             emboss: {
                 name: "Рельеф",
                 type: "Slider",

@@ -212,6 +212,21 @@ define("lib/Processor", [
         /**
          * @param {string} filter
          */
+        postBump: function (filter) {
+            if (parseInt(filter)) {
+                this.data = Filter.convolve3x3(this.data, this.w, [
+                    //@formatter:off
+                    -1, -1, 0,
+                    -1,  1, 1,
+                     0,  1, 1
+                    //@formatter:off
+                ]);
+            }
+        },
+
+        /**
+         * @param {string} filter
+         */
         postPattern: function (filter) {
             if (parseInt(filter)
                 && this.options.pattern.options[filter]
