@@ -73,6 +73,15 @@ define("lib/Processor", [
         /**
          * @param {string} filter
          */
+        postBorder: function (filter) {
+            if (parseInt(filter)) {
+                this.data = Filter.border(this.data, this.w, this.h, parseInt(filter));
+            }
+        },
+
+        /**
+         * @param {string} filter
+         */
         postSaturation: function (filter) {
             if (parseFloat(filter)) {
                 this.data = Filter.saturation(

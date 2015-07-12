@@ -210,6 +210,14 @@ define("lib/Options", [
                 min:  0,
                 max:  1,
                 def:  0
+            },
+
+            border: {
+                name: "Рамка",
+                type: "Slider",
+                min:  0,
+                max:  10,
+                def:  0
             }
         }
     };

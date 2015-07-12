@@ -10,6 +10,36 @@ define("lib/Filter", [
 
     //noinspection JSValidateJSDoc
     return {
+        //// BORDER ///////////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @param size
+         */
+        border: function(data, w, h, size) {
+            var x;
+
+            for(var y = 0; y < h; y++) {
+                if(y < size || (y >= w - size)) {
+                    for(x = 0; x < w; x++) {
+                        Buffer.setPixelXY(data, x, y, Buffer.COLORS.BLACK, w);
+                    }
+                } else {
+                    for(x = 0; x < size; x++) {
+                        Buffer.setPixelXY(data, x, y, Buffer.COLORS.BLACK, w);
+                    }
+
+                    for(x = w - size; x < w; x++) {
+                        Buffer.setPixelXY(data, x, y, Buffer.COLORS.BLACK, w);
+                    }
+                }
+            }
+
+            return data;
+        },
+
         //// EMBOSS ///////////////////////////////////////////////////////////
 
         /**

@@ -103,14 +103,13 @@ define("lib/Buffer", ["lib/Canvas"], function (Canvas) {
          * @param y
          * @param color
          * @param w
-         * @returns {*}
          */
         setPixelXY: function (data, x, y, color, w) {
             if (x >= w) {
                 return;
             }
 
-            return this.setPixel(data, y * w + x, color);
+            this.setPixel(data, y * w + x, color);
         },
 
         /**
