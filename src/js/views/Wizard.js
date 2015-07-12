@@ -282,7 +282,7 @@ define("views/Wizard", [
 
             var idtIn = ctxIn.getImageData(0, 0, cvsIn.width, cvsIn.height),
 
-                result = Processor.doit(idtIn, cvsIn.width, cvsIn.height),
+                result = Processor.doit(idtIn),
 
                 cvsOut = Canvas.createEmptyCanvas(result.w, result.h),
                 ctxOut = cvsOut.getContext("2d"),

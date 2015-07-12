@@ -19,17 +19,13 @@ define("lib/Processor", [
 
         /**
          * @param {ImageData} imageData
-         * @param {number} w
-         * @param {number} h
          */
-        doit: function (imageData, w, h) {
-            //TODO: remove w & h arguments
-
+        doit: function (imageData) {
             this.filter = Storage.getFilter();
             this.options = Options.options;
             this.data = imageData.data;
-            this.w = w;
-            this.h = h;
+            this.w = imageData.width;
+            this.h = imageData.height;
 
             this.applyPost();
 
