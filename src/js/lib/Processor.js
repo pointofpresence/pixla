@@ -229,14 +229,8 @@ define("lib/Processor", [
          * @param {string} filter
          */
         postBlur: function (filter) {
-            if (parseInt(filter)) {
-                var bFac = parseInt(filter) + 7;
-
-                this.data = Filter.convolute(this.data, this.w, this.h, [
-                    1 / bFac, 1 / bFac, 1 / bFac,
-                    1 / bFac, 1 / bFac, 1 / bFac,
-                    1 / bFac, 1 / bFac, 1 / bFac
-                ]);
+            if (parseFloat(filter)) {
+                this.data = Filter.blur(this.data, this.w, this.h, parseFloat(filter));
             }
         },
 

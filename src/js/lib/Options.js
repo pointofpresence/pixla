@@ -83,7 +83,8 @@ define("lib/Options", [
                 name: "Размытие",
                 type: "Slider",
                 min:  0,
-                max:  3
+                max:  10,
+                step: 0.1
             },
 
             sharpen: {
