@@ -77,6 +77,17 @@ define("lib/Processor", [
         /**
          * @param {string} filter
          */
+        postSaturation: function (filter) {
+            if (parseFloat(filter)) {
+                this.data = Filter.saturation(
+                    this.data, this.w, this.h, parseFloat(filter)
+                );
+            }
+        },
+
+        /**
+         * @param {string} filter
+         */
         postDither: function (filter) {
             if (parseInt(filter)
                 && this.options.dither.options[filter].cb

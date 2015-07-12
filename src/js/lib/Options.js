@@ -71,6 +71,14 @@ define("lib/Options", [
                 step: 0.01
             },
 
+            saturation: {
+                name: "Насыщенность",
+                type: "Slider",
+                min:  0,
+                max:  2,
+                step: 0.01
+            },
+
             threshold: {
                 name: "Порог",
                 type: "Slider",

@@ -10,14 +10,50 @@ define("lib/Filter", [
 
     //noinspection JSValidateJSDoc
     return {
+        //// SATURATION ///////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @param {number} amount
+         * @returns {Uint8ClampedArray}
+         */
+        saturation: function (data, w, h, amount) {
+            var RW = 0.3086,
+                RG = 0.6084,
+                RB = 0.0820;
+
+            var a = (1 - amount) * RW + amount,
+                b = (1 - amount) * RW,
+                c = (1 - amount) * RW,
+                d = (1 - amount) * RG,
+                e = (1 - amount) * RG + amount,
+                f = (1 - amount) * RG,
+                g = (1 - amount) * RB,
+                k = (1 - amount) * RB,
+                i = (1 - amount) * RB + amount;
+
+            for (var y = 0; y < h; y++) {
+                for (var x = 0; x < w; x++) {
+                    var pixel = (y * w + x) * 4;
+                    data[pixel] = a * data[pixel] + d * data[pixel + 1] + g * data[pixel + 2];
+                    data[pixel + 1] = b * data[pixel] + e * data[pixel + 1] + k * data[pixel + 2];
+                    data[pixel + 2] = c * data[pixel] + f * data[pixel + 1] + i * data[pixel + 2];
+                }
+            }
+
+            return data;
+        },
+
         //// BLUR /////////////////////////////////////////////////////////////
 
         /**
-         * @param data
-         * @param w
-         * @param h
-         * @param amount
-         * @returns {*}
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @param {number} amount
+         * @returns {Uint8ClampedArray}
          */
         blur: function (data, w, h, amount) {
             var width4 = w << 2, q;
@@ -172,8 +208,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         //// ZHANG SUEN ///////////////////////////////////////////////////////
 
@@ -330,8 +365,7 @@ define("lib/Filter", [
             }
 
             return ZhangSuenThinning(data, w, h);
-        }
-        ,
+        },
 
         //// KALEIDOSKOPE /////////////////////////////////////////////////////
 
@@ -361,8 +395,7 @@ define("lib/Filter", [
             data = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -390,8 +423,7 @@ define("lib/Filter", [
             data = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -420,8 +452,7 @@ define("lib/Filter", [
             data = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -441,8 +472,7 @@ define("lib/Filter", [
             data = Buffer.draw(block, srcW, h, data, 0, h, srcW, srcH);
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -463,8 +493,7 @@ define("lib/Filter", [
             data = Buffer.draw(block, srcW, h, data, 0, h, srcW, srcH);
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -484,8 +513,7 @@ define("lib/Filter", [
             data = Buffer.draw(block, w, srcH, data, w, 0, srcW, srcH);
 
             return data;
-        }
-        ,
+        },
 
         //// SOBEL ///////////////////////////////////////////////////////////
 
@@ -527,8 +555,7 @@ define("lib/Filter", [
             }
 
             return newData;
-        }
-        ,
+        },
 
         //// CONVOLUTION /////////////////////////////////////////////////////
 
@@ -591,8 +618,7 @@ define("lib/Filter", [
             }
 
             return dst;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -648,8 +674,7 @@ define("lib/Filter", [
             }
 
             return newData;
-        }
-        ,
+        },
 
         //// INVERSE /////////////////////////////////////////////////////////
 
@@ -665,8 +690,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         //// MIRROR //////////////////////////////////////////////////////////
 
@@ -693,8 +717,7 @@ define("lib/Filter", [
             }
 
             return tempData;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -719,8 +742,7 @@ define("lib/Filter", [
             }
 
             return tempData;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -732,8 +754,7 @@ define("lib/Filter", [
             return this.flipY(
                 this.flipX(data, w, h), w, h
             );
-        }
-        ,
+        },
 
         //// THRESHOLD ///////////////////////////////////////////////////////
 
@@ -752,8 +773,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         //// BRIGHTNESS ///////////////////////////////////////////////////////
 
@@ -770,8 +790,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         //// COLOR ////////////////////////////////////////////////////////////
 
@@ -791,8 +810,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -811,8 +829,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -830,8 +847,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -848,8 +864,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -866,8 +881,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -884,8 +898,7 @@ define("lib/Filter", [
             }
 
             return data;
-        }
-        ,
+        },
 
         //// DITHERING ////////////////////////////////////////////////////////
 
@@ -900,8 +913,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.C64,
                 algorithm: Dithering.ALGORITHM.REDUCE
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -914,8 +926,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.C64,
                 algorithm: Dithering.ALGORITHM.ORDERED
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -928,8 +939,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.C64,
                 algorithm: Dithering.ALGORITHM.ERROR
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -942,8 +952,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.C64,
                 algorithm: Dithering.ALGORITHM.ATKINSON
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -956,8 +965,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.SPECTRUM,
                 algorithm: Dithering.ALGORITHM.ATKINSON
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -970,8 +978,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.SPECTRUM,
                 algorithm: Dithering.ALGORITHM.REDUCE
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -984,8 +991,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.SPECTRUM,
                 algorithm: Dithering.ALGORITHM.ORDERED
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -998,8 +1004,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.SPECTRUM,
                 algorithm: Dithering.ALGORITHM.ERROR
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1012,8 +1017,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_BRONZE,
                 algorithm: Dithering.ALGORITHM.ATKINSON
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1026,8 +1030,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_BRONZE,
                 algorithm: Dithering.ALGORITHM.REDUCE
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1040,8 +1043,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_BRONZE,
                 algorithm: Dithering.ALGORITHM.ORDERED
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1054,8 +1056,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_BRONZE,
                 algorithm: Dithering.ALGORITHM.ERROR
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1068,8 +1069,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.MONO,
                 algorithm: Dithering.ALGORITHM.ATKINSON
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1082,8 +1082,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.MONO,
                 algorithm: Dithering.ALGORITHM.REDUCE
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1096,8 +1095,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.MONO,
                 algorithm: Dithering.ALGORITHM.ORDERED
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1110,8 +1108,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.MONO,
                 algorithm: Dithering.ALGORITHM.ERROR
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1124,8 +1121,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_ORANGE,
                 algorithm: Dithering.ALGORITHM.ATKINSON
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1138,8 +1134,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_ORANGE,
                 algorithm: Dithering.ALGORITHM.REDUCE
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1152,8 +1147,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_ORANGE,
                 algorithm: Dithering.ALGORITHM.ORDERED
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1166,8 +1160,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.AMIGA_ORANGE,
                 algorithm: Dithering.ALGORITHM.ERROR
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1180,8 +1173,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.BASIC,
                 algorithm: Dithering.ALGORITHM.ATKINSON
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1194,8 +1186,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.BASIC,
                 algorithm: Dithering.ALGORITHM.REDUCE
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
@@ -1208,8 +1199,7 @@ define("lib/Filter", [
                 palette:   Dithering.PALETTE.BASIC,
                 algorithm: Dithering.ALGORITHM.ORDERED
             });
-        }
-        ,
+        },
 
         /**
          * @param {Uint8ClampedArray} data
