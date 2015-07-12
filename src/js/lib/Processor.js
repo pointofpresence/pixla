@@ -103,11 +103,21 @@ define("lib/Processor", [
          */
         postThin: function (filter) {
             if (parseInt(filter)) {
-                this.data = Filter.convolute(this.data, this.w, this.h, [
-                    1, 1, 1,
-                    1, -7, 1,
-                    1, 1, 1
-                ]);
+                switch (parseInt(filter)) {
+                    case 1:
+                        this.data = Filter.convolute(this.data, this.w, this.h, [
+                            1, 1, 1,
+                            1, -7, 1,
+                            1, 1, 1
+                        ]);
+
+                        break;
+
+                    default:
+                        this.data = Filter.emboss(
+                            this.data, this.w, this.h, 5, 180, 90
+                        );
+                }
             }
         },
 

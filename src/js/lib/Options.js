@@ -53,6 +53,7 @@ define("lib/Options", [
                 type: "Slider",
                 min:  -1,
                 max:  1,
+                def:  0,
                 step: 0.01
             },
 
@@ -60,7 +61,8 @@ define("lib/Options", [
                 name: "Контраст",
                 type: "Slider",
                 min:  0,
-                max:  259
+                max:  259,
+                def:  0
             },
 
             hue: {
@@ -68,6 +70,7 @@ define("lib/Options", [
                 type: "Slider",
                 min:  -1,
                 max:  1,
+                def:  0,
                 step: 0.01
             },
 
@@ -76,6 +79,7 @@ define("lib/Options", [
                 type: "Slider",
                 min:  0,
                 max:  2,
+                def:  0,
                 step: 0.01
             },
 
@@ -84,6 +88,7 @@ define("lib/Options", [
                 type: "Slider",
                 min:  0,
                 max:  200,
+                def:  0,
                 cb:   Filter.threshold
             },
 
@@ -92,6 +97,7 @@ define("lib/Options", [
                 type: "Slider",
                 min:  0,
                 max:  10,
+                def:  0,
                 step: 0.1
             },
 
@@ -99,21 +105,24 @@ define("lib/Options", [
                 name: "Резкость",
                 type: "Slider",
                 min:  0,
-                max:  10
+                max:  10,
+                def:  0
             },
 
             edge: {
                 name: "Поиск края",
                 type: "Slider",
                 min:  0,
-                max:  2
+                max:  2,
+                def:  0
             },
 
             bump: {
                 name: "Выдавливание",
                 type: "Slider",
                 min:  0,
-                max:  1
+                max:  1,
+                def:  0
             },
 
             emboss: {
@@ -121,6 +130,7 @@ define("lib/Options", [
                 type: "Slider",
                 min:  0,
                 max:  10,
+                def:  0,
                 step: 0.1
             },
 
@@ -128,14 +138,16 @@ define("lib/Options", [
                 name: "Оператор Собеля",
                 type: "Slider",
                 min:  0,
-                max:  1
+                max:  1,
+                def:  0
             },
 
             thin: {
                 name: "Контур",
                 type: "Slider",
                 min:  0,
-                max:  1
+                max:  2,
+                def:  0
             },
 
             dither: {
@@ -188,14 +200,16 @@ define("lib/Options", [
                 name: "Скелет",
                 type: "Slider",
                 min:  0,
-                max:  1
+                max:  1,
+                def:  0
             },
 
             invert: {
                 name: "Инверсия",
                 type: "Slider",
                 min:  0,
-                max:  1
+                max:  1,
+                def:  0
             }
         }
     };
