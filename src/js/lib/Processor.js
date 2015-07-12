@@ -133,30 +133,10 @@ define("lib/Processor", [
          * @param {string} filter
          */
         postEmboss: function (filter) {
-            if (parseInt(filter)) {
-                var eFac = parseInt(filter),
-                    eMtx = [];
-
-                switch (eFac) {
-                    case 1:
-                        eMtx = [
-                            1, 1, -1,
-                            1, 3, -1,
-                            1, -1, -1
-                        ];
-
-                        break;
-                    case 2:
-                        eMtx = [
-                            2, 0, 0,
-                            0, -1, 0,
-                            0, 0, -1
-                        ];
-
-                        break;
-                }
-
-                this.data = Filter.convolve3x3(this.data, this.w, eMtx);
+            if (parseFloat(filter)) {
+                this.data = Filter.emboss(
+                    this.data, this.w, this.h, parseFloat(filter)
+                );
             }
         },
 
@@ -310,8 +290,8 @@ define("lib/Processor", [
          */
         postColors: function (filter) {
             if (parseInt(filter)
-                && this.options.colors.options[filter].cb
-                && this.options.colors.options[filter]) {
+                && this.options.colors.options[filter]
+                && this.options.colors.options[filter].cb) {
                 this.data = this.options.colors.options[filter].cb.call(
                     this, this.data
                 );
@@ -323,8 +303,8 @@ define("lib/Processor", [
          */
         postKaleidoscope: function (filter) {
             if (parseInt(filter)
-                && this.options.kaleidoscope.options[filter].cb
-                && this.options.kaleidoscope.options[filter]) {
+                && this.options.kaleidoscope.options[filter]
+                && this.options.kaleidoscope.options[filter].cb) {
                 this.data = this.options.kaleidoscope.options[filter].cb.call(
                     Filter, this.data, this.w, this.h
                 );

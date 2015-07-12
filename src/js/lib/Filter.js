@@ -10,6 +10,78 @@ define("lib/Filter", [
 
     //noinspection JSValidateJSDoc
     return {
+        //// EMBOSS ///////////////////////////////////////////////////////////
+
+        /**
+         * @param {Uint8ClampedArray} data
+         * @param {number} w
+         * @param {number} h
+         * @param {number} bumpHeight
+         * @param {number} angle
+         * @param {number} elevation
+         */
+        emboss: function (data, w, h, bumpHeight, angle, elevation) {
+            angle = angle || 135;
+            elevation = elevation || 30;
+
+            angle = angle / 180 * Math.PI;
+            elevation = elevation / 180 * Math.PI;
+            var width45 = 3 * bumpHeight;
+            var pixelScale = 255.9;
+
+            var bumpPixels = [];
+            var bumpMapWidth = w;
+
+            for (var i = 0; i < data.length; i += 4) {
+                bumpPixels[i / 4] = (data[i] + data[i + 1] + data[i + 2]) / 3
+            }
+
+            var Nx, Ny, Nz, Lx, Ly, Lz, Nz2, NzLz, NdotL;
+            var shade, background;
+
+            Lx = Math.floor(Math.cos(angle) * Math.cos(elevation) * pixelScale);
+            Ly = Math.floor(Math.sin(angle) * Math.cos(elevation) * pixelScale);
+            Lz = Math.floor(Math.sin(elevation) * pixelScale);
+
+            Nz = Math.floor(6 * 255 / width45);
+            Nz2 = Nz * Nz;
+            NzLz = Nz * Lz;
+            background = Lz;
+
+            var bumpIndex = 0;
+
+            for (var y = 0; y < h; y++, bumpIndex += bumpMapWidth) {
+                var s1 = bumpIndex,
+                    s2 = s1 + bumpMapWidth,
+                    s3 = s2 + bumpMapWidth;
+
+                for (var x = 0; x < w; x++, s1++, s2++, s3++) {
+                    var pixel = (y * w + x) * 4;
+
+                    if (y != 0 && y < h - 2 && x != 0 && x < w - 2) {
+                        Nx = bumpPixels[s1 - 1] + bumpPixels[s2 - 1] + bumpPixels[s3 - 1] - bumpPixels[s1 + 1] - bumpPixels[s2 + 1] - bumpPixels[s3 + 1];
+                        Ny = bumpPixels[s3 - 1] + bumpPixels[s3] + bumpPixels[s3 + 1] - bumpPixels[s1 - 1] - bumpPixels[s1] - bumpPixels[s1 + 1];
+
+                        if (Nx == 0 && Ny == 0) {
+                            shade = background;
+                        } else if ((NdotL = Nx * Lx + Ny * Ly + NzLz) < 0) {
+                            shade = 0;
+                        } else {
+                            shade = Math.floor(
+                                NdotL / Math.sqrt(Nx * Nx + Ny * Ny + Nz2)
+                            );
+                        }
+                    } else {
+                        shade = background;
+                    }
+
+                    data[pixel] = data[pixel + 1] = data[pixel + 2] = shade;
+                }
+            }
+
+            return data;
+        },
+
         //// SATURATION ///////////////////////////////////////////////////////
 
         /**

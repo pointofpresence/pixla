@@ -120,7 +120,8 @@ define("lib/Options", [
                 name: "Рельеф",
                 type: "Slider",
                 min:  0,
-                max:  2
+                max:  10,
+                step: 0.1
             },
 
             sobel: {
