@@ -298,10 +298,9 @@ define("lib/Processor", [
          * @param {string} filter
          */
         postBrightness: function (filter) {
-            if (parseInt(filter)
-                && this.options.brightness.cb) {
-                this.data = this.options.brightness.cb.call(
-                    this, this.data, parseInt(filter)
+            if (parseFloat(filter) && Filter.brightness) {
+                this.data = Filter.brightness(
+                    this.data, this.w, this.h, parseFloat(filter)
                 );
             }
         },

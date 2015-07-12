@@ -779,14 +779,34 @@ define("lib/Filter", [
 
         /**
          * @param {Uint8ClampedArray} data
-         * @param {number} adjustment
+         * @param w
+         * @param h
+         * @param {number} amount
          * @returns {Uint8ClampedArray}
          */
-        brightness: function (data, adjustment) {
-            for (var i = 0; i < data.length; i += 4) {
-                data[i] += adjustment;
-                data[i + 1] += adjustment;
-                data[i + 2] += adjustment;
+        brightness: function (data, w, h, amount) {
+            for (var y = 0; y < h; y++) {
+                for (var x = 0; x < w; x++) {
+                    var pixel = (y * w + x) * 4;
+
+                    var hsv = Buffer.rgbToHsv(
+                        data[pixel], data[pixel + 1], data[pixel + 2]
+                    );
+
+                    hsv[2] += amount;
+
+                    if (hsv[2] < 0) {
+                        hsv[2] = 0;
+                    } else if (hsv[2] > 1) {
+                        hsv[2] = 1;
+                    }
+
+                    var rgb = Buffer.hsvToRgb(hsv[0], hsv[1], hsv[2]);
+
+                    for (var i = 0; i < 3; i++) {
+                        data[pixel + i] = rgb[i];
+                    }
+                }
             }
 
             return data;

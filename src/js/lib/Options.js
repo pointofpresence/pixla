@@ -51,9 +51,9 @@ define("lib/Options", [
             brightness: {
                 name: "Яркость",
                 type: "Slider",
-                min:  0,
-                max:  200,
-                cb:   Filter.brightness
+                min:  -1,
+                max:  1,
+                step: 0.01
             },
 
             contrast: {
