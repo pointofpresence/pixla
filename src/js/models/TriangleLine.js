@@ -1,11 +1,8 @@
-/**
- * @module models/TriangleCross
- */
-define("models/TriangleLine", [
-    "models/TriangleCross"
-], function (TriangleCrossModel) {
-    "use strict";
+"use strict";
 
+var TriangleCrossModel = require("./TriangleCross");
+
+module.exports = function () {
     return TriangleCrossModel.extend({
         getColors: function (data, x, y) {
             var colors = [];
@@ -56,4 +53,4 @@ define("models/TriangleLine", [
             [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
         ]
     });
-});
+};

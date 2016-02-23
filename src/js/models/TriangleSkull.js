@@ -1,11 +1,8 @@
-/**
- * @module models/TriangleSkull
- */
-define("models/TriangleSkull", [
-    "models/TriangleCross"
-], function (TriangleCrossModel) {
-    "use strict";
+"use strict";
 
+var TriangleCrossModel = require("./TriangleCross");
+
+module.exports = function () {
     return TriangleCrossModel.extend({
         getColors: function (data, x, y) {
             var colors = [];
@@ -68,4 +65,4 @@ define("models/TriangleSkull", [
             [5, 2, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 2, 6]
         ]
     });
-});
+};

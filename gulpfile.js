@@ -1,214 +1,33 @@
-/**
- * Run npm install
- */
+"use strict";
 
-//noinspection JSLint
-var gulp     = require("gulp"),               // Gulp JS
-out          = require("gulp-out"),           // output to file
-minifyHTML   = require("gulp-minify-html"),   // min HTML
-csso         = require("gulp-csso"),          // CSS min
-less         = require("gulp-less"),          // LESS
-concat       = require("gulp-concat"),        // concat
-uglify       = require("gulp-uglify"),        // JS min
-ejsmin       = require("gulp-ejsmin"),        // EJS min
-header       = require("gulp-header"),        // banner maker
-mkdirp       = require("mkdirp"),             // mkdir
-fs           = require("fs"),                 // fs
-autoprefixer = require('gulp-autoprefixer'),  // CSS autoprefixer
-gutil        = require("gulp-util"),          // log and other
-chalk        = require("chalk"),              // colors
-dateFormat   = require("dateformat"),         // date helper
-jsonHelper   = require("resampled-json-io"),  // JSON helper
-jade         = require("gulp-jade"),          // Jade compiler
-replace      = require("gulp-replace");       // replace
+global.$      = require("gulp-load-plugins")();
+$.dateFormat  = require("dateformat");
+$.mkdirp      = require("mkdirp");
+$.runSequence = require("run-sequence");
+$.chalk       = require("chalk");
 
-var src     = "./src",
-    srcJs   = src + "/js",
-    srcLess = src + "/less";
+global.isProd = $.util.env.prod || false;
+global.config = require("./gulp/config.js");
+global.pkg    = require("./package.json");
+global.gulp   = require("gulp");
 
-var dist    = "./dist",
-    distJs  = dist + "/js",
-    distCss = dist + "/css";
-
-var templates   = "/templates",
-    collections = "/collections",
-    lib         = "/lib",
-    models      = "/models",
-    views       = "/views";
-
-var pkg = require('./package.json');
-
-var banner = [
+global.banner = [
     '/**',
     ' * Copyright (c) <%= new Date().getFullYear() %> <%= pkg.author %>',
     ' * <%= pkg.title %> (<%= pkg.name %>) - <%= pkg.description %>',
     ' * @version v<%= pkg.version %>',
-    ' * @build <%= pkg.lastBuildDateHuman %>',
     ' * @link <%= pkg.repository %>',
     ' * @license <%= pkg.license %>',
     ' */',
     ''
 ].join('\n');
 
-function buildAmd() {
-    gulp
-        .src([
-            srcJs + lib + "/*.js",
-            srcJs + models + "/*.js",
-            srcJs + collections + "/*.js",
-            srcJs + views + "/*.js",
-            srcJs + "/templates.js",
-            srcJs + "/main.js"
-        ])
-        .pipe(concat("modules.js"))
-        .pipe(uglify({mangle: false}))
-        .pipe(header(banner, {pkg: pkg}))
-        .pipe(gulp.dest(distJs));
-}
+require("require-dir")("./gulp/tasks", {recurse: true});
 
-function buildTemplates() {
-    var distDir = distJs + templates,
-        srcDir = srcJs + templates;
+gulp.task("default", function () {
+    if (!isProd) {
+        return $.runSequence("build", "watch");
+    }
 
-    mkdirp(distDir);
-
-    gulp
-        .src(srcDir + "/**/*.ejs")
-        .pipe(ejsmin({removeComment: false}))
-        .pipe(gulp.dest(distDir));
-}
-
-function buildTplPlugin() {
-    var srcDir = srcJs,
-        distDir = distJs,
-        file = "/tpl.js";
-
-    mkdirp(distDir);
-
-    gulp
-        .src(srcDir + file)
-        .pipe(uglify())
-        .pipe(header(banner, {pkg: pkg}))
-        .pipe(out(distDir + file));
-}
-
-function buildJade() {
-    gulp.src("./index.jade")
-        .pipe(jade({pretty: true}))
-        .pipe(out("./index-dev.html"));
-
-    var opts = {
-        conditionals: true,
-        spare:        true,
-        empty:        true,
-        cdata:        true,
-        quotes:       true,
-        loose:        false
-    };
-
-    gulp.src("./index.jade")
-        .pipe(jade())
-        .pipe(minifyHTML(opts))
-        .pipe(replace("/src/js/main", "/dist/js/modules"))
-        .pipe(replace("##NAME##", pkg.name || "Unknown"))
-        .pipe(replace("##TITLE##", pkg.title || "Unknown"))
-        .pipe(replace("##DESCRIPTION##", pkg.description || "Unknown"))
-        .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
-        .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
-        .pipe(replace("##VERSION##", pkg.version || "Unknown"))
-        .pipe(replace("##DATE##", pkg.lastBuildDateHuman || "Unknown"))
-        .pipe(gulp.dest("./"));
-}
-
-function buildReadme() {
-    gulp.src(src + "/README.md")
-        .pipe(replace("##TITLE##", pkg.title || "Unknown"))
-        .pipe(replace("##NAME##", pkg.name || "Unknown"))
-        .pipe(replace("##DESCRIPTION##", pkg.description || "Unknown"))
-        .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
-        .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
-        .pipe(replace("##VERSION##", pkg.version || "Unknown"))
-        .pipe(replace("##DATE##", pkg.lastBuildDateHuman || "Unknown"))
-        .pipe(out("./README.md"));
-}
-
-function buildCss() {
-    mkdirp(distCss);
-
-    gulp
-        .src(srcLess + "/main.less")
-        .pipe(less())
-        .pipe(autoprefixer({
-            browsers: [
-                "Android 2.3",
-                "Android >= 4",
-                "Chrome >= 20",
-                "Firefox >= 24",
-                "Explorer >= 8",
-                "iOS >= 6",
-                "Opera >= 12",
-                "Safari >= 6"
-            ]
-        }))
-        .pipe(csso())
-        .pipe(header(banner, {pkg: pkg}))
-        .pipe(out(distCss + "/app.css"));
-}
-
-function versionIncrement() {
-    var v = (pkg.version || "0.0.0").split(".");
-
-    pkg.version = [
-        v[0] ? v[0] : 0,
-        v[1] ? v[1] : 0,
-        (v[2] ? parseInt(v[2]) : 0) + 1
-    ].join(".");
-
-    gutil.log("Current version: " + chalk.blue(pkg.version));
-
-    jsonHelper.write("./package.json", pkg);
-}
-
-function dateUpdate() {
-    var d = new Date();
-    pkg.lastBuildDate = dateFormat(d, "isoUtcDateTime");
-    pkg.lastBuildDateHuman = dateFormat(d);
-
-    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateHuman));
-
-    jsonHelper.write("./package.json", pkg);
-}
-
-gulp.task("build_css", buildCss);
-gulp.task("build_jade", buildJade);
-gulp.task("build_tpl_plugin", buildTplPlugin);
-gulp.task("build_templates", buildTemplates);
-gulp.task("build_amd", buildAmd);
-gulp.task("build_readme", buildReadme);
-
-gulp.task("watch", function () {
-    gulp.watch(srcLess + "/**/*.less", ["build_css"]);
-    gulp.watch("./index.jade", ["build_jade"]);
-    gulp.watch(srcJs + "/lib/tpl.js", ["build_tpl_plugin"]);
-    gulp.watch(srcJs + templates + "/**/*.ejs", ["build_templates"]);
-
-    gulp.watch(srcJs + collections + "/**/*.js", ["build_amd"]);
-    gulp.watch(srcJs + lib + "/**/*.js", ["build_amd"]);
-    gulp.watch(srcJs + models + "/**/*.js", ["build_amd"]);
-    gulp.watch(srcJs + views + "/**/*.js", ["build_amd"]);
-    gulp.watch(srcJs + "/main.js", ["build_amd"]);
-    gulp.watch(srcJs + "/templates.js", ["build_amd"]);
-
-    gulp.watch(src + "/README.md", ["build_readme"]);
-});
-
-gulp.task("build", function () {
-    dateUpdate();
-    versionIncrement();
-    buildJade();
-    buildCss();
-    buildTplPlugin();
-    buildTemplates();
-    buildAmd();
-    buildReadme();
+    return $.runSequence("build");
 });

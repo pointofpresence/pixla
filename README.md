@@ -3,6 +3,6 @@
 
 Author: pointofpresence
 
-Last build date: Sun Jul 12 2015 21:32:34
+Last build date: Unknown
 
 Creative online image filter

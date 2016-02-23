@@ -1,12 +1,10 @@
-define("templates", function (require) {
-    "use strict";
+"use strict";
 
-    return {
-        OptionsTitle: require("tpl!templates/OptionsTitle.ejs"),
+module.exports = {
+    OptionsTitle: require("./templates/OptionsTitle.ejs"),
 
-        options: {
-            Select: require("tpl!templates/options/Select.ejs"),
-            Slider: require("tpl!templates/options/Slider.ejs")
-        }
-    };
-});
+    options: {
+        Select: require("./templates/options/Select.ejs"),
+        Slider: require("./templates/options/Slider.ejs")
+    }
+};

@@ -1,12 +1,9 @@
-/**
- * @module models/TriangleKuwahara
- */
-define("models/TriangleKuwahara", [
-    "models/TriangleCross",
-    "lib/Buffer"
-], function (TriangleCrossModel, Buffer) {
-    "use strict";
+"use strict";
 
+var TriangleCrossModel = "./TriangleCross",
+    Buffer             = "../lib/Buffer";
+
+module.exports = function () {
     return TriangleCrossModel.extend({
         TILE_WIDTH:  5,
         TILE_HEIGHT: 5,
@@ -69,4 +66,4 @@ define("models/TriangleKuwahara", [
         ]
         //@formatter:on
     });
-});
+};

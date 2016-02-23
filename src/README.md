@@ -1,8 +1,8 @@
-# ##TITLE## v##VERSION##
-## aka ##NAME##
+# <%= title %> v<%= version %>
+## aka <%= name %>
 
-Author: ##AUTHOR##
+Author: <%= author %>
 
-Last build date: ##DATE##
+Last build date: <%= lastBuildDateHuman %>
 
-##DESCRIPTION##
+<%= description %>

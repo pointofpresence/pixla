@@ -1,8 +1,8 @@
-/* global define */
+"use strict";
 
-define("lib/Fileinput", ["jquery"], function ($) {
-    "use strict";
+var $ = jQuery;
 
+module.exports = (function () {
     var b = function (d, e) {
         this.options = e;
         this.$elementFilestyle = [];
@@ -177,7 +177,7 @@ define("lib/Fileinput", ["jquery"], function ($) {
             }
         },
 
-        pushNameFiles:  function () {
+        pushNameFiles: function () {
             var d = "", f = [];
 
             if (this.$element[0].files === undefined) {
@@ -324,4 +324,4 @@ define("lib/Fileinput", ["jquery"], function ($) {
             e.filestyle(d)
         })
     });
-});
+})();

@@ -1,14 +1,11 @@
-/**
- * @module models/TrianglePeecol
- */
-define("models/TrianglePeecol", [
-    "backbone",
-    "underscore",
-    "models/TriangleCross",
-    "lib/Buffer"
-], function (Backbone, _, TriangleCrossModel, Buffer) {
-    "use strict";
+"use strict";
 
+var Backbone           = require("backbone"),
+    _                  = require("underscore"),
+    TriangleCrossModel = require("./TriangleCross"),
+    Buffer             = require("../lib/Buffer");
+
+module.exports = function () {
     return TriangleCrossModel.extend({
         TILE_WIDTH:  36,
         TILE_HEIGHT: 36,
@@ -188,4 +185,4 @@ define("models/TrianglePeecol", [
          ]
         //@formatter:on
     });
-});
+};

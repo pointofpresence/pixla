@@ -1,11 +1,8 @@
-/**
- * @module models/TriangleStoneAdvanced
- */
-define("models/TriangleStoneAdvanced", [
-    "models/TriangleCross"
-], function (TriangleCrossModel) {
-    "use strict";
+"use strict";
 
+var TriangleCrossModel = require("./TriangleCross");
+
+module.exports = function () {
     return TriangleCrossModel.extend({
         getColors: function (data, x, y) {
             var colors = [];
@@ -66,7 +63,7 @@ define("models/TriangleStoneAdvanced", [
 
             colors[9] = this.getPixelXY(
                 data,
-                x + this.TILE_WIDTH  - 1,
+                x + this.TILE_WIDTH - 1,
                 y + this.TILE_HEIGHT / 2 - 1
             );
 
@@ -142,4 +139,4 @@ define("models/TriangleStoneAdvanced", [
             //@formatter:on
         ]
     });
-});
+};

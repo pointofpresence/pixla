@@ -1,12 +1,9 @@
-/**
- * @module models/TriangleBlocks
- */
-define("models/TriangleBlocks", [
-    "models/TriangleCross",
-    "lib/Buffer"
-], function (TriangleCrossModel, Buffer) {
-    "use strict";
+"use strict";
 
+var TriangleCrossModel = require("./TriangleCross"),
+    Buffer             = require("../lib/Buffer");
+
+module.exports = function () {
     return TriangleCrossModel.extend({
         TILE_WIDTH:  5,
         TILE_HEIGHT: 5,
@@ -42,4 +39,4 @@ define("models/TriangleBlocks", [
             [2, 5, 6, 6, 7]
         ]
     });
-});
+};

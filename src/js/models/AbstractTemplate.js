@@ -1,13 +1,10 @@
-/**
- * @module models/AbstractTemplate
- */
-define("models/AbstractTemplate", [
-    "backbone",
-    "underscore",
-    "lib/Buffer"
-], function (Backbone, _, Buffer) {
-    "use strict";
+"use strict";
 
+var Backbone = require("backbone"),
+    _        = require("underscore"),
+    Buffer   = require("../lib/Buffer");
+
+module.exports = function () {
     //noinspection JSValidateJSDoc
     return Backbone.Model.extend({
         TILE_WIDTH:  0,
@@ -82,4 +79,4 @@ define("models/AbstractTemplate", [
             Buffer.setPixelXY(data, x, y, color, this.w);
         }
     });
-});
+};

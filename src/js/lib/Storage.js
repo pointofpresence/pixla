@@ -1,39 +1,35 @@
-/* global define */
+"use strict";
 
-define("lib/Storage", [], function () {
-    "use strict";
+module.exports = {
+    /**
+     * @returns {*}
+     */
+    getFilter: function () {
+        return localStorage["filter"] ? JSON.parse(localStorage["filter"]) : {};
+    },
 
-    return {
-        /**
-         * @returns {*}
-         */
-        getFilter: function () {
-            return localStorage["filter"] ? JSON.parse(localStorage["filter"]) : {};
-        },
+    /**
+     * @param filter
+     */
+    setFilter: function (filter) {
+        localStorage["filter"] = JSON.stringify(filter || {});
+    },
 
-        /**
-         * @param filter
-         */
-        setFilter: function (filter) {
-            localStorage["filter"] = JSON.stringify(filter || {});
-        },
+    unsetFilter: function () {
+        delete localStorage["filter"];
+    },
 
-        unsetFilter: function () {
-            delete localStorage["filter"];
-        },
+    /**
+     * @returns {*}
+     */
+    getEncoded: function () {
+        return localStorage["encoded"] ? JSON.parse(localStorage["encoded"]) : null;
+    },
 
-        /**
-         * @returns {*}
-         */
-        getEncoded: function () {
-            return localStorage["encoded"] ? JSON.parse(localStorage["encoded"]) : null;
-        },
-
-        /**
-         * @param data
-         */
-        setEncoded: function (data) {
-            localStorage["encoded"] = JSON.stringify(data);
-        }
-    };
-});
+    /**
+     * @param data
+     */
+    setEncoded: function (data) {
+        localStorage["encoded"] = JSON.stringify(data);
+    }
+};

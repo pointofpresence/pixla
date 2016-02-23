@@ -1,13 +1,10 @@
-/**
- * @module models/TriangleCross
- */
-define("models/TriangleCross", [
-    "backbone",
-    "underscore",
-    "models/AbstractTemplate"
-], function (Backbone, _, AbstractTemplate) {
-    "use strict";
+"use strict";
 
+var Backbone         = require("backbone"),
+    _                = require("underscore"),
+    AbstractTemplate = require("./AbstractTemplate");
+
+module.exports = function () {
     return AbstractTemplate.extend({
         pattern: [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -85,4 +82,4 @@ define("models/TriangleCross", [
             };
         }
     });
-});
+};

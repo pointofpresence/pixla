@@ -4,10 +4,10 @@ html(lang="en")
         meta(charset="utf-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1")
-        meta(name="description", content="##DESCRIPTION##")
-        meta(name="author", content="##AUTHOR##")
+        meta(name="description", content=description)
+        meta(name="author", content=author)
 
-        title ##TITLE##
+        title= title
 
         link(rel="icon", href="/favicon.png")
 
@@ -42,7 +42,7 @@ html(lang="en")
                         span.icon-bar
                         span.icon-bar
 
-                    a.navbar-brand(href="#") ##TITLE##
+                    a.navbar-brand(href="#")= title
 
                 // Collect the nav links, forms, and other content for toggling
                 #bs-navbar-collapse.collapse.navbar-collapse
@@ -53,8 +53,8 @@ html(lang="en")
         .container
             .page-header
                 h1
-                    img.logo(src="/dist/images/logo.png", title="##TITLE##")
-                    small v##VERSION##
+                    img.logo(src="/dist/images/logo.png", title=title)
+                    small v#{version}
 
                 h3 Креативный онлайн-фильтр изображений
 
@@ -91,7 +91,7 @@ html(lang="en")
                                 button.close(type="button", data-dismiss="modal", aria-label="Close")
                                     span(aria-hidden="true") ×
 
-                                h4#myModalLabel2.modal-title ##TITLE##
+                                h4#myModalLabel2.modal-title= title
 
                             .modal-body
                                 p
@@ -177,4 +177,4 @@ html(lang="en")
             .container
                 .yashare-auto-init(data-yashareL10n="ru", data-yashareQuickServices="vkontakte,facebook,twitter,odnoklassniki,moimir,gplus", data-yashareTheme="counter")
 
-        script(data-main="/src/js/main", src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js")
+        script(src="dist/js/bundle.js")

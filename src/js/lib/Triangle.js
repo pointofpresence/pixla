@@ -1,32 +1,19 @@
-/* global define */
+"use strict";
 
-define("lib/Triangle", [
-    "models/TriangleCross",
-    "models/TrianglePeecol",
-    "models/TriangleBlocks",
-    "models/TriangleCrossRadial",
-    "models/TriangleDithering",
-    "models/TriangleKuwahara",
-    "models/TriangleLine",
-    "models/TriangleMeander",
-    "models/TriangleRealCross",
-    "models/TriangleSkull",
-    "models/TriangleStone",
-    "models/TriangleStoneAdvanced"
-], function (TriangleCross,
-             TrianglePeecol,
-             TriangleBlocks,
-             TriangleCrossRadial,
-             TriangleDithering,
-             TriangleKuwahara,
-             TriangleLine,
-             TriangleMeander,
-             TriangleRealCross,
-             TriangleSkull,
-             TriangleStone,
-             TriangleStoneAdvanced) {
-    "use strict";
+var TriangleCross         = require("../models/TriangleCross"),
+    TrianglePeecol        = require("../models/TrianglePeecol"),
+    TriangleBlocks        = require("../models/TriangleBlocks"),
+    TriangleCrossRadial   = require("../models/TriangleCrossRadial"),
+    TriangleDithering     = require("../models/TriangleDithering"),
+    TriangleKuwahara      = require("../models/TriangleKuwahara"),
+    TriangleLine          = require("../models/TriangleLine"),
+    TriangleMeander       = require("../models/TriangleMeander"),
+    TriangleRealCross     = require("../models/TriangleRealCross"),
+    TriangleSkull         = require("../models/TriangleSkull"),
+    TriangleStone         = require("../models/TriangleStone"),
+    TriangleStoneAdvanced = require("../models/TriangleStoneAdvanced");
 
+module.exports = function () {
     //noinspection JSValidateJSDoc
     return {
         /**
@@ -113,4 +100,4 @@ define("lib/Triangle", [
             return new TriangleStoneAdvanced;
         }
     };
-});
+};

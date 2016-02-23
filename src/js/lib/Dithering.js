@@ -1,11 +1,9 @@
-/* global define */
+"use strict";
 
 /**
  * @description Based on dpiccone/ditherjs
  */
-define("lib/Dithering", [], function () {
-    "use strict";
-
+module.exports = function () {
     //noinspection JSValidateJSDoc
     return {
         opt: {},
@@ -485,4 +483,4 @@ define("lib/Dithering", [], function () {
             return out;
         }
     };
-});
+};
