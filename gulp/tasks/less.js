@@ -9,7 +9,7 @@ gulp.task('less', function () {
     $.mkdirp(distCss);
 
     return gulp
-        .src(srcLess + 'freelancer.less')
+        .src(srcLess + 'main.less')
         .pipe(!isProd ? $.sourcemaps.init({loadMaps: true}) : $.util.noop())
         .pipe($.less())
         .pipe($.autoprefixer({
