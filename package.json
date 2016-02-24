@@ -10,6 +10,8 @@
   "author": "pointofpresence",
   "license": "MIT",
   "devDependencies": {
+    "babel-preset-es2015": "^6.5.0",
+    "babelify": "^7.2.0",
     "backbone": "^1.2.2",
     "bootstrap": "^3.3.5",
     "bootswatch": "^3.3.6",
@@ -64,5 +66,7 @@
       ]
     ]
   },
-  "browser": {}
+  "browser": {
+    "fabric": "./bower_components/fabric.js/dist/fabric.js"
+  }
 }

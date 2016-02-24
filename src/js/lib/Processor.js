@@ -1,6 +1,6 @@
 "use strict";
 var Backbone = require("backbone"),
-    _        = require("underscore"),
+    _        = require("lodash"),
     Filter   = require("./Filter"),
     Triangle = require("./Triangle"),
     Options  = require("./Options");

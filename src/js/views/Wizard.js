@@ -1,7 +1,7 @@
 "use strict";
 
 var Backbone  = require("backbone"),
-    _         = require("underscore"),
+    _         = require("lodash"),
     Sortable  = require("../vendor/sortable"),
     templates = require("../templates"),
     Canvas    = require("../lib/Canvas"),

@@ -1,7 +1,8 @@
 "use strict";
 
-var Canvas = require("./Canvas"),
-    Fabric = require("../../../bower_components/fabric.js/dist/fabric.js");
+var Canvas = require("./Canvas");
+
+require("fabric");
 
 module.exports = {
     /**

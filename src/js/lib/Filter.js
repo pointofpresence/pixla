@@ -1,6 +1,6 @@
 "use strict";
 
-var _         = require("underscore"),
+var _         = require("lodash"),
     Dithering = require("./Dithering"),
     Buffer    = require("./Buffer"),
     Mixin     = require("./Mixin");

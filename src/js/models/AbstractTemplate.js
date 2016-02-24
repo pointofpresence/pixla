@@ -1,7 +1,7 @@
 "use strict";
 
 var Backbone = require("backbone"),
-    _        = require("underscore"),
+    _        = require("lodash"),
     Buffer   = require("../lib/Buffer");
 
 module.exports = function () {

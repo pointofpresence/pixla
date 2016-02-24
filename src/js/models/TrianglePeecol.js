@@ -1,7 +1,7 @@
 "use strict";
 
 var Backbone           = require("backbone"),
-    _                  = require("underscore"),
+    _                  = require("lodash"),
     TriangleCrossModel = require("./TriangleCross"),
     Buffer             = require("../lib/Buffer");
 

@@ -2,7 +2,7 @@
 
 var Filter    = require("./Filter"),
     Dithering = require("./Dithering"),
-    _         = require("underscore"),
+    _         = require("lodash"),
     Triangle  = require("./Triangle");
 
 module.exports = {

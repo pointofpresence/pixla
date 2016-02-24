@@ -7,13 +7,15 @@ gulp.task("babel", function () {
     var bundle = 'bundle.js';
 
     $.util.log('Creating ' + bundle + ' in ' + $.chalk.magenta(config.jsDst) + ' ...');
-    $.mkdirp(config.jsSrc);
+    $.mkdirp(config.jsDst);
 
     return gulp
         .src(config.jsSrc + "index.js")
         .pipe(through2.obj(function (file, enc, next) {
             browserify(file.path, {debug: !isProd})
-                .transform(require('babelify'))
+                .transform(require('babelify'), {
+                    ignore: ['**/bower_components/fabric.js/*']
+                })
                 .bundle(function (err, res) {
                     if (err) {
                         return next(err);

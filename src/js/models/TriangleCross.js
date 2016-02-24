@@ -1,7 +1,7 @@
 "use strict";
 
 var Backbone         = require("backbone"),
-    _                = require("underscore"),
+    _                = require("lodash"),
     AbstractTemplate = require("./AbstractTemplate");
 
 module.exports = function () {
