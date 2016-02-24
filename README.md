@@ -1,8 +1,6 @@
-# ReSampled.Pixla v0.1.13
+# ReSampled.Pixla v0.2.1
 ## aka pixla
 
 Author: pointofpresence
-
-Last build date: Unknown
 
 Creative online image filter

@@ -15,6 +15,7 @@
     "backbone": "^1.2.2",
     "bootstrap": "^3.3.5",
     "bootswatch": "^3.3.6",
+    "browserify": "^13.0.0",
     "chalk": "^1.0.0",
     "dateformat": "^1.0.11",
     "del": "^2.2.0",
@@ -39,12 +40,12 @@
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.5",
     "jquery": "^2.1.4",
-    "jsdom": "^6.2.0",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
     "node-underscorify": "0.0.14",
     "require-dir": "^0.3.0",
-    "run-sequence": "^1.1.2"
+    "run-sequence": "^1.1.2",
+    "through2": "^2.0.1"
   },
   "browserify": {
     "transform": [

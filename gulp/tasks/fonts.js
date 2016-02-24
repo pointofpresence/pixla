@@ -5,7 +5,10 @@ gulp.task("fonts", function () {
     $.mkdirp(config.fonts);
 
     return gulp
-        .src(config.vendor.fontAwesome + "fonts/*.*")
+        .src([
+            config.vendor.fontAwesome + "fonts/*.*",
+            config.vendor.bootstrap + "fonts/*.*"
+        ])
         .pipe($.size({title: "Fonts"}))
         .pipe(gulp.dest(config.fonts));
 });

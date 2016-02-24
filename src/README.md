@@ -3,6 +3,4 @@
 
 Author: <%= author %>
 
-Last build date: <%= lastBuildDateHuman %>
-
 <%= description %>

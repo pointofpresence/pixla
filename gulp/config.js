@@ -22,6 +22,7 @@ module.exports = {
     "jsSrc":     jsSrc,
     "jsDst":     jsDst,
     "vendor":    {
-        "fontAwesome": node + "font-awesome/"
+        "fontAwesome": node + "font-awesome/",
+        "bootstrap":   node + "bootstrap/"
     }
 };
