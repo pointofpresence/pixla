@@ -16,8 +16,12 @@ module.exports = {
     "jade":      "src/jade/",
     "less":      src + "less/",
     "css":       dist + "css/",
+    "fonts":     dist + "fonts/",
     "readMeSrc": "src/README.md",
     "readMeDst": "README.md",
     "jsSrc":     jsSrc,
-    "jsDst":     jsDst
+    "jsDst":     jsDst,
+    "vendor":    {
+        "fontAwesome": node + "font-awesome/"
+    }
 };
