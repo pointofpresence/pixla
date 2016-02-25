@@ -4,7 +4,6 @@ var TriangleCross         = require("../models/TriangleCross"),
     TrianglePeecol        = require("../models/TrianglePeecol"),
     TriangleBlocks        = require("../models/TriangleBlocks"),
     TriangleCrossRadial   = require("../models/TriangleCrossRadial"),
-    TriangleKuwahara      = require("../models/TriangleKuwahara"),
     TriangleLine          = require("../models/TriangleLine"),
     TriangleMeander       = require("../models/TriangleMeander"),
     TriangleRealCross     = require("../models/TriangleRealCross"),
@@ -13,6 +12,7 @@ var TriangleCross         = require("../models/TriangleCross"),
     TriangleStoneAdvanced = require("../models/TriangleStoneAdvanced");
 
 import TriangleDithering from '../models/TriangleDithering';
+import TriangleKuwahara from '../models/TriangleKuwahara';
 
 export default {
     /**
