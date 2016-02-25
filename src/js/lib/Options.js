@@ -2,8 +2,9 @@
 
 var Filter    = require("./Filter"),
     Dithering = require("./Dithering"),
-    _         = require("lodash"),
-    Triangle  = require("./Triangle");
+    _         = require("lodash");
+
+import Triangle from './Triangle';
 
 module.exports = {
     options: {

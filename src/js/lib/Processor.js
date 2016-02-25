@@ -1,9 +1,9 @@
-"use strict";
 var Backbone = require("backbone"),
     _        = require("lodash"),
     Filter   = require("./Filter"),
-    Triangle = require("./Triangle"),
     Options  = require("./Options");
+
+import Triangle from './Triangle';
 
 _.mixin(require("./Mixin"));
 
@@ -220,7 +220,7 @@ module.exports = {
                 -1, -1, 0,
                 -1, 1, 1,
                 0, 1, 1
-                //@formatter:off
+                //@formatter:on
             ]);
         }
     },
@@ -232,7 +232,7 @@ module.exports = {
         if (parseInt(filter)
             && this.options.pattern.options[filter]
             && this.options.pattern.options[filter].model) {
-            var model = Triangle[this.options.pattern.options[filter].model](),
+            let model = Triangle[this.options.pattern.options[filter].model](),
                 data  = model.doit(this.data, this.w, this.h);
 
             this.data = data.data;

@@ -21,8 +21,6 @@ module.exports = Backbone.View.extend({
     filterId:  null,
 
     initialize: function () {
-        console.log("Wizard::initialize")
-
         // fieldsets blocker
         this.elements.preloader = this.$(".preloader");
 
@@ -46,7 +44,6 @@ module.exports = Backbone.View.extend({
 
         // message box (reserved)
         this.elements.messageModal = this.$("#message");
-
 
         // save button
         this.elements.save = this.$("#output-save");

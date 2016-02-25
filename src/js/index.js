@@ -11,7 +11,7 @@ require("./lib/Fileinput");
 
 $(function () {
     // # fix
-    $(document).on("click", "a[href=#]", function (e) {
+    $(document).on("click", "a[href='#']", function (e) {
         e.preventDefault();
     });
 

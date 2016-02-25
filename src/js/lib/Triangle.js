@@ -4,7 +4,6 @@ var TriangleCross         = require("../models/TriangleCross"),
     TrianglePeecol        = require("../models/TrianglePeecol"),
     TriangleBlocks        = require("../models/TriangleBlocks"),
     TriangleCrossRadial   = require("../models/TriangleCrossRadial"),
-    TriangleDithering     = require("../models/TriangleDithering"),
     TriangleKuwahara      = require("../models/TriangleKuwahara"),
     TriangleLine          = require("../models/TriangleLine"),
     TriangleMeander       = require("../models/TriangleMeander"),
@@ -13,91 +12,90 @@ var TriangleCross         = require("../models/TriangleCross"),
     TriangleStone         = require("../models/TriangleStone"),
     TriangleStoneAdvanced = require("../models/TriangleStoneAdvanced");
 
-module.exports = function () {
-    //noinspection JSValidateJSDoc
-    return {
-        /**
-         * @returns {TriangleCross}
-         */
-        "Cross": function () {
-            return new TriangleCross;
-        },
+import TriangleDithering from '../models/TriangleDithering';
 
-        /**
-         * @returns {TriangleCrossRadial}
-         */
-        "Cross Radial": function () {
-            return new TriangleCrossRadial;
-        },
+export default {
+    /**
+     * @returns {TriangleCross}
+     */
+    "Cross": function () {
+        return new TriangleCross;
+    },
 
-        /**
-         * @returns {TrianglePeecol}
-         */
-        "Peecol": function () {
-            return new TrianglePeecol;
-        },
+    /**
+     * @returns {TriangleCrossRadial}
+     */
+    "Cross Radial": function () {
+        return new TriangleCrossRadial;
+    },
 
-        /**
-         * @returns {TriangleBlocks}
-         */
-        "Blocks": function () {
-            return new TriangleBlocks;
-        },
+    /**
+     * @returns {TrianglePeecol}
+     */
+    "Peecol": function () {
+        return new TrianglePeecol;
+    },
 
-        /**
-         * @returns {TriangleDithering}
-         */
-        "Dithering": function () {
-            return new TriangleDithering;
-        },
+    /**
+     * @returns {TriangleBlocks}
+     */
+    "Blocks": function () {
+        return new TriangleBlocks;
+    },
 
-        /**
-         * @returns {TriangleKuwahara}
-         */
-        "Kuwahara": function () {
-            return new TriangleKuwahara;
-        },
+    /**
+     * @returns {$ES6_ANONYMOUS_CLASS$}
+     */
+    "Dithering": function () {
+        return new TriangleDithering;
+    },
 
-        /**
-         * @returns {TriangleLine}
-         */
-        "Line": function () {
-            return new TriangleLine;
-        },
+    /**
+     * @returns {TriangleKuwahara}
+     */
+    "Kuwahara": function () {
+        return new TriangleKuwahara;
+    },
 
-        /**
-         * @returns {TriangleMeander}
-         */
-        "Meander": function () {
-            return new TriangleMeander;
-        },
+    /**
+     * @returns {TriangleLine}
+     */
+    "Line": function () {
+        return new TriangleLine;
+    },
 
-        /**
-         * @returns {TriangleRealCross}
-         */
-        "Real Cross": function () {
-            return new TriangleRealCross;
-        },
+    /**
+     * @returns {TriangleMeander}
+     */
+    "Meander": function () {
+        return new TriangleMeander;
+    },
 
-        /**
-         * @returns {TriangleSkull}
-         */
-        "Skull": function () {
-            return new TriangleSkull;
-        },
+    /**
+     * @returns {TriangleRealCross}
+     */
+    "Real Cross": function () {
+        return new TriangleRealCross;
+    },
 
-        /**
-         * @returns {TriangleStone}
-         */
-        "Stone": function () {
-            return new TriangleStone;
-        },
+    /**
+     * @returns {TriangleSkull}
+     */
+    "Skull": function () {
+        return new TriangleSkull;
+    },
 
-        /**
-         * @returns {TriangleStoneAdvanced}
-         */
-        "Stone Advanced": function () {
-            return new TriangleStoneAdvanced;
-        }
-    };
-};
+    /**
+     * @returns {TriangleStone}
+     */
+    "Stone": function () {
+        return new TriangleStone;
+    },
+
+    /**
+     * @returns {TriangleStoneAdvanced}
+     */
+    "Stone Advanced": function () {
+        return new TriangleStoneAdvanced;
+    }
+}
