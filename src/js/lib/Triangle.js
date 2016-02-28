@@ -2,7 +2,6 @@
 
 var TrianglePeecol        = require("../models/TrianglePeecol"),
     TriangleBlocks        = require("../models/TriangleBlocks"),
-    TriangleCrossRadial   = require("../models/TriangleCrossRadial"),
     TriangleLine          = require("../models/TriangleLine"),
     TriangleMeander       = require("../models/TriangleMeander"),
     TriangleRealCross     = require("../models/TriangleRealCross"),
@@ -13,6 +12,7 @@ var TrianglePeecol        = require("../models/TrianglePeecol"),
 import TriangleDithering from '../models/TriangleDithering';
 import TriangleKuwahara from '../models/TriangleKuwahara';
 import TriangleCross from '../models/TriangleCross';
+import TriangleCrossRadial from '../models/TriangleCrossRadial';
 
 export default {
     /**
@@ -23,7 +23,7 @@ export default {
     },
 
     /**
-     * @returns {TriangleCrossRadial}
+     * @returns {$ES6_ANONYMOUS_CLASS$}
      */
     "Cross Radial": function () {
         return new TriangleCrossRadial;
