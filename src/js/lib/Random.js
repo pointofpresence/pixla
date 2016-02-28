@@ -1,8 +1,7 @@
 import Canvas from './Canvas';
+import 'fabric';
 
-require("fabric");
-
-module.exports = {
+export default {
     /**
      * @param {number} w
      * @param {number} h
@@ -10,24 +9,24 @@ module.exports = {
      * @returns {string|*}
      */
     generate: function (w, h, count) {
-        count = count || 100;
+        count      = count || 100;
 
-        var el     = Canvas.createEmptyCanvas(w, h, "random-canvas"),
-            canvas = new fabric.Canvas("random-canvas");
+        Canvas.createEmptyCanvas(w, h, 'random-canvas');
+        let canvas = new fabric.Canvas('random-canvas');
 
         canvas.setDimensions({width: w, height: h});
 
-        var objects = Object.keys(this.objects);
+        let objects = Object.keys(this.objects);
 
-        var rect = new fabric.Rect({
+        let rect = new fabric.Rect({
             left: 0,
             top:  0,
 
-            fill: "rgb(" + [
+            fill: 'rgb(' + [
                 Math.round(Math.random() * 255),
                 Math.round(Math.random() * 255),
                 Math.round(Math.random() * 255)
-            ].join(",") + ")",
+            ].join(',') + ')',
 
             width:  w,
             height: h
@@ -35,8 +34,8 @@ module.exports = {
 
         canvas.add(rect);
 
-        for (var i = 0; i <= Math.round(Math.random() * count); i++) {
-            var o = objects[Math.round(Math.random() * (objects.length - 1))];
+        for (let i = 0; i <= Math.round(Math.random() * count); i++) {
+            let o = objects[Math.round(Math.random() * (objects.length - 1))];
             this.objects[o](canvas, w, h);
         }
 
@@ -49,19 +48,19 @@ module.exports = {
          * @param w
          * @param h
          */
-        poly: function (canvas, w, h) {
-            var points = [];
+        poly: (canvas, w, h) => {
+            let points = [];
 
-            for (var i = 0; i <= Math.round(Math.random() * 100); i++) {
+            for (let i = 0; i <= Math.round(Math.random() * 100); i++) {
                 points.push({x: Math.round(Math.random() * w), y: Math.round(Math.random() * h)});
             }
 
-            var rect = new fabric.Polygon(points, {
-                fill: "rgb(" + [
+            let rect = new fabric.Polygon(points, {
+                fill: 'rgb(' + [
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255)
-                ].join(",") + ")",
+                ].join(',') + ')',
 
                 left:    Math.round(Math.random() * w),
                 top:     Math.round(Math.random() * h),
@@ -83,16 +82,16 @@ module.exports = {
          * @param w
          * @param h
          */
-        rect: function (canvas, w, h) {
-            var rect = new fabric.Rect({
+        rect: (canvas, w, h) => {
+            let rect = new fabric.Rect({
                 left: Math.round(Math.random() * w),
                 top:  Math.round(Math.random() * h),
 
-                fill: "rgb(" + [
+                fill: 'rgb(' + [
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255)
-                ].join(",") + ")",
+                ].join(',') + ')',
 
                 width:   Math.round(Math.random() * w),
                 height:  Math.round(Math.random() * h),
@@ -114,16 +113,16 @@ module.exports = {
          * @param w
          * @param h
          */
-        ellipse: function (canvas, w, h) {
-            var rect = new fabric.Ellipse({
+        ellipse: (canvas, w, h) => {
+            let rect = new fabric.Ellipse({
                 left: Math.round(Math.random() * w),
                 top:  Math.round(Math.random() * h),
 
-                fill: "rgb(" + [
+                fill: 'rgb(' + [
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255)
-                ].join(",") + ")",
+                ].join(',') + ')',
 
                 rx:      Math.round(Math.random() * w),
                 ry:      Math.round(Math.random() * h),
@@ -144,16 +143,16 @@ module.exports = {
          * @param w
          * @param h
          */
-        triangle: function (canvas, w, h) {
-            var rect = new fabric.Triangle({
+        triangle: (canvas, w, h) => {
+            let rect = new fabric.Triangle({
                 left: Math.round(Math.random() * w),
                 top:  Math.round(Math.random() * h),
 
-                fill: "rgb(" + [
+                fill: 'rgb(' + [
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255)
-                ].join(",") + ")",
+                ].join(',') + ')',
 
                 width:   Math.round(Math.random() * w),
                 height:  Math.round(Math.random() * h),
@@ -175,16 +174,16 @@ module.exports = {
          * @param w
          * @param h
          */
-        circle: function (canvas, w, h) {
-            var rect = new fabric.Circle({
+        circle: (canvas, w, h) => {
+            let rect = new fabric.Circle({
                 left: Math.round(Math.random() * w),
                 top:  Math.round(Math.random() * h),
 
-                fill: "rgb(" + [
+                fill: 'rgb(' + [
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255),
                     Math.round(Math.random() * 255)
-                ].join(",") + ")",
+                ].join(',') + ')',
 
                 radius:  Math.round(Math.random() * w / 2),
                 opacity: Math.round(Math.random() * 100) / 100
@@ -199,4 +198,4 @@ module.exports = {
             canvas.add(rect);
         }
     }
-};
+}
