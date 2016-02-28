@@ -9,47 +9,47 @@ _.mixin(Mixin);
 export default {
     options: {
         mirror: {
-            name:    "Отражение",
-            type:    "Select",
+            name:    'Отражение',
+            type:    'Select',
             options: [
-                {text: "Нет"},
-                {text: "По оси X", cb: Filter.flipX},
-                {text: "По оси Y", cb: Filter.flipY},
-                {text: "По оси X и Y", cb: Filter.flipXY}
+                {text: 'Нет'},
+                {text: 'По оси X', cb: Filter.flipX},
+                {text: 'По оси Y', cb: Filter.flipY},
+                {text: 'По оси X и Y', cb: Filter.flipXY}
             ]
         },
 
         kaleidoscope: {
-            name:    "Калейдоскоп",
-            type:    "Select",
+            name:    'Калейдоскоп',
+            type:    'Select',
             options: [
-                {text: "Нет"},
-                {text: "К центру", cb: Filter.kaleidoskopeCenter},
-                {text: "В стороны", cb: Filter.kaleidoskopeOutside},
-                {text: "К центру и в стороны", cb: Filter.kaleidoskopeCenterOutside},
-                {text: "По горизонтали", cb: Filter.kaleidoskopeHoriz},
-                {text: "По вертикали", cb: Filter.kaleidoskopeVert},
-                {text: "Игральная карта", cb: Filter.kaleidoskopeCard}
+                {text: 'Нет'},
+                {text: 'К центру', cb: Filter.kaleidoskopeCenter},
+                {text: 'В стороны', cb: Filter.kaleidoskopeOutside},
+                {text: 'К центру и в стороны', cb: Filter.kaleidoskopeCenterOutside},
+                {text: 'По горизонтали', cb: Filter.kaleidoskopeHoriz},
+                {text: 'По вертикали', cb: Filter.kaleidoskopeVert},
+                {text: 'Игральная карта', cb: Filter.kaleidoskopeCard}
             ]
         },
 
         colors: {
-            name:    "Цвет",
-            type:    "Select",
+            name:    'Цвет',
+            type:    'Select',
             options: [
-                {text: "Нет"},
-                {text: "Монохром", cb: Filter.monochrome},
-                {text: "Градации серого", cb: Filter.grayscale},
-                {text: "Сепия", cb: Filter.sepia},
-                {text: "Красный", cb: Filter.red},
-                {text: "Зеленый", cb: Filter.green},
-                {text: "Синий", cb: Filter.blue}
+                {text: 'Нет'},
+                {text: 'Монохром', cb: Filter.monochrome},
+                {text: 'Градации серого', cb: Filter.grayscale},
+                {text: 'Сепия', cb: Filter.sepia},
+                {text: 'Красный', cb: Filter.red},
+                {text: 'Зеленый', cb: Filter.green},
+                {text: 'Синий', cb: Filter.blue}
             ]
         },
 
         brightness: {
-            name: "Яркость",
-            type: "Slider",
+            name: 'Яркость',
+            type: 'Slider',
             min:  -1,
             max:  1,
             def:  0,
@@ -57,16 +57,16 @@ export default {
         },
 
         contrast: {
-            name: "Контраст",
-            type: "Slider",
+            name: 'Контраст',
+            type: 'Slider',
             min:  0,
             max:  259,
             def:  0
         },
 
         hue: {
-            name: "Тон",
-            type: "Slider",
+            name: 'Тон',
+            type: 'Slider',
             min:  -1,
             max:  1,
             def:  0,
@@ -74,8 +74,8 @@ export default {
         },
 
         saturation: {
-            name: "Насыщенность",
-            type: "Slider",
+            name: 'Насыщенность',
+            type: 'Slider',
             min:  0,
             max:  2,
             def:  0,
@@ -83,17 +83,17 @@ export default {
         },
 
         threshold: {
-            name: "Порог",
-            type: "Slider",
+            name: 'Порог',
+            type: 'Slider',
             min:  0,
             max:  200,
             def:  0,
-            cb:   Dithering.threshold
+            cb:   Filter.threshold
         },
 
         blur: {
-            name: "Размытие",
-            type: "Slider",
+            name: 'Размытие',
+            type: 'Slider',
             min:  0,
             max:  10,
             def:  0,
@@ -101,32 +101,32 @@ export default {
         },
 
         sharpen: {
-            name: "Резкость",
-            type: "Slider",
+            name: 'Резкость',
+            type: 'Slider',
             min:  0,
             max:  10,
             def:  0
         },
 
         edge: {
-            name: "Поиск края",
-            type: "Slider",
+            name: 'Поиск края',
+            type: 'Slider',
             min:  0,
             max:  2,
             def:  0
         },
 
         bump: {
-            name: "Выдавливание",
-            type: "Slider",
+            name: 'Выдавливание',
+            type: 'Slider',
             min:  0,
             max:  1,
             def:  0
         },
 
         emboss: {
-            name: "Рельеф",
-            type: "Slider",
+            name: 'Рельеф',
+            type: 'Slider',
             min:  0,
             max:  10,
             def:  0,
@@ -134,27 +134,27 @@ export default {
         },
 
         sobel: {
-            name: "Оператор Собеля",
-            type: "Slider",
+            name: 'Оператор Собеля',
+            type: 'Slider',
             min:  0,
             max:  1,
             def:  0
         },
 
         thin: {
-            name: "Контур",
-            type: "Slider",
+            name: 'Контур',
+            type: 'Slider',
             min:  0,
             max:  2,
             def:  0
         },
 
         dither: {
-            name:    "Дизеринг",
-            type:    "Select",
+            name:    'Дизеринг',
+            type:    'Select',
             options: (function () {
                 let options = [
-                    {text: "Нет"}
+                    {text: 'Нет'}
                 ];
 
                 Object.keys(Dithering.PALETTE).forEach(function (p) {
@@ -173,11 +173,11 @@ export default {
         },
 
         pattern: {
-            name:    "Паттерн",
-            type:    "Select",
+            name:    'Паттерн',
+            type:    'Select',
             options: (function () {
                 var options = [
-                    {text: "Нет"}
+                    {text: 'Нет'}
                 ];
 
                 Object.keys(Triangle).forEach(function (k) {
@@ -194,24 +194,24 @@ export default {
         },
 
         zhangSuen: {
-            name: "Скелет",
-            type: "Slider",
+            name: 'Скелет',
+            type: 'Slider',
             min:  0,
             max:  1,
             def:  0
         },
 
         invert: {
-            name: "Инверсия",
-            type: "Slider",
+            name: 'Инверсия',
+            type: 'Slider',
             min:  0,
             max:  1,
             def:  0
         },
 
         border: {
-            name: "Рамка",
-            type: "Slider",
+            name: 'Рамка',
+            type: 'Slider',
             min:  0,
             max:  10,
             def:  0

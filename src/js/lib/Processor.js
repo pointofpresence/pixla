@@ -1,4 +1,4 @@
-var Filter   = require("./Filter");
+var Filter = require("./Filter");
 
 import Backbone from 'backbone';
 import _        from 'lodash';
@@ -255,9 +255,8 @@ module.exports = {
      * @param {string} filter
      */
     postThreshold: function (filter) {
-        if (parseInt(filter)
-            && Dithering.threshold.cb) {
-            this.data = Dithering.threshold.cb.call(
+        if (parseInt(filter) && this.options.threshold.cb) {
+            this.data = this.options.threshold.cb.call(
                 this, this.data, parseInt(filter)
             );
         }
