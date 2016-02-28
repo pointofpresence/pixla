@@ -1,4 +1,4 @@
-"use strict";
+import Preset from '../lib/Preset';
 
 var Backbone  = require("backbone"),
     _         = require("lodash"),
@@ -8,8 +8,7 @@ var Backbone  = require("backbone"),
     Processor = require("../lib/Processor"),
     Storage   = require("../lib/Storage"),
     Random    = require("../lib/Random"),
-    Options   = require("../lib/Options"),
-    Preset    = require("../lib/Preset");
+    Options   = require("../lib/Options");
 
 Backbone.$ = jQuery;
 
