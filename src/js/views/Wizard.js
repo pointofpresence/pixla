@@ -1,11 +1,11 @@
 import Preset  from '../lib/Preset';
 import Storage from '../lib/Storage';
+import Canvas  from '../lib/Canvas';
 
 var Backbone  = require("backbone"),
     _         = require("lodash"),
     Sortable  = require("../vendor/sortable"),
     templates = require("../templates"),
-    Canvas    = require("../lib/Canvas"),
     Processor = require("../lib/Processor"),
     Random    = require("../lib/Random"),
     Options   = require("../lib/Options");

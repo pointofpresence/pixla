@@ -1,6 +1,4 @@
-"use strict";
-
-var Canvas = require("./Canvas");
+import Canvas from '../lib/Canvas';
 
 module.exports = {
     COLORS: {
