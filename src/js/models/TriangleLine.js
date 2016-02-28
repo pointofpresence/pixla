@@ -1,40 +1,10 @@
-"use strict";
+import TriangleCrossModel from './TriangleCross';
 
-var TriangleCrossModel = require("./TriangleCross");
+export default class extends TriangleCrossModel {
+    constructor() {
+        super();
 
-module.exports = function () {
-    return TriangleCrossModel.extend({
-        getColors: function (data, x, y) {
-            var colors = [];
-
-            colors[1] = this.getPixelXY(
-                data,
-                x,
-                y
-            );
-
-            colors[2] = this.getPixelXY(
-                data,
-                x,
-                y + 4
-            );
-
-            colors[3] = this.getPixelXY(
-                data,
-                x,
-                y + 8
-            );
-
-            colors[4] = this.getPixelXY(
-                data,
-                x,
-                y + 12
-            );
-
-            return colors;
-        },
-
-        pattern: [
+        this.pattern = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -51,6 +21,36 @@ module.exports = function () {
             [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-        ]
-    });
-};
+        ];
+    }
+
+    getColors(data, x, y) {
+        let colors = [];
+
+        colors[1] = this.getPixelXY(
+            data,
+            x,
+            y
+        );
+
+        colors[2] = this.getPixelXY(
+            data,
+            x,
+            y + 4
+        );
+
+        colors[3] = this.getPixelXY(
+            data,
+            x,
+            y + 8
+        );
+
+        colors[4] = this.getPixelXY(
+            data,
+            x,
+            y + 12
+        );
+
+        return colors;
+    }
+}
