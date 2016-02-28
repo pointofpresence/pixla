@@ -1,18 +1,15 @@
-"use strict";
-
-var TriangleStoneAdvanced = require("../models/TriangleStoneAdvanced");
-
-import TriangleDithering   from '../models/TriangleDithering';
-import TriangleKuwahara    from '../models/TriangleKuwahara';
-import TriangleCross       from '../models/TriangleCross';
-import TriangleCrossRadial from '../models/TriangleCrossRadial';
-import TrianglePeecol      from '../models/TrianglePeecol';
-import TriangleBlocks      from '../models/TriangleBlocks';
-import TriangleLine        from '../models/TriangleLine';
-import TriangleMeander     from '../models/TriangleMeander';
-import TriangleRealCross   from '../models/TriangleRealCross';
-import TriangleSkull       from '../models/TriangleSkull';
-import TriangleStone       from '../models/TriangleStone';
+import TriangleDithering     from '../models/TriangleDithering';
+import TriangleKuwahara      from '../models/TriangleKuwahara';
+import TriangleCross         from '../models/TriangleCross';
+import TriangleCrossRadial   from '../models/TriangleCrossRadial';
+import TrianglePeecol        from '../models/TrianglePeecol';
+import TriangleBlocks        from '../models/TriangleBlocks';
+import TriangleLine          from '../models/TriangleLine';
+import TriangleMeander       from '../models/TriangleMeander';
+import TriangleRealCross     from '../models/TriangleRealCross';
+import TriangleSkull         from '../models/TriangleSkull';
+import TriangleStone         from '../models/TriangleStone';
+import TriangleStoneAdvanced from '../models/TriangleStoneAdvanced';
 
 export default {
     /**
@@ -93,7 +90,7 @@ export default {
     },
 
     /**
-     * @returns {TriangleStoneAdvanced}
+     * @returns {$ES6_ANONYMOUS_CLASS$}
      */
     "Stone Advanced": function () {
         return new TriangleStoneAdvanced;

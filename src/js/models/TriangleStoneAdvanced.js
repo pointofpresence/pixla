@@ -1,124 +1,10 @@
-"use strict";
+import TriangleCrossModel from './TriangleCross';
 
-var TriangleCrossModel = require("./TriangleCross");
+export default class extends TriangleCrossModel {
+    constructor() {
+        super();
 
-module.exports = function () {
-    return TriangleCrossModel.extend({
-        getColors: function (data, x, y) {
-            var colors = [];
-
-            colors[1] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH / 2,
-                y + this.TILE_HEIGHT / 2
-            );
-
-            colors[2] = this.getPixelXY(
-                data,
-                x,
-                y
-            );
-
-            colors[3] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH / 4,
-                y
-            );
-
-            colors[4] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH / 2,
-                y
-            );
-
-            colors[4] = this.getPixelXY(
-                data,
-                x + (this.TILE_WIDTH / 4) * 3,
-                y
-            );
-
-            colors[5] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH - 1,
-                y
-            );
-
-            colors[6] = this.getPixelXY(
-                data,
-                x,
-                y + this.TILE_HEIGHT / 4
-            );
-
-            colors[7] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH / 2 - 1,
-                y + this.TILE_HEIGHT / 2 - 1
-            );
-
-            colors[8] = this.getPixelXY(
-                data,
-                x + (this.TILE_WIDTH / 4) * 3,
-                y + this.TILE_HEIGHT / 2 - 1
-            );
-
-            colors[9] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH - 1,
-                y + this.TILE_HEIGHT / 2 - 1
-            );
-
-            colors[10] = this.getPixelXY(
-                data,
-                x,
-                y + (this.TILE_HEIGHT / 4) * 3
-            );
-
-            colors[11] = this.getPixelXY(
-                data,
-                x + this.TILE_HEIGHT / 4,
-                y + (this.TILE_HEIGHT / 4) * 3
-            );
-
-            colors[12] = this.getPixelXY(
-                data,
-                x + this.TILE_HEIGHT / 2,
-                y + (this.TILE_HEIGHT / 4) * 3
-            );
-
-            colors[13] = this.getPixelXY(
-                data,
-                x + (this.TILE_HEIGHT / 4) * 3,
-                y + (this.TILE_HEIGHT / 4) * 3
-            );
-
-            colors[14] = this.getPixelXY(
-                data,
-                x,
-                y + this.TILE_HEIGHT - 1
-            );
-
-            colors[15] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH / 4,
-                y + this.TILE_HEIGHT - 1
-            );
-
-            colors[16] = this.getPixelXY(
-                data,
-                x + this.TILE_WIDTH / 2,
-                y + this.TILE_HEIGHT - 1
-            );
-
-            colors[17] = this.getPixelXY(
-                data,
-                x + (this.TILE_WIDTH / 4) * 3,
-                y + this.TILE_HEIGHT - 1
-            );
-
-            return colors;
-        },
-
-        pattern: [
+        this.pattern = [
             //@formatter:off
             [ 1,  1,  2,  1,  3,  1,  1,  1,  3,  1,  4,  1,  4,  1,  5,  1],
             [ 1,  1,  2,  1,  3,  1,  1,  1,  3,  1,  4,  1,  4,  1,  5,  1],
@@ -137,6 +23,120 @@ module.exports = function () {
             [ 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
             [14, 14, 14,  1, 15, 15, 15, 15, 15,  1, 16, 16, 16,  1, 17, 17]
             //@formatter:on
-        ]
-    });
-};
+        ];
+    }
+
+    getColors(data, x, y) {
+        let colors = [];
+
+        colors[1] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 2,
+            y + this.TILE_HEIGHT / 2
+        );
+
+        colors[2] = this.getPixelXY(
+            data,
+            x,
+            y
+        );
+
+        colors[3] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 4,
+            y
+        );
+
+        colors[4] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 2,
+            y
+        );
+
+        colors[4] = this.getPixelXY(
+            data,
+            x + (this.TILE_WIDTH / 4) * 3,
+            y
+        );
+
+        colors[5] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH - 1,
+            y
+        );
+
+        colors[6] = this.getPixelXY(
+            data,
+            x,
+            y + this.TILE_HEIGHT / 4
+        );
+
+        colors[7] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 2 - 1,
+            y + this.TILE_HEIGHT / 2 - 1
+        );
+
+        colors[8] = this.getPixelXY(
+            data,
+            x + (this.TILE_WIDTH / 4) * 3,
+            y + this.TILE_HEIGHT / 2 - 1
+        );
+
+        colors[9] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH - 1,
+            y + this.TILE_HEIGHT / 2 - 1
+        );
+
+        colors[10] = this.getPixelXY(
+            data,
+            x,
+            y + (this.TILE_HEIGHT / 4) * 3
+        );
+
+        colors[11] = this.getPixelXY(
+            data,
+            x + this.TILE_HEIGHT / 4,
+            y + (this.TILE_HEIGHT / 4) * 3
+        );
+
+        colors[12] = this.getPixelXY(
+            data,
+            x + this.TILE_HEIGHT / 2,
+            y + (this.TILE_HEIGHT / 4) * 3
+        );
+
+        colors[13] = this.getPixelXY(
+            data,
+            x + (this.TILE_HEIGHT / 4) * 3,
+            y + (this.TILE_HEIGHT / 4) * 3
+        );
+
+        colors[14] = this.getPixelXY(
+            data,
+            x,
+            y + this.TILE_HEIGHT - 1
+        );
+
+        colors[15] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 4,
+            y + this.TILE_HEIGHT - 1
+        );
+
+        colors[16] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 2,
+            y + this.TILE_HEIGHT - 1
+        );
+
+        colors[17] = this.getPixelXY(
+            data,
+            x + (this.TILE_WIDTH / 4) * 3,
+            y + this.TILE_HEIGHT - 1
+        );
+
+        return colors;
+    }
+}
