@@ -1,11 +1,12 @@
-var Backbone = require("backbone"),
-    _        = require("lodash"),
-    Filter   = require("./Filter"),
-    Options  = require("./Options");
+var Filter   = require("./Filter");
 
+import Backbone from 'backbone';
+import _        from 'lodash';
 import Triangle from './Triangle';
+import Mixin    from './Mixin';
+import Options  from './Options';
 
-_.mixin(require("./Mixin"));
+_.mixin(Mixin);
 
 module.exports = {
     w: 0,
@@ -255,8 +256,8 @@ module.exports = {
      */
     postThreshold: function (filter) {
         if (parseInt(filter)
-            && this.options.threshold.cb) {
-            this.data = this.options.threshold.cb.call(
+            && Dithering.threshold.cb) {
+            this.data = Dithering.threshold.cb.call(
                 this, this.data, parseInt(filter)
             );
         }

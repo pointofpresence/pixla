@@ -1,8 +1,7 @@
-import _      from 'lodash';
-import Buffer from '../lib/Buffer';
-
-var Dithering = require("./Dithering"),
-    Mixin     = require("./Mixin");
+import _         from 'lodash';
+import Buffer    from '../lib/Buffer';
+import Mixin     from './Mixin';
+import Dithering from './Dithering';
 
 module.exports = {
     //// BORDER ///////////////////////////////////////////////////////////
@@ -1026,7 +1025,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_REDUCE: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1039,7 +1040,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_ORDERED: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1052,7 +1055,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_ERROR: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1065,7 +1070,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_ATKINSON: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1078,7 +1085,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_ATKINSON: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1091,7 +1100,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_REDUCE: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1104,7 +1115,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_ORDERED: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1117,7 +1130,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_ERROR: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1130,7 +1145,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_ATKINSON: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1143,7 +1160,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_REDUCE: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1156,7 +1175,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_ORDERED: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1169,7 +1190,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_ERROR: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1182,7 +1205,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_ATKINSON: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1195,7 +1220,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_REDUCE: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1208,7 +1235,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_ORDERED: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1221,7 +1250,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_ERROR: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1234,7 +1265,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_ATKINSON: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1247,7 +1280,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_REDUCE: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1260,7 +1295,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_ORDERED: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1273,7 +1310,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_ERROR: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1286,7 +1325,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_ATKINSON: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1299,7 +1340,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_REDUCE: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1312,7 +1355,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_ORDERED: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1325,7 +1370,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_ERROR: function (data, w, h) {
-        return Dithering.dither(data, w, h, {
+        let d = new Dithering;
+
+        return d.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ERROR
         });

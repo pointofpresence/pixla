@@ -1,7 +1,10 @@
-import _         from "lodash";
+import _         from 'lodash';
 import Filter    from './Filter';
 import Dithering from './Dithering';
 import Triangle  from './Triangle';
+import Mixin     from './Mixin';
+
+_.mixin(Mixin);
 
 export default {
     options: {
@@ -85,7 +88,7 @@ export default {
             min:  0,
             max:  200,
             def:  0,
-            cb:   Filter.threshold
+            cb:   Dithering.threshold
         },
 
         blur: {
@@ -150,22 +153,20 @@ export default {
             name:    "Дизеринг",
             type:    "Select",
             options: (function () {
-                var options = [
+                let options = [
                     {text: "Нет"}
                 ];
 
-                _.each(Dithering.PALETTE, function (obj, keyP) {
-                    var nameP = obj.name;
-
-                    _.each(Dithering.ALGORITHM, function (nameA, keyA) {
+                Object.keys(Dithering.PALETTE).forEach(function (p) {
+                    Object.keys(Dithering.ALGORITHM).forEach(function (a) {
                         options.push(
                             {
-                                text: _.format("{0} ({1})", nameP, nameA),
-                                cb:   Filter[_.format("dither{0}_{1}", keyP, keyA)]
+                                text: `${Dithering.PALETTE[p].name} (${Dithering.ALGORITHM[a]})`,
+                                cb:   Filter[`dither${p}_${a}`]
                             }
                         );
-                    }, this);
-                }, this);
+                    });
+                });
 
                 return options;
             })()

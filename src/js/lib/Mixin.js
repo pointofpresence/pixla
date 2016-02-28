@@ -1,8 +1,6 @@
-"use strict";
+import _ from 'lodash';
 
-var _ = require("lodash");
-
-module.exports =
+export default
 {
     /**
      * @param str
@@ -20,6 +18,8 @@ module.exports =
      * @returns {*}
      */
     format: function () {
+        console.warn('Mixin.format is deprecated. Use ES6 strings instead.')
+
         var s = arguments[0];
 
         for (var i = 1; i < arguments.length; i++) {
