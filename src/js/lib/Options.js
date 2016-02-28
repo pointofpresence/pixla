@@ -1,12 +1,9 @@
-"use strict";
+import _         from "lodash";
+import Filter    from './Filter';
+import Dithering from './Dithering';
+import Triangle  from './Triangle';
 
-var Filter    = require("./Filter"),
-    Dithering = require("./Dithering"),
-    _         = require("lodash");
-
-import Triangle from './Triangle';
-
-module.exports = {
+export default {
     options: {
         mirror: {
             name:    "Отражение",
@@ -219,4 +216,4 @@ module.exports = {
             def:  0
         }
     }
-};
+}

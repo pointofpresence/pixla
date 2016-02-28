@@ -1,14 +1,14 @@
 import Preset  from '../lib/Preset';
 import Storage from '../lib/Storage';
 import Canvas  from '../lib/Canvas';
+import Options from '../lib/Options';
 
 var Backbone  = require("backbone"),
     _         = require("lodash"),
     Sortable  = require("../vendor/sortable"),
     templates = require("../templates"),
     Processor = require("../lib/Processor"),
-    Random    = require("../lib/Random"),
-    Options   = require("../lib/Options");
+    Random    = require("../lib/Random");
 
 Backbone.$ = jQuery;
 

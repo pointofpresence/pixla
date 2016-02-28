@@ -1,9 +1,15 @@
-"use strict";
+'use strict';
 
 var through2   = require('through2'),
     browserify = require('browserify');
 
-gulp.task("babel", function () {
+gulp.task('babel:prod', function () {
+    global.isProd = true;
+
+    return $.runSequence('babel');
+});
+
+gulp.task('babel', function () {
     var bundle = 'bundle.js';
 
     $.util.log('Creating ' + bundle + ' in ' + $.chalk.magenta(config.jsDst) + ' ...');
