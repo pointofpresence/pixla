@@ -1,19 +1,18 @@
 "use strict";
 
-var TriangleMeander       = require("../models/TriangleMeander"),
-    TriangleRealCross     = require("../models/TriangleRealCross"),
+var TriangleRealCross     = require("../models/TriangleRealCross"),
     TriangleSkull         = require("../models/TriangleSkull"),
     TriangleStone         = require("../models/TriangleStone"),
     TriangleStoneAdvanced = require("../models/TriangleStoneAdvanced");
 
-import TriangleDithering from '../models/TriangleDithering';
-import TriangleKuwahara from '../models/TriangleKuwahara';
-import TriangleCross from '../models/TriangleCross';
+import TriangleDithering   from '../models/TriangleDithering';
+import TriangleKuwahara    from '../models/TriangleKuwahara';
+import TriangleCross       from '../models/TriangleCross';
 import TriangleCrossRadial from '../models/TriangleCrossRadial';
-import TrianglePeecol from '../models/TrianglePeecol';
-import TriangleBlocks from '../models/TriangleBlocks';
-import TriangleLine from '../models/TriangleLine';
-
+import TrianglePeecol      from '../models/TrianglePeecol';
+import TriangleBlocks      from '../models/TriangleBlocks';
+import TriangleLine        from '../models/TriangleLine';
+import TriangleMeander     from '../models/TriangleMeander';
 
 export default {
     /**
@@ -66,7 +65,7 @@ export default {
     },
 
     /**
-     * @returns {TriangleMeander}
+     * @returns {$ES6_ANONYMOUS_CLASS$}
      */
     "Meander": function () {
         return new TriangleMeander;

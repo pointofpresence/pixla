@@ -1,28 +1,10 @@
-"use strict";
+import TriangleCrossModel from './TriangleCross';
 
-var TriangleCrossModel = require("./TriangleCross");
+export default class extends TriangleCrossModel {
+    constructor() {
+        super();
 
-module.exports = function () {
-    return TriangleCrossModel.extend({
-        getColors: function (data, x, y) {
-            var colors = [];
-
-            colors[1] = this.getPixelXY(
-                data,
-                x,
-                y
-            );
-
-            colors[2] = this.getPixelXY(
-                data,
-                x,
-                y + 8
-            );
-
-            return colors;
-        },
-
-        pattern: [
+        this.pattern = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
             [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -39,6 +21,24 @@ module.exports = function () {
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1]
-        ]
-    });
-};
+        ];
+    }
+
+    getColors(data, x, y) {
+        let colors = [];
+
+        colors[1] = this.getPixelXY(
+            data,
+            x,
+            y
+        );
+
+        colors[2] = this.getPixelXY(
+            data,
+            x,
+            y + 8
+        );
+
+        return colors;
+    }
+}
