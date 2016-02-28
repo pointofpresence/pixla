@@ -1,6 +1,4 @@
-"use strict";
-
-var Canvas = require("./Canvas");
+import Canvas from './Canvas';
 
 require("fabric");
 
