@@ -1,4 +1,5 @@
-import Preset from '../lib/Preset';
+import Preset  from '../lib/Preset';
+import Storage from '../lib/Storage';
 
 var Backbone  = require("backbone"),
     _         = require("lodash"),
@@ -6,7 +7,6 @@ var Backbone  = require("backbone"),
     templates = require("../templates"),
     Canvas    = require("../lib/Canvas"),
     Processor = require("../lib/Processor"),
-    Storage   = require("../lib/Storage"),
     Random    = require("../lib/Random"),
     Options   = require("../lib/Options");
 

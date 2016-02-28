@@ -1,35 +1,29 @@
-"use strict";
-
-module.exports = {
+export default {
     /**
      * @returns {*}
      */
-    getFilter: function () {
-        return localStorage["filter"] ? JSON.parse(localStorage["filter"]) : {};
+    getFilter: () => {
+        return localStorage["filter"] ? JSON.parse(localStorage["filter"]) : {}
     },
 
     /**
      * @param filter
      */
-    setFilter: function (filter) {
+    setFilter: (filter) => {
         localStorage["filter"] = JSON.stringify(filter || {});
     },
 
-    unsetFilter: function () {
-        delete localStorage["filter"];
-    },
+    unsetFilter: () => delete localStorage["filter"],
 
     /**
      * @returns {*}
      */
-    getEncoded: function () {
+    getEncoded: () => {
         return localStorage["encoded"] ? JSON.parse(localStorage["encoded"]) : null;
     },
 
     /**
      * @param data
      */
-    setEncoded: function (data) {
-        localStorage["encoded"] = JSON.stringify(data);
-    }
+    setEncoded: (data) => localStorage["encoded"] = JSON.stringify(data)
 };
