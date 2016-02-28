@@ -15,84 +15,60 @@ export default {
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Cross": function () {
-        return new TriangleCross;
-    },
+    'Cross': () => new TriangleCross,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Cross Radial": function () {
-        return new TriangleCrossRadial;
-    },
+    'Cross Radial': () => new TriangleCrossRadial,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Peecol": function () {
-        return new TrianglePeecol;
-    },
+    'Peecol': () => new TrianglePeecol,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Blocks": function () {
-        return new TriangleBlocks;
-    },
+    'Blocks': () => new TriangleBlocks,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Dithering": function () {
-        return new TriangleDithering;
-    },
+    'Dithering': () => new TriangleDithering,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Kuwahara": function () {
-        return new TriangleKuwahara;
-    },
+    'Kuwahara': () => new TriangleKuwahara,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Line": function () {
-        return new TriangleLine;
-    },
+    'Line': () => new TriangleLine,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Meander": function () {
-        return new TriangleMeander;
-    },
+    'Meander': () => new TriangleMeander,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Real Cross": function () {
-        return new TriangleRealCross;
-    },
+    'Real Cross': () => new TriangleRealCross,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Skull": function () {
-        return new TriangleSkull;
-    },
+    'Skull': () => new TriangleSkull,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Stone": function () {
-        return new TriangleStone;
-    },
+    'Stone': () => new TriangleStone,
 
     /**
      * @returns {$ES6_ANONYMOUS_CLASS$}
      */
-    "Stone Advanced": function () {
-        return new TriangleStoneAdvanced;
-    }
+    'Stone Advanced': () => new TriangleStoneAdvanced
 }
