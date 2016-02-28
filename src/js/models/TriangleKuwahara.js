@@ -1,6 +1,5 @@
 import TriangleCrossModel from './TriangleCross';
-
-let Buffer = require("../lib/Buffer");
+import Buffer from '../lib/Buffer';
 
 export default class extends TriangleCrossModel {
     constructor() {
@@ -8,11 +7,11 @@ export default class extends TriangleCrossModel {
 
         //@formatter:off
         this.pattern = [
-            [1, 1, 5, 2, 2],
+            [1,  1, 5,  2, 2],
             [1, 10, 5, 11, 2],
-            [6, 6, 9, 7, 7],
+            [6,  6, 9,  7, 7],
             [3, 12, 8, 13, 4],
-            [3, 3, 8, 4, 4]
+            [3,  3, 8,  4, 4]
         ];
         //@formatter:on
 
