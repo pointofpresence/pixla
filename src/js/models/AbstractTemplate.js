@@ -1,7 +1,6 @@
 import Backbone from 'backbone';
-
-let _      = require("lodash"),
-    Buffer = require("../lib/Buffer");
+import _        from 'lodash';
+import Buffer   from '../lib/Buffer';
 
 export default class extends Backbone.Model {
     constructor() {
@@ -79,5 +78,12 @@ export default class extends Backbone.Model {
      */
     setPixelXY(data, x, y, color) {
         Buffer.setPixelXY(data, x, y, color, this.w);
+    }
+
+    /**
+     * @returns {*[]}
+     */
+    getPattern() {
+        return _.isFunction(this.pattern) ? this.pattern() : this.pattern
     }
 }

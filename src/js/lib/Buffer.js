@@ -1,10 +1,12 @@
 import Canvas from '../lib/Canvas';
 
-module.exports = {
-    COLORS: {
-        BLACK: [0, 0, 0, 255],
-        WHITE: [255, 255, 255, 255]
-    },
+export default class Buffer {
+    static get COLORS() {
+        return {
+            BLACK: [0, 0, 0, 255],
+            WHITE: [255, 255, 255, 255]
+        }
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -16,9 +18,9 @@ module.exports = {
      * @param {number} dstH
      * @returns {Uint8ClampedArray}
      */
-    grab: function (data, srcW, srcH, dstX, dstY, dstW, dstH) {
-        var tempCvs   = Canvas.createEmptyCanvas(srcW, srcH),
-            tempCtx   = tempCvs.getContext("2d"),
+    static grab(data, srcW, srcH, dstX, dstY, dstW, dstH) {
+        let tempCvs   = Canvas.createEmptyCanvas(srcW, srcH),
+            tempCtx   = tempCvs.getContext('2d'),
             tempIData = tempCtx.createImageData(srcW, srcH);
 
         tempIData.data.set(data);
@@ -31,7 +33,7 @@ module.exports = {
             Math.floor(dstW),
             Math.floor(dstH)
         ).data;
-    },
+    }
 
     /**
      * @param srcData
@@ -44,9 +46,9 @@ module.exports = {
      * @param destH
      * @returns {CanvasPixelArray}
      */
-    draw: function (srcData, srcW, srcH, destData, destX, destY, destW, destH) {
-        var tempCvs       = Canvas.createEmptyCanvas(destW, destH),
-            tempCtx       = tempCvs.getContext("2d"),
+    static draw(srcData, srcW, srcH, destData, destX, destY, destW, destH) {
+        let tempCvs       = Canvas.createEmptyCanvas(destW, destH),
+            tempCtx       = tempCvs.getContext('2d'),
             tempSrcIData  = tempCtx.createImageData(srcW, srcH),
             tempDestIData = tempCtx.createImageData(destW, destH);
 
@@ -57,17 +59,23 @@ module.exports = {
         tempCtx.putImageData(tempSrcIData, destX, destY);
 
         return tempCtx.getImageData(0, 0, destW, destH).data;
-    },
+    }
 
     /**
      * @param data
      * @param index
      * @returns {*[]}
      */
-    getPixel: function (data, index) {
-        var i = index * 4;
-        return [data[i], data[i + 1], data[i + 2], data[i + 3]];
-    },
+    static getPixel(data, index) {
+        let i = index * 4;
+
+        return [
+            data[i],
+            data[i + 1],
+            data[i + 2],
+            data[i + 3]
+        ];
+    }
 
     /**
      * @param data
@@ -76,22 +84,29 @@ module.exports = {
      * @param w
      * @returns {*}
      */
-    getPixelXY: function (data, x, y, w) {
-        return this.getPixel(data, Math.floor(y * w + x));
-    },
+    static getPixelXY(data, x, y, w) {
+        return Buffer.getPixel(data, Math.floor(y * w + x));
+    }
 
     /**
      * @param data
      * @param index
      * @param color
      */
-    setPixel: function (data, index, color) {
-        var i       = index * 4;
+    static setPixel(data, index, color) {
+        let i = index * 4;
+
+
+
         data[i]     = color[0];
         data[i + 1] = color[1];
         data[i + 2] = color[2];
         data[i + 3] = color[3];
-    },
+
+        //console.log(color)
+        //console.log([data[i], data[i + 1], data[i + 2], data[i + 3]])
+        //debugger
+    }
 
     /**
      * @param data
@@ -100,13 +115,13 @@ module.exports = {
      * @param color
      * @param w
      */
-    setPixelXY: function (data, x, y, color, w) {
+    static setPixelXY(data, x, y, color, w) {
         if (x >= w) {
             return;
         }
 
-        this.setPixel(data, y * w + x, color);
-    },
+        Buffer.setPixel(data, y * w + x, color);
+    }
 
     /**
      * @param color1
@@ -114,18 +129,18 @@ module.exports = {
      * @param percent
      * @returns {*[]}
      */
-    mixColors: function (color1, color2, percent) {
-        var n = percent || 0.5;
+    static mixColors(color1, color2, percent) {
+        let n = percent || 0.5;
 
-        var R = Math.round((color2[0] - color1[0]) * n) + color1[0];
-        var G = Math.round((color2[1] - color1[1]) * n) + color1[1];
-        var B = Math.round((color2[2] - color1[2]) * n) + color1[2];
-        var A = Math.round((color2[3] - color1[3]) * n) + color1[3];
+        let R = Math.round((color2[0] - color1[0]) * n) + color1[0],
+            G = Math.round((color2[1] - color1[1]) * n) + color1[1],
+            B = Math.round((color2[2] - color1[2]) * n) + color1[2],
+            A = Math.round((color2[3] - color1[3]) * n) + color1[3];
 
         return [
             R, G, B, A
         ];
-    },
+    }
 
     /**
      * @param data
@@ -134,19 +149,18 @@ module.exports = {
      * @param blendColor
      * @param w
      */
-    setMixPixel: function (data, x, y, blendColor, w) {
-        var oc = this.getPixelXY(data, x, y, w);
+    static setMixPixel(data, x, y, blendColor, w) {
+        let oc = Buffer.getPixelXY(data, x, y, w),
+            n  = blendColor[3] / 255.0,
+            n2 = 1.0 - n;
 
-        var n  = blendColor[3] / 255.0;
-        var n2 = 1.0 - n;
-
-        this.setPixelXY(data, x, y, [
+        Buffer.setPixelXY(data, x, y, [
             Math.floor(oc[0] * n2 + blendColor[0] * n),
             Math.floor(oc[1] * n2 + blendColor[1] * n),
             Math.floor(oc[2] * n2 + blendColor[2] * n),
             oc[3]
         ], w);
-    },
+    }
 
     /**
      *
@@ -158,43 +172,44 @@ module.exports = {
      * @returns {string}
      * @param w
      */
-    setShadeBlendPixel: function (data, x, y, percent, blendColor, w) {
-        var oc = this.getPixelXY(data, x, y, w);
+    static setShadeBlendPixel(data, x, y, percent, blendColor, w) {
+        let oc = Buffer.getPixelXY(data, x, y, w),
+            n  = percent < 0 ? percent * -1 : percent;
 
-        var n = percent < 0 ? percent * -1 : percent;
+        blendColor = blendColor
+            ? blendColor
+            : (percent < 0 ? [0, 0, 0, oc[3]] : [255, 255, 255, oc[3]]);
 
-        blendColor = blendColor ? blendColor : (percent < 0 ? [0, 0, 0, oc[3]] : [255, 255, 255, oc[3]]);
+        let R = Math.round((blendColor[0] - oc[0]) * n) + oc[0],
+            G = Math.round((blendColor[1] - oc[1]) * n) + oc[1],
+            B = Math.round((blendColor[2] - oc[2]) * n) + oc[2],
+            A = Math.round((blendColor[3] - oc[3]) * n) + oc[3];
 
-        var R = Math.round((blendColor[0] - oc[0]) * n) + oc[0];
-        var G = Math.round((blendColor[1] - oc[1]) * n) + oc[1];
-        var B = Math.round((blendColor[2] - oc[2]) * n) + oc[2];
-        var A = Math.round((blendColor[3] - oc[3]) * n) + oc[3];
-
-        this.setPixelXY(data, x, y, [
+        Buffer.setPixelXY(data, x, y, [
                 R, G, B, A
             ], w
         );
-    },
+    }
 
     /**
      * @param {number} c
      * @returns {string}
      */
-    componentToHex: function (c) {
-        var hex = c.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
-    },
+    static componentToHex(c) {
+        let hex = c.toString(16);
+        return hex.length == 1 ? '0' + hex : hex;
+    }
 
     /**
      * @param {Array} color
      * @returns {string}
      */
-    rgbaToHex: function (color) {
-        return this.componentToHex(color[0])
-            + this.componentToHex(color[1])
-            + this.componentToHex(color[2])
-            + this.componentToHex(color[3]);
-    },
+    static rgbaToHex(color) {
+        return Buffer.componentToHex(color[0])
+            + Buffer.componentToHex(color[1])
+            + Buffer.componentToHex(color[2])
+            + Buffer.componentToHex(color[3]);
+    }
 
     /**
      * @param h
@@ -202,13 +217,13 @@ module.exports = {
      * @param v
      * @returns {*[]}
      */
-    hsvToRgb: function (h, s, v) {
-        var r, g, b;
-        var i = Math.floor(h * 6);
-        var f = h * 6 - i;
-        var p = v * (1 - s);
-        var q = v * (1 - f * s);
-        var t = v * (1 - (1 - f) * s);
+    static hsvToRgb(h, s, v) {
+        let r, g, b,
+            i = Math.floor(h * 6),
+            f = h * 6 - i,
+            p = v * (1 - s),
+            q = v * (1 - f * s),
+            t = v * (1 - (1 - f) * s);
 
         switch (i % 6) {
             case 0:
@@ -246,7 +261,7 @@ module.exports = {
         }
 
         return [r * 255, g * 255, b * 255];
-    },
+    }
 
     /**
      *
@@ -255,16 +270,17 @@ module.exports = {
      * @param b
      * @returns {*[]}
      */
-    rgbToHsv: function (r, g, b) {
+    static rgbToHsv(r, g, b) {
         r = r / 255;
         g = g / 255;
         b = b / 255;
 
-        var max = Math.max(r, g, b),
+        let max = Math.max(r, g, b),
             min = Math.min(r, g, b);
 
-        var h, s, v = max;
-        var d       = max - min;
+        let h, s,
+            v = max,
+            d = max - min;
 
         s = max === 0 ? 0 : d / max;
 
@@ -290,4 +306,4 @@ module.exports = {
 
         return [h, s, v];
     }
-};
+}

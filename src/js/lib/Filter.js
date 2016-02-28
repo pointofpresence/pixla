@@ -1,8 +1,7 @@
-"use strict";
+import _      from 'lodash';
+import Buffer from '../lib/Buffer';
 
-var _         = require("lodash"),
-    Dithering = require("./Dithering"),
-    Buffer    = require("./Buffer"),
+var Dithering = require("./Dithering"),
     Mixin     = require("./Mixin");
 
 module.exports = {

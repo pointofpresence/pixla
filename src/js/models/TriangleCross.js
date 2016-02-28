@@ -1,8 +1,3 @@
-"use strict";
-
-var Backbone = require("backbone"),
-    _        = require("lodash");
-
 import AbstractTemplate from './AbstractTemplate';
 
 export default class extends AbstractTemplate {
@@ -35,10 +30,29 @@ export default class extends AbstractTemplate {
     getColors(data, x, y) {
         let colors = [];
 
-        colors[1] = this.getPixelXY(data, x + this.TILE_WIDTH / 2, y + this.TILE_HEIGHT / 4);
-        colors[2] = this.getPixelXY(data, x + this.TILE_WIDTH - this.TILE_WIDTH / 4, y + this.TILE_HEIGHT / 2);
-        colors[3] = this.getPixelXY(data, x + this.TILE_WIDTH / 2, y + this.TILE_HEIGHT - this.TILE_HEIGHT / 4);
-        colors[4] = this.getPixelXY(data, x + this.TILE_WIDTH / 4, y + this.TILE_HEIGHT / 2);
+        colors[1] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 2,
+            y + this.TILE_HEIGHT / 4
+        );
+
+        colors[2] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH - this.TILE_WIDTH / 4,
+            y + this.TILE_HEIGHT / 2
+        );
+
+        colors[3] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 2,
+            y + this.TILE_HEIGHT - this.TILE_HEIGHT / 4
+        );
+
+        colors[4] = this.getPixelXY(
+            data,
+            x + this.TILE_WIDTH / 4,
+            y + this.TILE_HEIGHT / 2
+        );
 
         return colors;
     }
@@ -58,7 +72,7 @@ export default class extends AbstractTemplate {
         //noinspection JSUnresolvedFunction
         let out = new Uint8ClampedArray(data.length);
 
-        let pattern = _.isFunction(this.pattern) ? this.pattern() : this.pattern,
+        let pattern = this.getPattern(),
             colors, x, y, px, py;
 
         for (x = 0; x < newW; x += this.TILE_WIDTH) {
@@ -81,8 +95,8 @@ export default class extends AbstractTemplate {
 
         return {
             data: out,
-            w:    this.w,
-            h:    this.h
+            w:    newW,
+            h:    newH
         };
     }
 }
