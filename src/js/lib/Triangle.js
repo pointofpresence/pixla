@@ -1,7 +1,6 @@
 "use strict";
 
-var TriangleSkull         = require("../models/TriangleSkull"),
-    TriangleStone         = require("../models/TriangleStone"),
+var TriangleStone         = require("../models/TriangleStone"),
     TriangleStoneAdvanced = require("../models/TriangleStoneAdvanced");
 
 import TriangleDithering   from '../models/TriangleDithering';
@@ -13,6 +12,7 @@ import TriangleBlocks      from '../models/TriangleBlocks';
 import TriangleLine        from '../models/TriangleLine';
 import TriangleMeander     from '../models/TriangleMeander';
 import TriangleRealCross   from '../models/TriangleRealCross';
+import TriangleSkull       from '../models/TriangleSkull';
 
 export default {
     /**
@@ -79,7 +79,7 @@ export default {
     },
 
     /**
-     * @returns {TriangleSkull}
+     * @returns {$ES6_ANONYMOUS_CLASS$}
      */
     "Skull": function () {
         return new TriangleSkull;
