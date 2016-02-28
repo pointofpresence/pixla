@@ -13,10 +13,10 @@ module.exports = {
      * @param {number} size
      */
     border: function (data, w, h, size) {
-        var x;
+        let x, y;
 
-        for (var y = 0; y < h; y++) {
-            if (y < size || (y >= w - size)) {
+        for (y = 0; y < h; y++) {
+            if (y < size || (y >= h - size)) {
                 for (x = 0; x < w; x++) {
                     Buffer.setPixelXY(data, x, y, Buffer.COLORS.BLACK, w);
                 }
