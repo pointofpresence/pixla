@@ -1,10 +1,9 @@
-var Filter = require("./Filter");
-
 import Backbone from 'backbone';
 import _        from 'lodash';
 import Triangle from './Triangle';
 import Mixin    from './Mixin';
 import Options  from './Options';
+import Filter   from './Filter';
 
 _.mixin(Mixin);
 
@@ -219,8 +218,8 @@ module.exports = {
             this.data = Filter.convolve3x3(this.data, this.w, [
                 //@formatter:off
                 -1, -1, 0,
-                -1, 1, 1,
-                0, 1, 1
+                -1,  1, 1,
+                 0,  1, 1
                 //@formatter:on
             ]);
         }

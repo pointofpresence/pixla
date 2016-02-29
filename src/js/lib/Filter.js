@@ -3,7 +3,7 @@ import Buffer    from '../lib/Buffer';
 import Mixin     from './Mixin';
 import Dithering from './Dithering';
 
-module.exports = {
+export default {
     //// BORDER ///////////////////////////////////////////////////////////
 
     /**
@@ -116,11 +116,11 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     saturation: function (data, w, h, amount) {
-        var RW = 0.3086,
+        let RW = 0.3086,
             RG = 0.6084,
             RB = 0.0820;
 
-        var a = (1 - amount) * RW + amount,
+        let a = (1 - amount) * RW + amount,
             b = (1 - amount) * RW,
             c = (1 - amount) * RW,
             d = (1 - amount) * RG,
@@ -130,9 +130,9 @@ module.exports = {
             k = (1 - amount) * RB,
             i = (1 - amount) * RB + amount;
 
-        for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-                var pixel       = (y * w + x) * 4;
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                let pixel       = (y * w + x) * 4;
                 data[pixel]     = a * data[pixel] + d * data[pixel + 1] + g * data[pixel + 2];
                 data[pixel + 1] = b * data[pixel] + e * data[pixel + 1] + k * data[pixel + 2];
                 data[pixel + 2] = c * data[pixel] + f * data[pixel + 1] + i * data[pixel + 2];
@@ -152,7 +152,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     blur: function (data, w, h, amount) {
-        var width4 = w << 2, q;
+        let width4 = w << 2, q;
 
         if (amount < 0.0) {
             amount = 0.0;
@@ -166,15 +166,15 @@ module.exports = {
             q = 2 * amount * (3.97156 - 4.14554 * Math.sqrt(1.0 - 0.26891 * 0.5));
         }
 
-        var qq   = q * q;
-        var qqq  = qq * q;
-        var b0   = 1.57825 + (2.44413 * q) + (1.4281 * qq ) + (0.422205 * qqq);
-        var b1   = ((2.44413 * q) + (2.85619 * qq) + (1.26661 * qqq)) / b0;
-        var b2   = (-((1.4281 * qq) + (1.26661 * qqq))) / b0;
-        var b3   = (0.422205 * qqq) / b0;
-        var bigB = 1.0 - (b1 + b2 + b3);
+        let qq   = q * q,
+            qqq  = qq * q,
+            b0   = 1.57825 + (2.44413 * q) + (1.4281 * qq ) + (0.422205 * qqq),
+            b1   = ((2.44413 * q) + (2.85619 * qq) + (1.26661 * qqq)) / b0,
+            b2   = (-((1.4281 * qq) + (1.26661 * qqq))) / b0,
+            b3   = (0.422205 * qqq) / b0,
+            bigB = 1.0 - (b1 + b2 + b3);
 
-        var index,
+        let index,
             indexLast,
             pixel,
             ppixel,
@@ -183,7 +183,7 @@ module.exports = {
             c;
 
         for (c = 0; c < 3; c++) {
-            for (var y = 0; y < h; y++) {
+            for (let y = 0; y < h; y++) {
                 index     = y * width4 + c;
                 indexLast = y * width4 + ((w - 1) << 2) + c;
                 pixel     = data[index];
@@ -217,7 +217,7 @@ module.exports = {
         }
 
         for (c = 0; c < 3; c++) {
-            for (var x = 0; x < w; x++) {
+            for (let x = 0; x < w; x++) {
                 index     = (x << 2) + c;
                 indexLast = (h - 1) * width4 + (x << 2) + c;
                 pixel     = data[index];
@@ -262,11 +262,11 @@ module.exports = {
      * @param {number} amount -1.0 ... 1.0
      */
     hue: function (data, w, h, amount) {
-        for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-                var pixel = (y * w + x) * 4;
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                let pixel = (y * w + x) * 4;
 
-                var hsv = Buffer.rgbToHsv(
+                let hsv = Buffer.rgbToHsv(
                     data[pixel], data[pixel + 1], data[pixel + 2]
                 );
 
@@ -276,9 +276,9 @@ module.exports = {
                     hsv[0] += 360;
                 }
 
-                var rgb = Buffer.hsvToRgb(hsv[0], hsv[1], hsv[2]);
+                let rgb = Buffer.hsvToRgb(hsv[0], hsv[1], hsv[2]);
 
-                for (var i = 0; i < 3; i++) {
+                for (let i = 0; i < 3; i++) {
                     data[pixel + i] = rgb[i];
                 }
             }
@@ -295,9 +295,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     contrast: function (data, contrast) {
-        var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+        let factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 
-        for (var i = 0; i < data.length; i += 4) {
+        for (let i = 0; i < data.length; i += 4) {
             data[i]     = factor * (data[i] - 128) + 128;
             data[i + 1] = factor * (data[i + 1] - 128) + 128;
             data[i + 2] = factor * (data[i + 2] - 128) + 128;
@@ -316,18 +316,18 @@ module.exports = {
      */
     zhangSuen: function (data, w, h) {
         function Image2Bool(img, width, height) {
-            var s = [];
+            let s = [];
 
-            for (var y = 0; y < height; y++) {
-                var sx = [];
+            for (let y = 0; y < height; y++) {
+                let sx = [];
 
-                for (var x = 0; x < width; x++) {
-                    var p = Buffer.getPixelXY(img, x, y, w);
+                for (let x = 0; x < width; x++) {
+                    let p = Buffer.getPixelXY(img, x, y, w);
 
                     if (x == 0 || y == 0 || x == width - 1 || y == height - 1) {
                         sx.push(false);
                     } else {
-                        var v = Math.floor((p[0] + p[1] + p[2]) / 3);
+                        let v = Math.floor((p[0] + p[1] + p[2]) / 3);
                         sx.push(v < 32);
                     }
                 }
@@ -340,10 +340,10 @@ module.exports = {
 
         function Bool2Image(s, width, height) {
             //noinspection JSUnresolvedFunction
-            var bmp = new Uint8ClampedArray(width * height * 4);
+            let bmp = new Uint8ClampedArray(width * height * 4);
 
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
                     if (s[y][x]) {
                         Buffer.setPixelXY(bmp, x, y, Buffer.COLORS.BLACK, w);
                     } else {
@@ -359,7 +359,7 @@ module.exports = {
          * @return {number}
          */
         function NumberOfNonZeroNeighbors(x, y, s) {
-            var count = 0;
+            let count = 0;
 
             if (s[x - 1][y])     count++;
             if (s[x - 1][y + 1]) count++;
@@ -377,14 +377,14 @@ module.exports = {
          * @return {number}
          */
         function NumberOfZeroToOneTransitionFromP9(x, y, s) {
-            var p2 = s[x][y - 1];
-            var p3 = s[x + 1][y - 1];
-            var p4 = s[x + 1][y];
-            var p5 = s[x + 1][y + 1];
-            var p6 = s[x][y + 1];
-            var p7 = s[x - 1][y + 1];
-            var p8 = s[x - 1][y];
-            var p9 = s[x - 1][y - 1];
+            let p2 = s[x][y - 1],
+                p3 = s[x + 1][y - 1],
+                p4 = s[x + 1][y],
+                p5 = s[x + 1][y + 1],
+                p6 = s[x][y + 1],
+                p7 = s[x - 1][y + 1],
+                p8 = s[x - 1][y],
+                p9 = s[x - 1][y - 1];
 
             return (+(!p2 && p3)) + (+(!p3 && p4))
                 + (+(!p4 && p5)) + (+(!p5 && p6))
@@ -396,12 +396,12 @@ module.exports = {
          * @return {boolean}
          */
         function SuenThinningAlg(x, y, s, even) {
-            var p2 = s[x][y - 1];
-            var p4 = s[x + 1][y];
-            var p6 = s[x][y + 1];
-            var p8 = s[x - 1][y];
+            let p2 = s[x][y - 1],
+                p4 = s[x + 1][y],
+                p6 = s[x][y + 1],
+                p8 = s[x - 1][y];
 
-            var bp1 = NumberOfNonZeroNeighbors(x, y, s);
+            let bp1 = NumberOfNonZeroNeighbors(x, y, s);
 
             if (bp1 >= 2 && bp1 <= 6) {
                 if (NumberOfZeroToOneTransitionFromP9(x, y, s) == 1) {
@@ -425,10 +425,10 @@ module.exports = {
         }
 
         function step(stepNo, temp, s) {
-            var count = 0;
+            let count = 0;
 
-            for (var a = 1; a < temp.length - 1; a++) {
-                for (var b = 1; b < temp[0].length - 1; b++) {
+            for (let a = 1; a < temp.length - 1; a++) {
+                for (let b = 1; b < temp[0].length - 1; b++) {
                     if (SuenThinningAlg(a, b, temp, stepNo == 2)) {
                         // still changes happening?
                         if (s[a][b]) {
@@ -444,10 +444,9 @@ module.exports = {
         }
 
         function ZhangSuenThinning(img, width, height) {
-            var s = Image2Bool(img, width, height);
-
-            var temp;
-            var count = 0;
+            let s     = Image2Bool(img, width, height),
+                temp,
+                count = 0;
 
             do {
                 temp  = _.deepClone(s);
@@ -474,10 +473,10 @@ module.exports = {
     kaleidoskopeCenter: function (data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
-        var w = Math.floor(srcW / 2),
+        let w = Math.floor(srcW / 2),
             h = Math.floor(srcH / 2);
 
-        var block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
+        let block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
 
         data = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
 
@@ -502,10 +501,10 @@ module.exports = {
     kaleidoskopeCenterOutside: function (data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
-        var w = Math.floor(srcW / 2),
+        let w = Math.floor(srcW / 2),
             h = Math.floor(srcH / 2);
 
-        var block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
+        let block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
 
         data = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
 
@@ -530,10 +529,10 @@ module.exports = {
     kaleidoskopeOutside: function (data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
-        var w = Math.floor(srcW / 2),
+        let w = Math.floor(srcW / 2),
             h = Math.floor(srcH / 2);
 
-        var block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
+        let block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
 
         block = this.flipX(block, w, h);
         data  = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
@@ -559,9 +558,9 @@ module.exports = {
     kaleidoskopeVert: function (data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
-        var h = Math.floor(srcH / 2);
+        let h = Math.floor(srcH / 2);
 
-        var block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
+        let block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
         data      = Buffer.draw(block, srcW, h, data, 0, 0, srcW, srcH);
 
         block = this.flipY(block, srcW, h);
@@ -579,9 +578,9 @@ module.exports = {
     kaleidoskopeCard: function (data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
-        var h = Math.floor(srcH / 2);
+        let h = Math.floor(srcH / 2);
 
-        var block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
+        let block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
         data      = Buffer.draw(block, srcW, h, data, 0, 0, srcW, srcH);
 
         block = this.flipY(block, srcW, h);
@@ -600,9 +599,9 @@ module.exports = {
     kaleidoskopeHoriz: function (data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
-        var w = Math.floor(srcW / 2);
+        let w = Math.floor(srcW / 2);
 
-        var block = Buffer.grab(data, srcW, srcH, 0, 0, w, srcH);
+        let block = Buffer.grab(data, srcW, srcH, 0, 0, w, srcH);
         data      = Buffer.draw(block, w, srcH, data, 0, 0, srcW, srcH);
 
         block = this.flipX(block, w, srcH);
@@ -619,30 +618,30 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     sobel: function (data, w) {
-        var grayscale = this.grayscale(data);
+        let grayscale = this.grayscale(data);
 
-        var vertical = this.convolve3x3(grayscale, w, [
+        let vertical = this.convolve3x3(grayscale, w, [
             -1, 0, 1,
             -2, 0, 2,
             -1, 0, 1
         ]);
 
-        var horizontal = this.convolve3x3(grayscale, w, [
+        let horizontal = this.convolve3x3(grayscale, w, [
             -1, -2, -1,
             0, 0, 0,
             1, 2, 1
         ]);
 
         //noinspection JSUnresolvedFunction
-        var newData = new Uint8ClampedArray(data.length);
+        let newData = new Uint8ClampedArray(data.length);
 
-        for (var i = 0; i < data.length; i += 4) {
+        for (let i = 0; i < data.length; i += 4) {
             // make the vertical gradient red
-            var v      = Math.abs(vertical[i]);
+            let v      = Math.abs(vertical[i]);
             newData[i] = v;
 
             // make the horizontal gradient green
-            var h          = Math.abs(horizontal[i]);
+            let h          = Math.abs(horizontal[i]);
             newData[i + 1] = h;
 
             // and mix in some blue for aesthetics
@@ -666,36 +665,36 @@ module.exports = {
     convolute: function (data, w, h, weights, opaque) {
         opaque = opaque || false;
 
-        var side     = Math.round(Math.sqrt(weights.length)),
+        let side     = Math.round(Math.sqrt(weights.length)),
             halfSide = Math.floor(side / 2);
 
         // pad output by the convolution matrix
         //noinspection JSUnresolvedFunction
-        var dst = new Uint8ClampedArray(data.length);
+        let dst = new Uint8ClampedArray(data.length);
 
         // go through the destination image pixels
-        var alphaFac = +opaque;
+        let alphaFac = +opaque;
 
-        for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-                var sy     = y,
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                let sy     = y,
                     sx     = x,
                     dstOff = (y * w + x) * 4;
 
                 // calculate the weighed sum of the source image pixels that
                 // fall under the convolution matrix
-                var r = 0,
+                let r = 0,
                     g = 0,
                     b = 0,
                     a = 0;
 
-                for (var cy = 0; cy < side; cy++) {
-                    for (var cx = 0; cx < side; cx++) {
-                        var scy = sy + cy - halfSide,
+                for (let cy = 0; cy < side; cy++) {
+                    for (let cx = 0; cx < side; cx++) {
+                        let scy = sy + cy - halfSide,
                             scx = sx + cx - halfSide;
 
                         if (scy >= 0 && scy < h && scx >= 0 && scx < w) {
-                            var srcOff = (scy * w + scx) * 4,
+                            let srcOff = (scy * w + scx) * 4,
                                 wt     = weights[cy * side + cx];
 
                             r += data[srcOff] * wt;
@@ -732,11 +731,11 @@ module.exports = {
         }
 
         //noinspection JSUnresolvedFunction
-        var newData = new Uint8ClampedArray(data.length),
+        let newData = new Uint8ClampedArray(data.length),
             len     = newData.length,
             res     = 0;
 
-        for (var i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
             if ((i + 1) % 4 === 0) {
                 newData[i] = data[i];
                 continue;
@@ -744,7 +743,7 @@ module.exports = {
 
             res = 0;
 
-            var these = [
+            let these = [
                 data[i - w * 4 - 4] || data[i],
                 data[i - w * 4] || data[i],
                 data[i - w * 4 + 4] || data[i],
@@ -756,7 +755,7 @@ module.exports = {
                 data[i + w * 4 + 4] || data[i]
             ];
 
-            for (var j = 0; j < 9; j++) {
+            for (let j = 0; j < 9; j++) {
                 res += these[j] * m[j];
             }
 
@@ -779,7 +778,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     invert: function (data) {
-        for (var i = 0; i < data.length; i += 4) {
+        for (let i = 0; i < data.length; i += 4) {
             data[i] = 255 - data[i];            // red
             data[i + 1] = 255 - data[i + 1];    // green
             data[i + 2] = 255 - data[i + 2];    // blue
@@ -797,7 +796,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     flipX: function (data, w, h) {
-        var tempData = _.deepClone(data),
+        let tempData = _.deepClone(data),
             i, flip, x, y, c;
 
         for (y = 0; y < h; y++) {
@@ -822,7 +821,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     flipY: function (data, w, h) {
-        var tempData = _.deepClone(data),
+        let tempData = _.deepClone(data),
             i, flip, x, y, c;
 
         for (y = 0; y < h; y++) {
@@ -860,11 +859,14 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     threshold: function (data, threshold) {
-        for (var i = 0; i < data.length; i += 4) {
-            var r   = data[i];
-            var g   = data[i + 1];
-            var b   = data[i + 2];
-            var v   = (0.2126 * r + 0.7152 * g + 0.0722 * b >= threshold) ? 255 : 0;
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+                g = data[i + 1],
+                b = data[i + 2],
+                v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= threshold)
+                    ? 255
+                    : 0;
+
             data[i] = data[i + 1] = data[i + 2] = v
         }
 
@@ -881,11 +883,11 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     brightness: function (data, w, h, amount) {
-        for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-                var pixel = (y * w + x) * 4;
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                let pixel = (y * w + x) * 4;
 
-                var hsv = Buffer.rgbToHsv(
+                let hsv = Buffer.rgbToHsv(
                     data[pixel], data[pixel + 1], data[pixel + 2]
                 );
 
@@ -897,9 +899,9 @@ module.exports = {
                     hsv[2] = 1;
                 }
 
-                var rgb = Buffer.hsvToRgb(hsv[0], hsv[1], hsv[2]);
+                let rgb = Buffer.hsvToRgb(hsv[0], hsv[1], hsv[2]);
 
-                for (var i = 0; i < 3; i++) {
+                for (let i = 0; i < 3; i++) {
                     data[pixel + i] = rgb[i];
                 }
             }
@@ -915,12 +917,12 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     monochrome: function (data) {
-        for (var i = 0; i < data.length; i += 4) {
-            var r = data[i];
-            var g = data[i + 1];
-            var b = data[i + 2];
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+                g = data[i + 1],
+                b = data[i + 2];
 
-            var v   = Math.floor((r + g + b) / 3);
+            let v   = Math.floor((r + g + b) / 3);
             data[i] = data[i + 1] = data[i + 2] = (v > 127 ? 255 : 0);
             data[i + 3] = 255;
         }
@@ -933,14 +935,14 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     grayscale: function (data) {
-        for (var i = 0; i < data.length; i += 4) {
-            var r = data[i];
-            var g = data[i + 1];
-            var b = data[i + 2];
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+                g = data[i + 1],
+                b = data[i + 2];
 
             // CIE luminance for the RGB
             // The human eye is bad at seeing red and blue, so we de-emphasize them.
-            var v   = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            let v   = 0.2126 * r + 0.7152 * g + 0.0722 * b;
             data[i] = data[i + 1] = data[i + 2] = v;
         }
 
@@ -952,10 +954,10 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     sepia: function (data) {
-        for (var i = 0; i < data.length; i += 4) {
-            var r = data[i];
-            var g = data[i + 1];
-            var b = data[i + 2];
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+                g = data[i + 1],
+                b = data[i + 2];
 
             data[i] = (r * 0.393) + (g * 0.769) + (b * 0.189);      // red
             data[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168);  // green
@@ -970,10 +972,10 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     red: function (data) {
-        for (var i = 0; i < data.length; i += 4) {
-            var r = data[i];
-            var g = data[i + 1];
-            var b = data[i + 2];
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+                g = data[i + 1],
+                b = data[i + 2];
 
             data[i] = (r + g + b) / 3;     // apply average to red channel
             data[i + 1] = data[i + 2] = 0; // zero out green and blue channel
@@ -987,10 +989,10 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     green: function (data) {
-        for (var i = 0; i < data.length; i += 4) {
-            var r = data[i];
-            var g = data[i + 1];
-            var b = data[i + 2];
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+                g = data[i + 1],
+                b = data[i + 2];
 
             data[i + 1] = (r + g + b) / 3;
             data[i]     = data[i + 2] = 0;
@@ -1004,10 +1006,10 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     blue: function (data) {
-        for (var i = 0; i < data.length; i += 4) {
-            var r = data[i];
-            var g = data[i + 1];
-            var b = data[i + 2];
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+                g = data[i + 1],
+                b = data[i + 2];
 
             data[i + 2] = (r + g + b) / 3;
             data[i]     = data[i + 1] = 0;
@@ -1025,9 +1027,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_REDUCE: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1040,9 +1040,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_ORDERED: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1055,9 +1053,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_ERROR: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1070,9 +1066,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherC64_ATKINSON: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1085,9 +1079,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_ATKINSON: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1100,9 +1092,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_REDUCE: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1115,9 +1105,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_ORDERED: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1130,9 +1118,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherSPECTRUM_ERROR: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1145,9 +1131,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_ATKINSON: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1160,9 +1144,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_REDUCE: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1175,9 +1157,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_ORDERED: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1190,9 +1170,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_BRONZE_ERROR: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1205,9 +1183,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_ATKINSON: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1220,9 +1196,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_REDUCE: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1235,9 +1209,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_ORDERED: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1250,9 +1222,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherMONO_ERROR: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1265,9 +1235,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_ATKINSON: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1280,9 +1248,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_REDUCE: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1295,9 +1261,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_ORDERED: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1310,9 +1274,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherAMIGA_ORANGE_ERROR: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ERROR
         });
@@ -1325,9 +1287,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_ATKINSON: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
@@ -1340,9 +1300,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_REDUCE: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
@@ -1355,9 +1313,7 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_ORDERED: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
@@ -1370,11 +1326,9 @@ module.exports = {
      * @returns {Uint8ClampedArray}
      */
     ditherBASIC_ERROR: function (data, w, h) {
-        let d = new Dithering;
-
-        return d.dither(data, w, h, {
+        return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ERROR
         });
     }
-};
+}
