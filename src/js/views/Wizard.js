@@ -1,3 +1,5 @@
+import Backbone  from 'backbone';
+import _         from 'lodash';
 import Preset    from '../lib/Preset';
 import Storage   from '../lib/Storage';
 import Canvas    from '../lib/Canvas';
@@ -5,9 +7,7 @@ import Options   from '../lib/Options';
 import Random    from '../lib/Random';
 import templates from '../templates';
 
-var Backbone  = require("backbone"),
-    _         = require("lodash"),
-    Sortable  = require("../vendor/sortable"),
+let Sortable  = require("../vendor/sortable"),
     Processor = require("../lib/Processor");
 
 Backbone.$ = jQuery;

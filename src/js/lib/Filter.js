@@ -3,7 +3,7 @@ import Buffer    from '../lib/Buffer';
 import Mixin     from './Mixin';
 import Dithering from './Dithering';
 
-export default {
+export default class Filter {
     //// BORDER ///////////////////////////////////////////////////////////
 
     /**
@@ -12,7 +12,7 @@ export default {
      * @param {number} h
      * @param {number} size
      */
-    border: function (data, w, h, size) {
+    static border(data, w, h, size) {
         let x, y;
 
         for (y = 0; y < h; y++) {
@@ -32,7 +32,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// EMBOSS ///////////////////////////////////////////////////////////
 
@@ -44,24 +44,23 @@ export default {
      * @param {number} angle
      * @param {number} elevation
      */
-    emboss: function (data, w, h, bumpHeight, angle, elevation) {
+    static emboss(data, w, h, bumpHeight, angle, elevation) {
         angle     = angle || 135;
         elevation = elevation || 30;
+        angle     = angle / 180 * Math.PI;
+        elevation = elevation / 180 * Math.PI;
 
-        angle          = angle / 180 * Math.PI;
-        elevation      = elevation / 180 * Math.PI;
-        var width45    = 3 * bumpHeight;
-        var pixelScale = 255.9;
+        let width45      = 3 * bumpHeight,
+            pixelScale   = 255.9,
+            bumpPixels   = [],
+            bumpMapWidth = w;
 
-        var bumpPixels   = [];
-        var bumpMapWidth = w;
-
-        for (var i = 0; i < data.length; i += 4) {
+        for (let i = 0; i < data.length; i += 4) {
             bumpPixels[i / 4] = (data[i] + data[i + 1] + data[i + 2]) / 3
         }
 
-        var Nx, Ny, Nz, Lx, Ly, Lz, Nz2, NzLz, NdotL;
-        var shade, background;
+        let Nx, Ny, Nz, Lx, Ly, Lz, Nz2, NzLz, NdotL,
+            shade, background;
 
         Lx = Math.floor(Math.cos(angle) * Math.cos(elevation) * pixelScale);
         Ly = Math.floor(Math.sin(angle) * Math.cos(elevation) * pixelScale);
@@ -72,15 +71,15 @@ export default {
         NzLz       = Nz * Lz;
         background = Lz;
 
-        var bumpIndex = 0;
+        let bumpIndex = 0;
 
-        for (var y = 0; y < h; y++, bumpIndex += bumpMapWidth) {
-            var s1 = bumpIndex,
+        for (let y = 0; y < h; y++, bumpIndex += bumpMapWidth) {
+            let s1 = bumpIndex,
                 s2 = s1 + bumpMapWidth,
                 s3 = s2 + bumpMapWidth;
 
-            for (var x = 0; x < w; x++, s1++, s2++, s3++) {
-                var pixel = (y * w + x) * 4;
+            for (let x = 0; x < w; x++, s1++, s2++, s3++) {
+                let pixel = (y * w + x) * 4;
 
                 if (y != 0 && y < h - 2 && x != 0 && x < w - 2) {
                     Nx = bumpPixels[s1 - 1] + bumpPixels[s2 - 1] + bumpPixels[s3 - 1] - bumpPixels[s1 + 1] - bumpPixels[s2 + 1] - bumpPixels[s3 + 1];
@@ -104,7 +103,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// SATURATION ///////////////////////////////////////////////////////
 
@@ -115,7 +114,7 @@ export default {
      * @param {number} amount
      * @returns {Uint8ClampedArray}
      */
-    saturation: function (data, w, h, amount) {
+    static saturation(data, w, h, amount) {
         let RW = 0.3086,
             RG = 0.6084,
             RB = 0.0820;
@@ -133,6 +132,7 @@ export default {
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
                 let pixel       = (y * w + x) * 4;
+
                 data[pixel]     = a * data[pixel] + d * data[pixel + 1] + g * data[pixel + 2];
                 data[pixel + 1] = b * data[pixel] + e * data[pixel + 1] + k * data[pixel + 2];
                 data[pixel + 2] = c * data[pixel] + f * data[pixel + 1] + i * data[pixel + 2];
@@ -140,7 +140,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// BLUR /////////////////////////////////////////////////////////////
 
@@ -151,7 +151,7 @@ export default {
      * @param {number} amount
      * @returns {Uint8ClampedArray}
      */
-    blur: function (data, w, h, amount) {
+    static blur(data, w, h, amount) {
         let width4 = w << 2, q;
 
         if (amount < 0.0) {
@@ -251,7 +251,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// HUE //////////////////////////////////////////////////////////////
 
@@ -261,7 +261,7 @@ export default {
      * @param {number} h
      * @param {number} amount -1.0 ... 1.0
      */
-    hue: function (data, w, h, amount) {
+    static hue(data, w, h, amount) {
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
                 let pixel = (y * w + x) * 4;
@@ -285,7 +285,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// CONTRAST /////////////////////////////////////////////////////////
 
@@ -294,7 +294,7 @@ export default {
      * @param {number} contrast
      * @returns {Uint8ClampedArray}
      */
-    contrast: function (data, contrast) {
+    static contrast(data, contrast) {
         let factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 
         for (let i = 0; i < data.length; i += 4) {
@@ -304,7 +304,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// ZHANG SUEN ///////////////////////////////////////////////////////
 
@@ -314,7 +314,7 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    zhangSuen: function (data, w, h) {
+    static zhangSuen(data, w, h) {
         function Image2Bool(img, width, height) {
             let s = [];
 
@@ -460,7 +460,7 @@ export default {
         }
 
         return ZhangSuenThinning(data, w, h);
-    },
+    }
 
     //// KALEIDOSKOPE /////////////////////////////////////////////////////
 
@@ -470,7 +470,7 @@ export default {
      * @param {number} srcH
      * @returns {Uint8ClampedArray}
      */
-    kaleidoskopeCenter: function (data, srcW, srcH) {
+    static kaleidoskopeCenter(data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
         let w = Math.floor(srcW / 2),
@@ -480,17 +480,17 @@ export default {
 
         data = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
 
-        block = this.flipX(block, w, h);
+        block = Filter.flipX(block, w, h);
         data  = Buffer.draw(block, w, h, data, w, 0, srcW, srcH);
 
-        block = this.flipY(block, w, h);
+        block = Filter.flipY(block, w, h);
         data  = Buffer.draw(block, w, h, data, w, h, srcW, srcH);
 
-        block = this.flipX(block, w, h);
+        block = Filter.flipX(block, w, h);
         data  = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -498,7 +498,7 @@ export default {
      * @param {number} srcH
      * @returns {Uint8ClampedArray}
      */
-    kaleidoskopeCenterOutside: function (data, srcW, srcH) {
+    static kaleidoskopeCenterOutside(data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
         let w = Math.floor(srcW / 2),
@@ -508,17 +508,17 @@ export default {
 
         data = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
 
-        block = this.flipY(block, w, h);
+        block = Filter.flipY(block, w, h);
         data  = Buffer.draw(block, w, h, data, w, 0, srcW, srcH);
 
-        block = this.flipX(block, w, h);
+        block = Filter.flipX(block, w, h);
         data  = Buffer.draw(block, w, h, data, w, h, srcW, srcH);
 
-        block = this.flipY(block, w, h);
+        block = Filter.flipY(block, w, h);
         data  = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -526,7 +526,7 @@ export default {
      * @param {number} srcH
      * @returns {Uint8ClampedArray}
      */
-    kaleidoskopeOutside: function (data, srcW, srcH) {
+    static kaleidoskopeOutside(data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
         let w = Math.floor(srcW / 2),
@@ -534,20 +534,20 @@ export default {
 
         let block = Buffer.grab(data, srcW, srcH, 0, 0, w, h);
 
-        block = this.flipX(block, w, h);
+        block = Filter.flipX(block, w, h);
         data  = Buffer.draw(block, w, h, data, 0, 0, srcW, srcH);
 
-        block = this.flipX(block, w, h);
+        block = Filter.flipX(block, w, h);
         data  = Buffer.draw(block, w, h, data, w, 0, srcW, srcH);
 
-        block = this.flipY(block, w, h);
+        block = Filter.flipY(block, w, h);
         data  = Buffer.draw(block, w, h, data, w, h, srcW, srcH);
 
-        block = this.flipX(block, w, h);
+        block = Filter.flipX(block, w, h);
         data  = Buffer.draw(block, w, h, data, 0, h, srcW, srcH);
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -555,7 +555,7 @@ export default {
      * @param {number} srcH
      * @returns {Uint8ClampedArray}
      */
-    kaleidoskopeVert: function (data, srcW, srcH) {
+    static kaleidoskopeVert(data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
         let h = Math.floor(srcH / 2);
@@ -563,11 +563,11 @@ export default {
         let block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
         data      = Buffer.draw(block, srcW, h, data, 0, 0, srcW, srcH);
 
-        block = this.flipY(block, srcW, h);
+        block = Filter.flipY(block, srcW, h);
         data  = Buffer.draw(block, srcW, h, data, 0, h, srcW, srcH);
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -575,7 +575,7 @@ export default {
      * @param {number} srcH
      * @returns {Uint8ClampedArray}
      */
-    kaleidoskopeCard: function (data, srcW, srcH) {
+    static kaleidoskopeCard(data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
         let h = Math.floor(srcH / 2);
@@ -583,12 +583,12 @@ export default {
         let block = Buffer.grab(data, srcW, srcH, 0, 0, srcW, h);
         data      = Buffer.draw(block, srcW, h, data, 0, 0, srcW, srcH);
 
-        block = this.flipY(block, srcW, h);
-        block = this.flipX(block, srcW, h);
+        block = Filter.flipY(block, srcW, h);
+        block = Filter.flipX(block, srcW, h);
         data  = Buffer.draw(block, srcW, h, data, 0, h, srcW, srcH);
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -596,7 +596,7 @@ export default {
      * @param {number} srcH
      * @returns {Uint8ClampedArray}
      */
-    kaleidoskopeHoriz: function (data, srcW, srcH) {
+    static kaleidoskopeHoriz(data, srcW, srcH) {
         data = Buffer.grab(data, srcW, srcH, 0, 0, srcW, srcH);
 
         let w = Math.floor(srcW / 2);
@@ -604,11 +604,11 @@ export default {
         let block = Buffer.grab(data, srcW, srcH, 0, 0, w, srcH);
         data      = Buffer.draw(block, w, srcH, data, 0, 0, srcW, srcH);
 
-        block = this.flipX(block, w, srcH);
+        block = Filter.flipX(block, w, srcH);
         data  = Buffer.draw(block, w, srcH, data, w, 0, srcW, srcH);
 
         return data;
-    },
+    }
 
     //// SOBEL ///////////////////////////////////////////////////////////
 
@@ -617,16 +617,16 @@ export default {
      * @param {number} w
      * @returns {Uint8ClampedArray}
      */
-    sobel: function (data, w) {
-        let grayscale = this.grayscale(data);
+    static sobel(data, w) {
+        let grayscale = Filter.grayscale(data);
 
-        let vertical = this.convolve3x3(grayscale, w, [
+        let vertical = Filter.convolve3x3(grayscale, w, [
             -1, 0, 1,
             -2, 0, 2,
             -1, 0, 1
         ]);
 
-        let horizontal = this.convolve3x3(grayscale, w, [
+        let horizontal = Filter.convolve3x3(grayscale, w, [
             -1, -2, -1,
             0, 0, 0,
             1, 2, 1
@@ -650,7 +650,7 @@ export default {
         }
 
         return newData;
-    },
+    }
 
     //// CONVOLUTION /////////////////////////////////////////////////////
 
@@ -662,7 +662,7 @@ export default {
      * @param {boolean} opaque
      * @returns {Uint8ClampedArray}
      */
-    convolute: function (data, w, h, weights, opaque) {
+    static convolute(data, w, h, weights, opaque) {
         opaque = opaque || false;
 
         let side     = Math.round(Math.sqrt(weights.length)),
@@ -713,7 +713,7 @@ export default {
         }
 
         return dst;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -723,7 +723,7 @@ export default {
      * @param {number} [offset]
      * @returns {Uint8ClampedArray}
      */
-    convolve3x3: function (data, w, m, divisor, offset) {
+    static convolve3x3(data, w, m, divisor, offset) {
         if (!divisor) {
             divisor = m.reduce(function (a, b) {
                     return a + b;
@@ -769,7 +769,7 @@ export default {
         }
 
         return newData;
-    },
+    }
 
     //// INVERSE /////////////////////////////////////////////////////////
 
@@ -777,7 +777,7 @@ export default {
      * @param {Uint8ClampedArray} data
      * @returns {Uint8ClampedArray}
      */
-    invert: function (data) {
+    static invert(data) {
         for (let i = 0; i < data.length; i += 4) {
             data[i] = 255 - data[i];            // red
             data[i + 1] = 255 - data[i + 1];    // green
@@ -785,7 +785,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// MIRROR //////////////////////////////////////////////////////////
 
@@ -795,7 +795,7 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    flipX: function (data, w, h) {
+    static flipX(data, w, h) {
         let tempData = _.deepClone(data),
             i, flip, x, y, c;
 
@@ -812,7 +812,7 @@ export default {
         }
 
         return tempData;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -820,7 +820,7 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    flipY: function (data, w, h) {
+    static flipY(data, w, h) {
         let tempData = _.deepClone(data),
             i, flip, x, y, c;
 
@@ -837,7 +837,7 @@ export default {
         }
 
         return tempData;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -845,11 +845,11 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    flipXY: function (data, w, h) {
-        return this.flipY(
-            this.flipX(data, w, h), w, h
+    static flipXY(data, w, h) {
+        return Filter.flipY(
+            Filter.flipX(data, w, h), w, h
         );
-    },
+    }
 
     //// THRESHOLD ///////////////////////////////////////////////////////
 
@@ -858,7 +858,7 @@ export default {
      * @param {number} threshold
      * @returns {Uint8ClampedArray}
      */
-    threshold: function (data, threshold) {
+    static threshold(data, threshold) {
         for (let i = 0; i < data.length; i += 4) {
             let r = data[i],
                 g = data[i + 1],
@@ -871,7 +871,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// BRIGHTNESS ///////////////////////////////////////////////////////
 
@@ -882,7 +882,7 @@ export default {
      * @param {number} amount
      * @returns {Uint8ClampedArray}
      */
-    brightness: function (data, w, h, amount) {
+    static brightness(data, w, h, amount) {
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
                 let pixel = (y * w + x) * 4;
@@ -908,7 +908,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// COLOR ////////////////////////////////////////////////////////////
 
@@ -916,7 +916,7 @@ export default {
      * @param {Uint8ClampedArray} data
      * @returns {Uint8ClampedArray}
      */
-    monochrome: function (data) {
+    static monochrome(data) {
         for (let i = 0; i < data.length; i += 4) {
             let r = data[i],
                 g = data[i + 1],
@@ -928,13 +928,13 @@ export default {
         }
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
      * @returns {Uint8ClampedArray}
      */
-    grayscale: function (data) {
+    static grayscale(data) {
         for (let i = 0; i < data.length; i += 4) {
             let r = data[i],
                 g = data[i + 1],
@@ -947,13 +947,13 @@ export default {
         }
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
      * @returns {Uint8ClampedArray}
      */
-    sepia: function (data) {
+    static sepia(data) {
         for (let i = 0; i < data.length; i += 4) {
             let r = data[i],
                 g = data[i + 1],
@@ -965,13 +965,13 @@ export default {
         }
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
      * @returns {Uint8ClampedArray}
      */
-    red: function (data) {
+    static red(data) {
         for (let i = 0; i < data.length; i += 4) {
             let r = data[i],
                 g = data[i + 1],
@@ -982,13 +982,13 @@ export default {
         }
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
      * @returns {Uint8ClampedArray}
      */
-    green: function (data) {
+    static green(data) {
         for (let i = 0; i < data.length; i += 4) {
             let r = data[i],
                 g = data[i + 1],
@@ -999,13 +999,13 @@ export default {
         }
 
         return data;
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
      * @returns {Uint8ClampedArray}
      */
-    blue: function (data) {
+    static blue(data) {
         for (let i = 0; i < data.length; i += 4) {
             let r = data[i],
                 g = data[i + 1],
@@ -1016,7 +1016,7 @@ export default {
         }
 
         return data;
-    },
+    }
 
     //// DITHERING ////////////////////////////////////////////////////////
 
@@ -1026,12 +1026,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherC64_REDUCE: function (data, w, h) {
+    static ditherC64_REDUCE(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1039,12 +1039,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherC64_ORDERED: function (data, w, h) {
+    static ditherC64_ORDERED(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1052,12 +1052,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherC64_ERROR: function (data, w, h) {
+    static ditherC64_ERROR(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ERROR
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1065,12 +1065,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherC64_ATKINSON: function (data, w, h) {
+    static ditherC64_ATKINSON(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.C64,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1078,12 +1078,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherSPECTRUM_ATKINSON: function (data, w, h) {
+    static ditherSPECTRUM_ATKINSON(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1091,12 +1091,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherSPECTRUM_REDUCE: function (data, w, h) {
+    static ditherSPECTRUM_REDUCE(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1104,12 +1104,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherSPECTRUM_ORDERED: function (data, w, h) {
+    static ditherSPECTRUM_ORDERED(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1117,12 +1117,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherSPECTRUM_ERROR: function (data, w, h) {
+    static ditherSPECTRUM_ERROR(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.SPECTRUM,
             algorithm: Dithering.ALGORITHM.ERROR
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1130,12 +1130,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_BRONZE_ATKINSON: function (data, w, h) {
+    static ditherAMIGA_BRONZE_ATKINSON(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1143,12 +1143,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_BRONZE_REDUCE: function (data, w, h) {
+    static ditherAMIGA_BRONZE_REDUCE(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1156,12 +1156,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_BRONZE_ORDERED: function (data, w, h) {
+    static ditherAMIGA_BRONZE_ORDERED(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1169,12 +1169,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_BRONZE_ERROR: function (data, w, h) {
+    static ditherAMIGA_BRONZE_ERROR(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_BRONZE,
             algorithm: Dithering.ALGORITHM.ERROR
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1182,12 +1182,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherMONO_ATKINSON: function (data, w, h) {
+    static ditherMONO_ATKINSON(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1195,12 +1195,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherMONO_REDUCE: function (data, w, h) {
+    static ditherMONO_REDUCE(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1208,12 +1208,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherMONO_ORDERED: function (data, w, h) {
+    static ditherMONO_ORDERED(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1221,12 +1221,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherMONO_ERROR: function (data, w, h) {
+    static ditherMONO_ERROR(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.MONO,
             algorithm: Dithering.ALGORITHM.ERROR
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1234,12 +1234,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_ORANGE_ATKINSON: function (data, w, h) {
+    static ditherAMIGA_ORANGE_ATKINSON(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1247,12 +1247,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_ORANGE_REDUCE: function (data, w, h) {
+    static ditherAMIGA_ORANGE_REDUCE(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1260,12 +1260,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_ORANGE_ORDERED: function (data, w, h) {
+    static ditherAMIGA_ORANGE_ORDERED(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1273,12 +1273,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherAMIGA_ORANGE_ERROR: function (data, w, h) {
+    static ditherAMIGA_ORANGE_ERROR(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.AMIGA_ORANGE,
             algorithm: Dithering.ALGORITHM.ERROR
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1286,12 +1286,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherBASIC_ATKINSON: function (data, w, h) {
+    static ditherBASIC_ATKINSON(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ATKINSON
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1299,12 +1299,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherBASIC_REDUCE: function (data, w, h) {
+    static ditherBASIC_REDUCE(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.REDUCE
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1312,12 +1312,12 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherBASIC_ORDERED: function (data, w, h) {
+    static ditherBASIC_ORDERED(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ORDERED
         });
-    },
+    }
 
     /**
      * @param {Uint8ClampedArray} data
@@ -1325,7 +1325,7 @@ export default {
      * @param {number} h
      * @returns {Uint8ClampedArray}
      */
-    ditherBASIC_ERROR: function (data, w, h) {
+    static ditherBASIC_ERROR(data, w, h) {
         return Dithering.dither(data, w, h, {
             palette:   Dithering.PALETTE.BASIC,
             algorithm: Dithering.ALGORITHM.ERROR
