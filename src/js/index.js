@@ -1,13 +1,11 @@
 "use strict";
 
-global.jQuery = require("jquery");
-global.$      = jQuery;
-
-var WizardView = require("./views/Wizard"),
-    bootstrap  = require("bootstrap");
-
+global.jQuery = global.$ = require('jquery');
+require('bootstrap');
 //    "share",
 require("./lib/Fileinput");
+
+import WizardView from './views/Wizard';
 
 $(function () {
     // # fix

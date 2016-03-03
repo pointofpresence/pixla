@@ -9,9 +9,7 @@ import templates from '../templates';
 import Processor from '../lib/Processor';
 import Sortable  from '../vendor/sortable';
 
-Backbone.$ = jQuery;
-
-module.exports = Backbone.View.extend({
+export default Backbone.View.extend({
     el:        "#wizard",
     encoded:   null,
     imageName: null,
