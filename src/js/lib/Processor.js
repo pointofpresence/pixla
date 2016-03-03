@@ -7,7 +7,7 @@ import Filter   from './Filter';
 
 _.mixin(Mixin);
 
-module.exports = {
+export default {
     w: 0,
     h: 0,
 
@@ -161,17 +161,21 @@ module.exports = {
             switch (edFac) {
                 case 1:
                     edMtx = [
-                        1, 1, 1,
+                        //@formatter:off
+                        1,  1, 1,
                         1, -7, 1,
-                        1, 1, 1
+                        1,  1, 1
+                        //@formatter:on
                     ];
 
                     break;
                 case 2:
                     edMtx = [
+                        //@formatter:off
                         -5, 0, 0,
-                        0, 0, 0,
-                        0, 0, 5
+                         0, 0, 0,
+                         0, 0, 5
+                        //@formatter:on
                     ];
 
                     break;
@@ -186,23 +190,27 @@ module.exports = {
      */
     postSharpen: function (filter) {
         if (parseInt(filter)) {
-            var sFac = parseInt(filter),
+            let sFac = parseInt(filter),
                 sMtx = [];
 
             if (sFac < 2) {
                 sFac += 4;
                 sMtx = [
-                    0, -1, 0,
+                    //@formatter:off
+                     0,   -1,  0,
                     -1, sFac, -1,
-                    0, -1, 0
+                     0,   -1,  0
+                    //@formatter:on
                 ];
             } else {
                 sFac += 7;
 
                 sMtx = [
-                    -1, -1, -1,
+                    //@formatter:off
+                    -1,   -1, -1,
                     -1, sFac, -1,
-                    -1, -1, -1
+                    -1,   -1, -1
+                    //@formatter:on
                 ];
             }
 
@@ -319,4 +327,4 @@ module.exports = {
             );
         }
     }
-};
+}

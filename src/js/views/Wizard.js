@@ -6,9 +6,8 @@ import Canvas    from '../lib/Canvas';
 import Options   from '../lib/Options';
 import Random    from '../lib/Random';
 import templates from '../templates';
-
-let Sortable  = require("../vendor/sortable"),
-    Processor = require("../lib/Processor");
+import Processor from '../lib/Processor';
+import Sortable  from '../vendor/sortable';
 
 Backbone.$ = jQuery;
 
